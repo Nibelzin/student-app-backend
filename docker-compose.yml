@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:16
+    container_name: student_app_postgres
+
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=student_app_db
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - data:/var/lib/postgresql/data
+
+    restart: always
+
+volumes:
+  data:
