@@ -74,4 +74,10 @@ public class PeriodRepositoryAdapter implements PeriodRepositoryPort {
         return userPeriods.stream().map(periodMapper::toDomain).toList();
     }
 
+    @Override
+    public Optional<Period> findCurrentByUserId(UUID userId) {
+        return periodJpaRepository.findByUser_IdAndIsCurrentTrue(userId)
+                .map(periodMapper::toDomain);
+    }
+
 }

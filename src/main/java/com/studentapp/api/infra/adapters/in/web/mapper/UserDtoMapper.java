@@ -1,8 +1,8 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
 import com.studentapp.api.domain.model.User;
-import com.studentapp.api.infra.adapters.in.web.dto.UserCreateRequest;
-import com.studentapp.api.infra.adapters.in.web.dto.UserResponse;
+import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
+import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;

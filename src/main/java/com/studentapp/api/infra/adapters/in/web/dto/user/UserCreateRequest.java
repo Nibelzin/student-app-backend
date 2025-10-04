@@ -1,4 +1,4 @@
-package com.studentapp.api.infra.adapters.in.web.dto;
+package com.studentapp.api.infra.adapters.in.web.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,6 +1,7 @@
 package com.studentapp.api.infra.config.exception.handler;
 
 import com.studentapp.api.infra.config.exception.custom.EmailAlreadyExistsException;
+import com.studentapp.api.infra.config.exception.custom.PeriodConflictException;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = Map.of(
                 "timestamp", LocalDateTime.now(),
                 "status", HttpStatus.CONFLICT.value(),
-                "error", "Already exists",
+                "error", "Conflict",
                 "message", e.getMessage()
         );
 
@@ -36,6 +37,18 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(body.toString(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PeriodConflictException.class)
+    public ResponseEntity<String> handlePeriodConflictException(PeriodConflictException e) {
+        Map<String, Object> body = Map.of(
+                "timestamp", LocalDateTime.now(),
+                "status", HttpStatus.CONFLICT.value(),
+                "error", "Conflict",
+                "message", e.getMessage()
+        );
+
+        return new ResponseEntity<>(body.toString(), HttpStatus.CONFLICT);
     }
 
 }

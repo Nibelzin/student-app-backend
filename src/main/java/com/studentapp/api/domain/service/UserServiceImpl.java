@@ -42,7 +42,9 @@ public class UserServiceImpl implements UserUseCase {
     public User updateUser(UUID id, UserUpdateData userUpdateData) {
 
 
-        User existingUser = this.findUserById(id).get();
+        User existingUser = this.findUserById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Usuário não encontrado.")
+        );
 
         if (userUpdateData.name() != null && !userUpdateData.name().isBlank()) {
             existingUser.setName(userUpdateData.name());

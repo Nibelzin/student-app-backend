@@ -1,7 +1,7 @@
-package com.studentapp.api.infra.adapters.in.web.dto;
+package com.studentapp.api.infra.adapters.in.web.dto.user;
 
+import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -19,6 +19,6 @@ public class UserResponse {
     private Integer currentSemester;
     private LocalDateTime createdAt;
 
-    private List<PeriodSummaryResponse> periods;
+    private List<PeriodResponse> periods;
 
 }

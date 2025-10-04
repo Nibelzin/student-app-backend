@@ -2,9 +2,9 @@ package com.studentapp.api.infra.adapters.in.web;
 
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.domain.port.in.UserUseCase;
-import com.studentapp.api.infra.adapters.in.web.dto.UserCreateRequest;
-import com.studentapp.api.infra.adapters.in.web.dto.UserResponse;
-import com.studentapp.api.infra.adapters.in.web.dto.UserUpdateRequest;
+import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
+import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
+import com.studentapp.api.infra.adapters.in.web.dto.user.UserUpdateRequest;
 import com.studentapp.api.infra.adapters.in.web.mapper.UserDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,6 +49,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
+    @Operation(summary = "Atualiza um usuário existente", method = "PUT")
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id,@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
 

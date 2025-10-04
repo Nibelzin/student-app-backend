@@ -14,6 +14,7 @@ public interface PeriodRepositoryPort {
     Period update(Period period);
     void delete(UUID id);
     Optional<Period> findById(UUID id);
+    Optional<Period> findCurrentByUserId(UUID userId);
     Page<Period> findAll(Pageable pageable);
     List<Period> findByUserId(UUID userId);
 }

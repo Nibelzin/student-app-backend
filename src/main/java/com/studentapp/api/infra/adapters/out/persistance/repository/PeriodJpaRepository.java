@@ -5,10 +5,13 @@ import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface PeriodJpaRepository extends JpaRepository<PeriodEntity, UUID> {
 
     List<PeriodEntity> findByUser(UserEntity user);
+
+    Optional<PeriodEntity> findByUser_IdAndIsCurrentTrue(UUID userId);
 
 }
