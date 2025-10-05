@@ -1,19 +1,25 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
+import com.studentapp.api.domain.model.Period;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.infra.adapters.out.persistance.entity.PeriodEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class UserMapper {
 
     private final PeriodMapper periodMapper;
+
+    public UserMapper(@Lazy PeriodMapper periodMapper) {
+        this.periodMapper = periodMapper;
+    }
 
     public UserEntity toEntity(User user) {
         if (user == null) {
@@ -41,7 +47,14 @@ public class UserMapper {
             return null;
         }
 
-        return User.fromState(entity.getId(), entity.getName(), entity.getEmail(), entity.getPasswordHash(), entity.getCourse(), entity.getCurrentSemester(), entity.getCreatedAt(), entity.getUpdatedAt());
+        if (entity.getPeriods() == null) {
+            entity.setPeriods(new ArrayList<>());
+        }
+
+        List<Period> entityPeriods = entity.getPeriods().stream().map(periodMapper::toDomain).toList();
+
+
+        return User.fromState(entity.getId(), entity.getName(), entity.getEmail(), entity.getPasswordHash(), entity.getCourse(), entity.getCurrentSemester(), entity.getCreatedAt(), entity.getUpdatedAt(), entityPeriods);
     }
 
 }

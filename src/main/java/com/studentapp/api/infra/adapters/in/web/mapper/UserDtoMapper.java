@@ -3,6 +3,7 @@ package com.studentapp.api.infra.adapters.in.web.mapper;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
+import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponseSummary;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -40,6 +41,22 @@ public class UserDtoMapper {
                             .collect(Collectors.toList())
             );
         }
+
+        return response;
+    }
+
+    public UserResponseSummary toSummaryResponse(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        UserResponseSummary response = new UserResponseSummary();
+        response.setId(user.getId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        response.setCourse(user.getCourse());
+        response.setCurrentSemester(user.getCurrentSemester());
+        response.setCreatedAt(user.getCreatedAt());
 
         return response;
     }

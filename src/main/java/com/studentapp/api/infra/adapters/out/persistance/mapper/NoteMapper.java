@@ -1,44 +1,41 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.Period;
+import com.studentapp.api.domain.model.Note;
 import com.studentapp.api.domain.model.User;
-import com.studentapp.api.infra.adapters.out.persistance.entity.PeriodEntity;
+import com.studentapp.api.infra.adapters.out.persistance.entity.NoteEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
 @Component
-public class PeriodMapper {
+public class NoteMapper {
 
     private final UserMapper userMapper;
 
-    public PeriodMapper(@Lazy UserMapper userMapper) {
+    public NoteMapper(@Lazy UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
-    public PeriodEntity toEntity(Period period) {
-        if (period == null) {
+    public NoteEntity toEntity(Note note){
+        if(note == null){
             return null;
         }
 
-        UserEntity userEntity = userMapper.toEntity(period.getUser());
+        UserEntity userEntity = userMapper.toEntity(note.getUser());
 
-        return new PeriodEntity(
-                period.getId(),
-                period.getName(),
-                period.getStartDate(),
-                period.getEndDate(),
-                period.getCurrent(),
-                period.getCreatedAt(),
-                period.getUpdatedAt(),
+        return new NoteEntity(
+                note.getId(),
+                note.getContent(),
+                note.isPinned(),
+                note.getCreatedAt(),
+                note.getUpdatedAt(),
                 userEntity
         );
     }
 
-    public Period toDomain(PeriodEntity entity){
+    public Note toDomain(NoteEntity entity){
         if (entity == null) {
             return null;
         }
@@ -60,7 +57,7 @@ public class PeriodMapper {
             );
         }
 
-        return Period.fromState(entity.getId(), entity.getName(), entity.getStartDate(), entity.getEndDate(), entity.getIsCurrent(), userDomain, entity.getCreatedAt(), entity.getUpdatedAt());
+        return Note.fromState(entity.getId(), entity.getContent(), entity.getIsPinned(), userDomain, entity.getCreatedAt(), entity.getUpdatedAt());
     }
 
 }

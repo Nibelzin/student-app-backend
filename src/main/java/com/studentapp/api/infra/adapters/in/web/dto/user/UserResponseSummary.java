@@ -1,16 +1,14 @@
 package com.studentapp.api.infra.adapters.in.web.dto.user;
 
-import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponseSummary;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
-public class UserResponse {
+public class UserResponseSummary {
 
     private UUID id;
     private String name;
@@ -18,7 +16,5 @@ public class UserResponse {
     private String course;
     private Integer currentSemester;
     private LocalDateTime createdAt;
-
-    private List<PeriodResponseSummary> periods;
 
 }

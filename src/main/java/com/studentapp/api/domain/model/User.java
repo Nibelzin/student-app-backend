@@ -8,7 +8,7 @@ import java.util.*;
 
 public class User implements UserDetails {
 
-    private UUID id;
+    private final UUID id;
     private String name;
     private String email;
     private String passwordHash;
@@ -27,7 +27,7 @@ public class User implements UserDetails {
         this.updatedAt = this.createdAt;
     }
 
-    private User(UUID id, String name, String email, String passwordHash, LocalDateTime createdAt, LocalDateTime updatedAt, String course, Integer currentSemester) {
+    private User(UUID id, String name, String email, String passwordHash, LocalDateTime createdAt, LocalDateTime updatedAt, String course, Integer currentSemester, List<Period> periods) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -36,14 +36,15 @@ public class User implements UserDetails {
         this.passwordHash = passwordHash;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.periods = periods;
     }
 
     public static User create(String name, String email, String passwordHash){
         return new User(name, email, passwordHash);
     }
 
-    public static User fromState(UUID id, String name, String email, String passwordHash, String course, Integer currentSemester, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new User(id, name, email, passwordHash, createdAt, updatedAt, course, currentSemester);
+    public static User fromState(UUID id, String name, String email, String passwordHash, String course, Integer currentSemester, LocalDateTime createdAt, LocalDateTime updatedAt, List<Period> periods) {
+        return new User(id, name, email, passwordHash, createdAt, updatedAt, course, currentSemester, periods);
     }
 
     public void touch() {

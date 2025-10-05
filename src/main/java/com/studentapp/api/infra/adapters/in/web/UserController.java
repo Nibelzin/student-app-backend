@@ -1,10 +1,15 @@
 package com.studentapp.api.infra.adapters.in.web;
 
+import com.studentapp.api.domain.model.Period;
 import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.port.in.PeriodUseCase;
 import com.studentapp.api.domain.port.in.UserUseCase;
+import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
+import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponseSummary;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserUpdateRequest;
+import com.studentapp.api.infra.adapters.in.web.mapper.PeriodDtoMapper;
 import com.studentapp.api.infra.adapters.in.web.mapper.UserDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,7 +35,9 @@ import java.util.UUID;
 public class UserController {
 
     private final UserUseCase userUseCase;
+    private final PeriodUseCase periodUseCase;
     private final UserDtoMapper userDtoMapper;
+    private final PeriodDtoMapper periodDtoMapper;
 
 
     @Operation(summary = "Cria um novo usuário", method = "POST")
@@ -40,9 +48,7 @@ public class UserController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
 
-        User userToCreate = userDtoMapper.toDomain(userCreateRequest);
-
-        User createdUser = userUseCase.createUser(userToCreate.getName(), userToCreate.getEmail(), userCreateRequest.getPassword());
+        User createdUser = userUseCase.createUser(userCreateRequest.getName(), userCreateRequest.getEmail(), userCreateRequest.getPassword());
 
         UserResponse userResponse = userDtoMapper.toResponse(createdUser);
 
@@ -75,10 +81,10 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserResponse>> findAllUsers(Pageable pageable) {
+    public ResponseEntity<Page<UserResponseSummary>> findAllUsers(Pageable pageable) {
         Page<User> userPage = userUseCase.findAllUsers(pageable);
 
-        Page<UserResponse> userResponsePage = userPage.map(userDtoMapper::toResponse);
+        Page<UserResponseSummary> userResponsePage = userPage.map(userDtoMapper::toSummaryResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(userResponsePage);
     }
@@ -87,6 +93,17 @@ public class UserController {
     public ResponseEntity<UserResponse> deleteUser(@PathVariable UUID id) {
         userUseCase.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{id}/periods")
+    public ResponseEntity<List<PeriodResponse>> getPeriodsByUserId(@PathVariable UUID id){
+        Optional<User> foundUser = userUseCase.findUserById(id);
+
+        List<Period> userPeriods = periodUseCase.findPeriodsByUserId(foundUser.get().getId());
+
+        List<PeriodResponse> userPeriodsResponse = userPeriods.stream().map(periodDtoMapper::toResponse).toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(userPeriodsResponse);
     }
 
 }

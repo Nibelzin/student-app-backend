@@ -65,7 +65,7 @@ public class PeriodServiceImpl implements PeriodUseCase {
     @Override
     public Period updatePeriod(UUID id, PeriodUpdateData periodUpdateData) {
 
-        Period existingPeriod = this.findPeriodById(id).orElseThrow(
+        Period existingPeriod = periodRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Período não encontrado.")
         );
 
@@ -81,7 +81,7 @@ public class PeriodServiceImpl implements PeriodUseCase {
             existingPeriod.setEndDate(periodUpdateData.endDate());
         }
 
-        return periodRepository.save(existingPeriod);
+        return periodRepository.update(existingPeriod);
 
     }
 
