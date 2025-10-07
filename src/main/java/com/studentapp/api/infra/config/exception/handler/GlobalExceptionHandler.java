@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = Map.of(
                 "timestamp", LocalDateTime.now(),
                 "status", HttpStatus.NOT_FOUND.value(),
-                "error", "Already exists",
+                "error", "Not Found",
                 "message", e.getMessage()
         );
 

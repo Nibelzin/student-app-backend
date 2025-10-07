@@ -1,14 +1,18 @@
 package com.studentapp.api.infra.adapters.in.web;
 
+import com.studentapp.api.domain.model.Note;
 import com.studentapp.api.domain.model.Period;
 import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.port.in.NoteUseCase;
 import com.studentapp.api.domain.port.in.PeriodUseCase;
 import com.studentapp.api.domain.port.in.UserUseCase;
+import com.studentapp.api.infra.adapters.in.web.dto.note.NoteResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponseSummary;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserUpdateRequest;
+import com.studentapp.api.infra.adapters.in.web.mapper.NoteDtoMapper;
 import com.studentapp.api.infra.adapters.in.web.mapper.PeriodDtoMapper;
 import com.studentapp.api.infra.adapters.in.web.mapper.UserDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,8 +40,10 @@ public class UserController {
 
     private final UserUseCase userUseCase;
     private final PeriodUseCase periodUseCase;
+    private final NoteUseCase noteUseCase;
     private final UserDtoMapper userDtoMapper;
     private final PeriodDtoMapper periodDtoMapper;
+    private final NoteDtoMapper noteDtoMapper;
 
 
     @Operation(summary = "Cria um novo usuário", method = "POST")
@@ -104,6 +110,28 @@ public class UserController {
         List<PeriodResponse> userPeriodsResponse = userPeriods.stream().map(periodDtoMapper::toResponse).toList();
 
         return ResponseEntity.status(HttpStatus.OK).body(userPeriodsResponse);
+    }
+
+    @GetMapping("/{id}/notes")
+    public ResponseEntity<Page<NoteResponse>> getNotesByUserId(@PathVariable UUID id, Pageable pageable){
+        Optional<User> foundUser = userUseCase.findUserById(id);
+
+        Page<Note> userNotesPage = noteUseCase.findNotesByUserId(foundUser.get().getId(), pageable);
+
+        Page<NoteResponse> userNotesResponsePage = userNotesPage.map(noteDtoMapper::toResponse);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userNotesResponsePage);
+    }
+
+    @GetMapping("/{id}/pinned-notes")
+    public ResponseEntity<Page<NoteResponse>> getPinnedNotesByUserId(@PathVariable UUID id, Pageable pageable){
+        Optional<User> foundUser = userUseCase.findUserById(id);
+
+        Page<Note> userNotesPage = noteUseCase.findPinnedNotesByUserId(foundUser.get().getId(), pageable);
+
+        Page<NoteResponse> userNotesResponsePage = userNotesPage.map(noteDtoMapper::toResponse);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userNotesResponsePage);
     }
 
 }
