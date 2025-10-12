@@ -25,6 +25,7 @@ public class PeriodDtoMapper {
         response.setStartDate(period.getStartDate());
         response.setEndDate(period.getEndDate());
         response.setIsCurrent(period.getCurrent());
+        response.setCreatedAt(period.getCreatedAt());
 
         return response;
     }
@@ -41,6 +42,7 @@ public class PeriodDtoMapper {
         response.setEndDate(period.getEndDate());
         response.setIsCurrent(period.getCurrent());
         response.setUserId(period.getUser().getId());
+        response.setCreatedAt(period.getCreatedAt());
 
         return response;
     }

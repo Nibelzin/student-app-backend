@@ -14,8 +14,6 @@ import java.time.LocalDate;
 @Setter
 public class PeriodUpdateRequest {
 
-    @NotBlank(message = "o nome é obrigatório.")
-    @Size(min = 2, message = "O nome deve ter no mínimo 2 caracteres.")
     private String name;
 
     @NotNull(message = "data de início é obrigatório.")

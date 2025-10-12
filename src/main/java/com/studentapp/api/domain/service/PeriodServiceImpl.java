@@ -25,7 +25,6 @@ public class PeriodServiceImpl implements PeriodUseCase {
 
     private final PeriodRepositoryPort periodRepository;
     private final UserRepositoryPort userRepository;
-    private final PeriodMapper periodMapper;
 
     @Override
     @Transactional
@@ -36,7 +35,7 @@ public class PeriodServiceImpl implements PeriodUseCase {
         }
 
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException("Usuário com ID " + userId + " não encontrado.")
+                () -> new ResourceNotFoundException("Usuário não encontrado.")
         );
 
         List<Period> existingPeriods = periodRepository.findByUserId(userId);

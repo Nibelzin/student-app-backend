@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -15,5 +16,6 @@ public class PeriodResponseSummary {
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean isCurrent;
+    private LocalDateTime createdAt;
 
 }

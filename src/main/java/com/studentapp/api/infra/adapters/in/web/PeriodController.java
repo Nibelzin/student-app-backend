@@ -1,12 +1,16 @@
 package com.studentapp.api.infra.adapters.in.web;
 
 import com.studentapp.api.domain.model.Period;
+import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.port.in.PeriodUseCase;
+import com.studentapp.api.domain.port.in.SubjectUseCase;
 import com.studentapp.api.domain.port.in.UserUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodUpdateRequest;
+import com.studentapp.api.infra.adapters.in.web.dto.subject.SubjectResponse;
 import com.studentapp.api.infra.adapters.in.web.mapper.PeriodDtoMapper;
+import com.studentapp.api.infra.adapters.in.web.mapper.SubjectDtoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +31,38 @@ import java.util.UUID;
 public class PeriodController {
 
     private final PeriodUseCase periodUseCase;
-    private final UserUseCase userUseCase;
+    private final SubjectUseCase subjectUseCase;
     private final PeriodDtoMapper periodDtoMapper;
+    private final SubjectDtoMapper subjectDtoMapper;
+
+    @GetMapping
+    public ResponseEntity<Page<PeriodResponse>> getAllPeriods(Pageable pageable) {
+        Page<Period> periodPage = periodUseCase.findAllPeriods(pageable);
+
+        Page<PeriodResponse> periodResponsePage = periodPage.map(periodDtoMapper::toResponse);
+
+        return ResponseEntity.status(HttpStatus.OK).body(periodResponsePage);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PeriodResponse> getPeriodById(@PathVariable UUID id) {
+
+        Optional<Period> foundPeriod = periodUseCase.findPeriodById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(periodDtoMapper.toResponse(foundPeriod.get()));
+
+    }
+
+    @GetMapping("/{id}/subjects")
+    public ResponseEntity<Page<SubjectResponse>> getSubjectsByPeriodId(@PathVariable UUID id, Pageable pageable) {
+        Optional<Period> foundPeriod = periodUseCase.findPeriodById(id);
+
+        Page<Subject> subjectPage = subjectUseCase.findSubjectsByPeriodId(foundPeriod.get().getId(), pageable);
+
+        Page<SubjectResponse> subjectResponsePage = subjectPage.map(subjectDtoMapper::toResponse);
+
+        return ResponseEntity.status(HttpStatus.OK).body(subjectResponsePage);
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PeriodResponse> createPeriod(@Valid @RequestBody PeriodCreateRequest periodCreateRequest) {
@@ -66,30 +100,12 @@ public class PeriodController {
         return new ResponseEntity<>(periodResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PeriodResponse> getPeriodById(@PathVariable UUID id) {
-
-        Optional<Period> foundPeriod = periodUseCase.findPeriodById(id);
-
-        return ResponseEntity.status(HttpStatus.OK).body(periodDtoMapper.toResponse(foundPeriod.get()));
-
-    }
-
-    @GetMapping
-    public ResponseEntity<Page<PeriodResponse>> getAllPeriods(Pageable pageable) {
-        Page<Period> periodPage = periodUseCase.findAllPeriods(pageable);
-
-        Page<PeriodResponse> periodResponsePage = periodPage.map(periodDtoMapper::toResponse);
-
-        return ResponseEntity.status(HttpStatus.OK).body(periodResponsePage);
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<PeriodResponse> deletePeriod(@PathVariable UUID id) {
         periodUseCase.deletePeriod(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 
 
 }

@@ -28,6 +28,24 @@ public class NoteController {
     private final NoteUseCase noteUseCase;
     private final NoteDtoMapper noteDtoMapper;
 
+    @GetMapping
+    public ResponseEntity<Page<NoteResponse>> getAllNotes(Pageable pageable){
+        Page<Note> notePage = noteUseCase.findAllNotes(pageable);
+
+        Page<NoteResponse> noteResponsePage = notePage.map(noteDtoMapper::toResponse);
+
+        return ResponseEntity.status(HttpStatus.OK).body(noteResponsePage);
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NoteResponse> getNoteById(@PathVariable UUID id){
+
+        Optional<Note> foundNote = noteUseCase.findNoteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(noteDtoMapper.toResponse(foundNote.get()));
+    }
+
     @PostMapping
     public ResponseEntity<NoteResponse> createNote(@Valid @RequestBody NoteCreateRequest noteCreateRequest) {
 
@@ -53,23 +71,6 @@ public class NoteController {
         return new ResponseEntity<>(noteResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<NoteResponse> getNoteById(@PathVariable UUID id){
-
-        Optional<Note> foundNote = noteUseCase.findNoteById(id);
-
-        return ResponseEntity.status(HttpStatus.OK).body(noteDtoMapper.toResponse(foundNote.get()));
-    }
-
-    @GetMapping
-    public ResponseEntity<Page<NoteResponse>> getAllNotes(Pageable pageable){
-        Page<Note> notePage = noteUseCase.findAllNotes(pageable);
-
-        Page<NoteResponse> noteResponsePage = notePage.map(noteDtoMapper::toResponse);
-
-        return ResponseEntity.status(HttpStatus.OK).body(noteResponsePage);
-
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<NoteResponse> deleteNote(@PathVariable UUID id){
