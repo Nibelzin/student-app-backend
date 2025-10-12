@@ -1,6 +1,7 @@
 package com.studentapp.api.infra.config.exception.handler;
 
 import com.studentapp.api.infra.config.exception.custom.EmailAlreadyExistsException;
+import com.studentapp.api.infra.config.exception.custom.InvalidPeriodException;
 import com.studentapp.api.infra.config.exception.custom.PeriodConflictException;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,18 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(body.toString(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidPeriodException.class)
+    public ResponseEntity<String> handleInvalidPeriodException(InvalidPeriodException e) {
+        Map<String, Object> body = Map.of(
+                "timestamp", LocalDateTime.now(),
+                "status", HttpStatus.FORBIDDEN.value(),
+                "error", "Forbidden",
+                "message", e.getMessage()
+        );
+
+        return new ResponseEntity<>(body.toString(), HttpStatus.FORBIDDEN);
     }
 
 }

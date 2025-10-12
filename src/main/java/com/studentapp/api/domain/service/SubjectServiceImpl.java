@@ -7,6 +7,7 @@ import com.studentapp.api.domain.port.in.SubjectUseCase;
 import com.studentapp.api.domain.port.out.PeriodRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;
+import com.studentapp.api.infra.config.exception.custom.InvalidPeriodException;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,11 @@ public class SubjectServiceImpl implements SubjectUseCase {
     @Override
     public Subject createSubject(String name, String professor, String classroom, String color, UUID periodId, UUID userId){
 
+        if (periodId == null) {
+            throw new IllegalArgumentException("O ID do período é obrigatório para criar uma matéria");
+        }
+
+
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("Usuário não encontrado.")
         );
@@ -34,6 +40,10 @@ public class SubjectServiceImpl implements SubjectUseCase {
         Period period = periodRepository.findById(periodId).orElseThrow(
                 () -> new ResourceNotFoundException("Periodo não encontrado.")
         );
+
+        if(user.getId() != period.getUser().getId()){
+            throw new InvalidPeriodException("Periodo fornecido não pertence ao usuário informado.");
+        }
 
         Subject newSubject = Subject.create(name, professor, classroom, color, user, period);
 

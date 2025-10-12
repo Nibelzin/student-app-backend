@@ -30,6 +30,7 @@ public class Subject {
         this.updatedAt = this.createdAt;
 
         this.user = user;
+        this.period = period;
 
     }
 

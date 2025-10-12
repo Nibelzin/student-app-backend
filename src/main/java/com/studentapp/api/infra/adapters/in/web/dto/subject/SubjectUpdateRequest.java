@@ -17,7 +17,6 @@ public class SubjectUpdateRequest {
     private String classroom;
     private String color;
 
-    @NotNull
     private UUID periodId;
 
 }
