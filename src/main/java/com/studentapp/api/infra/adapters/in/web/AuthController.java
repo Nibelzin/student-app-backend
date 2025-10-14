@@ -1,6 +1,7 @@
 package com.studentapp.api.infra.adapters.in.web;
 
 import com.studentapp.api.infra.config.JwtService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ record AuthResponse(String token) {}
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "auth")
 public class AuthController {
 
     @Autowired

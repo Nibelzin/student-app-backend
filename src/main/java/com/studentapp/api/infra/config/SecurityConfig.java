@@ -48,7 +48,8 @@ public class SecurityConfig {
                                 "/auth/**",
                                 "/periods/**",
                                 "/notes/**",
-                                "/subjects/**"
+                                "/subjects/**",
+                                "/password/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
