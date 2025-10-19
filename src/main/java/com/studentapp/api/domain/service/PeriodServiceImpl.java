@@ -1,11 +1,14 @@
 package com.studentapp.api.domain.service;
 
 import com.studentapp.api.domain.model.Period;
+import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.domain.port.in.PeriodUseCase;
 import com.studentapp.api.domain.port.out.PeriodRepositoryPort;
+import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.mapper.PeriodMapper;
+import com.studentapp.api.infra.config.exception.custom.DependentEntitiesExistException;
 import com.studentapp.api.infra.config.exception.custom.PeriodConflictException;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
@@ -24,6 +27,7 @@ import java.util.UUID;
 public class PeriodServiceImpl implements PeriodUseCase {
 
     private final PeriodRepositoryPort periodRepository;
+    private final SubjectRepositoryPort subjectRepository;
     private final UserRepositoryPort userRepository;
 
     @Override
@@ -120,6 +124,12 @@ public class PeriodServiceImpl implements PeriodUseCase {
 
     @Override
     public void deletePeriod(UUID id) {
+        Page<Subject> periodSubjects = subjectRepository.findByPeriodId(id, Pageable.unpaged());
+
+        if(!periodSubjects.isEmpty()){
+            throw new DependentEntitiesExistException("Esse período possui matérias associadas, remova a associação antes de exclui-lo.");
+        }
+
         periodRepository.delete(id);
     }
 

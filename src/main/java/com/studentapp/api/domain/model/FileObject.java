@@ -3,20 +3,22 @@ package com.studentapp.api.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class File {
+public class FileObject {
 
     private final UUID id;
+    private final String name;
     private final String storageProvider;
     private final String bucket;
     private final String storagePath;
     private final String mimeType;
-    private final Integer size;
+    private final Long size;
     private final String checksum;
 
     private final LocalDateTime createdAt;
 
-    private File(UUID id, String storageProvider, String bucket, String storagePath, String mimeType, Integer size, String checksum, LocalDateTime createdAt) {
+    private FileObject(UUID id, String name, String storageProvider, String bucket, String storagePath, String mimeType, Long size, String checksum, LocalDateTime createdAt) {
         this.id = id;
+        this.name = name;
         this.storageProvider = storageProvider;
         this.bucket = bucket;
         this.storagePath = storagePath;
@@ -26,8 +28,9 @@ public class File {
         this.createdAt = createdAt;
     }
 
-    private File(String storageProvider, String bucket, String storagePath, String mimeType, Integer size, String checksum) {
+    private FileObject(String name, String storageProvider, String bucket, String storagePath, String mimeType, Long size, String checksum) {
         this.id = UUID.randomUUID();
+        this.name = name;
         this.storageProvider = storageProvider;
         this.bucket = bucket;
         this.storagePath = storagePath;
@@ -37,16 +40,20 @@ public class File {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static File create(String storageProvider, String bucket, String storagePath, String mimeType, Integer size, String checksum) {
-        return new File(storageProvider, bucket, storagePath, mimeType, size, checksum);
+    public static FileObject create(String name, String storageProvider, String bucket, String storagePath, String mimeType, Long size, String checksum) {
+        return new FileObject(name, storageProvider, bucket, storagePath, mimeType, size, checksum);
     }
 
-    public static File fromState(UUID id, String storageProvider, String bucket, String storagePath, String mimeType, Integer size, String checksum, LocalDateTime createdAt) {
-        return new File(id, storageProvider, bucket, storagePath, mimeType, size, checksum, createdAt);
+    public static FileObject fromState(UUID id, String storageProvider, String name, String bucket, String storagePath, String mimeType, Long size, String checksum, LocalDateTime createdAt) {
+        return new FileObject(id, name, storageProvider, bucket, storagePath, mimeType, size, checksum, createdAt);
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getStorageProvider() {
@@ -65,7 +72,7 @@ public class File {
         return mimeType;
     }
 
-    public Integer getSize() {
+    public Long getSize() {
         return size;
     }
 

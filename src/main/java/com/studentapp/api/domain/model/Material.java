@@ -15,9 +15,9 @@ public class Material {
     private LocalDateTime updatedAt;
 
     private Subject subject;
-    private File file;
+    private FileObject fileObject;
 
-    private Material(UUID id, String title, String type, String externalUrl, Boolean isFavorite, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, File file) {
+    private Material(UUID id, String title, String type, String externalUrl, Boolean isFavorite, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, FileObject fileObject) {
         this.id = id;
         this.title = title;
         this.type = type;
@@ -26,10 +26,10 @@ public class Material {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.subject = subject;
-        this.file = file;
+        this.fileObject = fileObject;
     }
 
-    private Material(String title, String type, String externalUrl, Boolean isFavorite, Subject subject, File file) {
+    private Material(String title, String type, String externalUrl, Boolean isFavorite, Subject subject, FileObject fileObject) {
         this.id = UUID.randomUUID();
         this.title = title;
         this.type = type;
@@ -38,15 +38,15 @@ public class Material {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
         this.subject = subject;
-        this.file = file;
+        this.fileObject = fileObject;
     }
 
-    public static Material create(String title, String type, String externalUrl, Boolean isFavorite, Subject subject, File file) {
-        return new Material(title, type, externalUrl, isFavorite, subject, file);
+    public static Material create(String title, String type, String externalUrl, Boolean isFavorite, Subject subject, FileObject fileObject) {
+        return new Material(title, type, externalUrl, isFavorite, subject, fileObject);
     }
 
-    public static Material fromState(UUID id, String title, String type, String externalUrl, Boolean isFavorite, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, File file) {
-        return new Material(id, title, type, externalUrl, isFavorite, createdAt, updatedAt, subject, file);
+    public static Material fromState(UUID id, String title, String type, String externalUrl, Boolean isFavorite, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, FileObject fileObject) {
+        return new Material(id, title, type, externalUrl, isFavorite, createdAt, updatedAt, subject, fileObject);
     }
 
     private void touch() {
@@ -110,12 +110,12 @@ public class Material {
         touch();
     }
 
-    public File getFile() {
-        return file;
+    public FileObject getFile() {
+        return fileObject;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setFile(FileObject fileObject) {
+        this.fileObject = fileObject;
         touch();
     }
 }

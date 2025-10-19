@@ -1,4 +1,4 @@
-package com.studentapp.api.infra.adapters.out.persistance;
+package com.studentapp.api.infra.adapters.out.email;
 
 import com.studentapp.api.domain.port.out.EmailServicePort;
 import lombok.RequiredArgsConstructor;

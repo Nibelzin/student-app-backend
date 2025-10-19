@@ -12,65 +12,51 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<String> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+    public record ApiErrorResponse(
+            LocalDateTime timestamp,
+            int status,
+            String error,
+            String message
+    ){}
 
-        Map<String, Object> body = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.CONFLICT.value(),
-                "error", "Conflict",
-                "message", e.getMessage()
+    private ResponseEntity<ApiErrorResponse> buildErrorResponse(HttpStatus status, String message) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(
+                LocalDateTime.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                message
         );
+        return new ResponseEntity<>(apiErrorResponse, status);
+    }
 
-        return new ResponseEntity<>(body.toString(), HttpStatus.CONFLICT);
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ApiErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+        return buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException e) {
-        Map<String, Object> body = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.NOT_FOUND.value(),
-                "error", "Not Found",
-                "message", e.getMessage()
-        );
-
-        return new ResponseEntity<>(body.toString(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiErrorResponse> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
     @ExceptionHandler(PeriodConflictException.class)
-    public ResponseEntity<String> handlePeriodConflictException(PeriodConflictException e) {
-        Map<String, Object> body = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.CONFLICT.value(),
-                "error", "Conflict",
-                "message", e.getMessage()
-        );
-
-        return new ResponseEntity<>(body.toString(), HttpStatus.CONFLICT);
+    public ResponseEntity<ApiErrorResponse> handlePeriodConflictException(PeriodConflictException e) {
+        return buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
     }
 
     @ExceptionHandler(InvalidPeriodException.class)
-    public ResponseEntity<String> handleInvalidPeriodException(InvalidPeriodException e) {
-        Map<String, Object> body = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.FORBIDDEN.value(),
-                "error", "Forbidden",
-                "message", e.getMessage()
-        );
-
-        return new ResponseEntity<>(body.toString(), HttpStatus.FORBIDDEN);
+    public ResponseEntity<ApiErrorResponse> handleInvalidPeriodException(InvalidPeriodException e) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<String> handleTokenExpiredException(TokenExpiredException e) {
-        Map<String, Object> body = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.FORBIDDEN.value(),
-                "error", "Forbidden",
-                "message", e.getMessage()
-        );
+    public ResponseEntity<ApiErrorResponse> handleTokenExpiredException(TokenExpiredException e) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
 
-        return new ResponseEntity<>(body.toString(), HttpStatus.FORBIDDEN);
+    @ExceptionHandler(DependentEntitiesExistException.class)
+    public ResponseEntity<ApiErrorResponse> handleDependentEntitiesExistException(DependentEntitiesExistException e) {
+        return buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
     }
 
 }
