@@ -40,8 +40,29 @@ public class Activity {
         this.subject = subject;
     }
 
+    public static Activity create(String title, String description, LocalDateTime dueDate, Boolean isCompleted, String type, Subject subject){
+        return new Activity(title, description, dueDate, isCompleted, type, subject);
+    }
+
+    public static Activity fromState(UUID id, String title, String description, LocalDateTime dueDate, Boolean isCompleted, String type, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject){
+        return new Activity(id, title, description, dueDate, isCompleted, type, createdAt, updatedAt, subject);
+    }
+
     private void touch(){
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public boolean isOverdue(){
+
+        if (this.isCompleted){
+            return false;
+        }
+
+        if (this.dueDate == null){
+            return false;
+        }
+
+        return this.dueDate.isBefore(LocalDateTime.now());
     }
 
     public UUID getId() {

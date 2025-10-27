@@ -1,9 +1,9 @@
 package com.studentapp.api.domain.port.in;
 
+import com.studentapp.api.domain.model.FileObject;
 import com.studentapp.api.domain.model.Material;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -29,6 +29,8 @@ public interface MaterialUseCase {
     Page<Material> findAllMaterials(Pageable pageable);
 
     Page<Material> findMaterialsBySubjectId(UUID subjectId, Pageable pageable);
+
+    Optional<FileObject> findFileObjectByMaterialId(UUID id);
 
     void deleteMaterial(UUID id);
 }

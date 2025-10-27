@@ -64,14 +64,16 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
         Optional<User> founduser = userUseCase.findUserById(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userDtoMapper.toResponse(founduser.get()));
+        return founduser
+                .map(userDtoMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/periods")
     public ResponseEntity<List<PeriodResponse>> getPeriodsByUserId(@PathVariable UUID id){
-        Optional<User> foundUser = userUseCase.findUserById(id);
 
-        List<Period> userPeriods = periodUseCase.findPeriodsByUserId(foundUser.get().getId());
+        List<Period> userPeriods = periodUseCase.findPeriodsByUserId(id);
 
         List<PeriodResponse> userPeriodsResponse = userPeriods.stream().map(periodDtoMapper::toResponse).toList();
 
@@ -80,9 +82,8 @@ public class UserController {
 
     @GetMapping("/{id}/subjects")
     public ResponseEntity<Page<SubjectResponse>> getSubjectsByUserId(@PathVariable UUID id, Pageable pageable){
-        Optional<User> foundUser = userUseCase.findUserById(id);
 
-        Page<Subject> userSubjectsPage = subjectUseCase.findSubjectsByUserId(foundUser.get().getId(), pageable);
+        Page<Subject> userSubjectsPage = subjectUseCase.findSubjectsByUserId(id, pageable);
 
         Page<SubjectResponse> userSubjectsResponsePage = userSubjectsPage.map(subjectDtoMapper::toResponse);
 
@@ -91,9 +92,8 @@ public class UserController {
 
     @GetMapping("/{id}/notes")
     public ResponseEntity<Page<NoteResponse>> getNotesByUserId(@PathVariable UUID id, Pageable pageable){
-        Optional<User> foundUser = userUseCase.findUserById(id);
 
-        Page<Note> userNotesPage = noteUseCase.findNotesByUserId(foundUser.get().getId(), pageable);
+        Page<Note> userNotesPage = noteUseCase.findNotesByUserId(id, pageable);
 
         Page<NoteResponse> userNotesResponsePage = userNotesPage.map(noteDtoMapper::toResponse);
 
@@ -102,9 +102,8 @@ public class UserController {
 
     @GetMapping("/{id}/pinned-notes")
     public ResponseEntity<Page<NoteResponse>> getPinnedNotesByUserId(@PathVariable UUID id, Pageable pageable){
-        Optional<User> foundUser = userUseCase.findUserById(id);
 
-        Page<Note> userNotesPage = noteUseCase.findPinnedNotesByUserId(foundUser.get().getId(), pageable);
+        Page<Note> userNotesPage = noteUseCase.findPinnedNotesByUserId(id, pageable);
 
         Page<NoteResponse> userNotesResponsePage = userNotesPage.map(noteDtoMapper::toResponse);
 

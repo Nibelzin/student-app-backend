@@ -50,7 +50,8 @@ public class SecurityConfig {
                                 "/notes/**",
                                 "/subjects/**",
                                 "/password/**",
-                                "/materials/**"
+                                "/materials/**",
+                                "/activity/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -43,7 +43,10 @@ public class NoteController {
 
         Optional<Note> foundNote = noteUseCase.findNoteById(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(noteDtoMapper.toResponse(foundNote.get()));
+        return foundNote
+                .map(noteDtoMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping

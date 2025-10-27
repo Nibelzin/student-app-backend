@@ -53,13 +53,16 @@ public class NoteServiceImpl implements NoteUseCase {
 
     @Override
     public Optional<Note> findNoteById(UUID id){
-        return Optional.ofNullable(noteRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Nota não encontrada.")
-        ));
+        return noteRepository.findById(id);
     }
 
     @Override
     public Page<Note> findPinnedNotesByUserId(UUID userId, Pageable pageable){
+
+        if (userRepository.findById(userId).isEmpty()){
+            throw new ResourceNotFoundException("Usuário não encontrado.");
+        }
+
         return noteRepository.findPinnedByUserId(userId, pageable);
     }
 
@@ -70,6 +73,11 @@ public class NoteServiceImpl implements NoteUseCase {
 
     @Override
     public Page<Note> findNotesByUserId(UUID userId, Pageable pageable){
+
+        if (userRepository.findById(userId).isEmpty()){
+            throw new ResourceNotFoundException("Usuário não encontrado.");
+        }
+
         return noteRepository.findByUserId(userId, pageable);
     }
 

@@ -87,9 +87,7 @@ public class SubjectServiceImpl implements SubjectUseCase {
 
     @Override
     public Optional<Subject> findSubjectById(UUID id){
-        return Optional.ofNullable(subjectRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Período não encontrado.")
-        ));
+        return subjectRepository.findById(id);
     }
 
     @Override
@@ -99,11 +97,21 @@ public class SubjectServiceImpl implements SubjectUseCase {
 
     @Override
     public Page<Subject> findSubjectsByPeriodId(UUID periodId, Pageable pageable){
+
+        if(periodRepository.findById(periodId).isEmpty()){
+            throw new ResourceNotFoundException("Período não encontrado.");
+        }
+
         return subjectRepository.findByPeriodId(periodId, pageable);
     }
 
     @Override
     public Page<Subject> findSubjectsByUserId(UUID userId, Pageable pageable){
+
+        if (userRepository.findById(userId).isEmpty()){
+            throw new ResourceNotFoundException("Usuário não encontrado.");
+        }
+
         return subjectRepository.findByUserId(userId, pageable);
     }
 

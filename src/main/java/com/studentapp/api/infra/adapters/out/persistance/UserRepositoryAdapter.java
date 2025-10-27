@@ -34,7 +34,6 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     @Override
     public User update(User user){
 
-
         UserEntity userEntity = userMapper.toEntity(user);
 
         UserEntity updatedUserEntity = userJpaRepository.save(userEntity);

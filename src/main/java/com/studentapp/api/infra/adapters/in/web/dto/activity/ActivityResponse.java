@@ -1,6 +1,5 @@
-package com.studentapp.api.infra.adapters.in.web.dto.material;
+package com.studentapp.api.infra.adapters.in.web.dto.activity;
 
-import com.studentapp.api.domain.model.FileObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,17 +8,18 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class MaterialResponse {
+public class ActivityResponse {
 
     private UUID id;
     private String title;
+    private String description;
     private String type;
-    private Boolean isFavorite;
+    private Boolean isCompleted;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime dueDate;
 
     private UUID subjectId;
     private String subjectName;
-
-    private FileObject fileObject;
 
 }

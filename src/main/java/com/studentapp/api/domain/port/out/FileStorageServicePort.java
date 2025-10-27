@@ -1,11 +1,16 @@
 package com.studentapp.api.domain.port.out;
 
+import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.port.in.MaterialUseCase;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 public interface FileStorageServicePort {
 
-    StorageDetails save(MaterialUseCase.FileInput fileInput);
+    StorageDetails save(MaterialUseCase.FileInput fileInput, String path);
+
+    void delete(String filePath);
 
     record StorageDetails(
             String name,

@@ -72,8 +72,7 @@ public class UserServiceImpl implements UserUseCase {
 
     @Override
     public Optional<User> findUserById(UUID id) {
-        return Optional.ofNullable(userRepositoryPort.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado")));
+        return userRepositoryPort.findById(id);
     }
 
     @Override

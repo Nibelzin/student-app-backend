@@ -14,8 +14,8 @@ public class FileObjectMapper {
 
         return new FileObjectEntity(
                 fileObject.getId(),
-                fileObject.getStorageProvider(),
                 fileObject.getName(),
+                fileObject.getStorageProvider(),
                 fileObject.getBucket(),
                 fileObject.getStoragePath(),
                 fileObject.getMimeType(),

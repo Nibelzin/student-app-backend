@@ -1,0 +1,7 @@
+package com.studentapp.api.infra.config.exception.custom;
+
+public class InvalidQueryException extends RuntimeException {
+    public InvalidQueryException(String message) {
+        super(message);
+    }
+}

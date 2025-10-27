@@ -49,15 +49,17 @@ public class PeriodController {
 
         Optional<Period> foundPeriod = periodUseCase.findPeriodById(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(periodDtoMapper.toResponse(foundPeriod.get()));
+        return foundPeriod
+                .map(periodDtoMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 
     @GetMapping("/{id}/subjects")
     public ResponseEntity<Page<SubjectResponse>> getSubjectsByPeriodId(@PathVariable UUID id, Pageable pageable) {
-        Optional<Period> foundPeriod = periodUseCase.findPeriodById(id);
 
-        Page<Subject> subjectPage = subjectUseCase.findSubjectsByPeriodId(foundPeriod.get().getId(), pageable);
+        Page<Subject> subjectPage = subjectUseCase.findSubjectsByPeriodId(id, pageable);
 
         Page<SubjectResponse> subjectResponsePage = subjectPage.map(subjectDtoMapper::toResponse);
 

@@ -59,4 +59,9 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
     }
 
+    @ExceptionHandler(InvalidQueryException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidQueryException(InvalidQueryException e) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
 }

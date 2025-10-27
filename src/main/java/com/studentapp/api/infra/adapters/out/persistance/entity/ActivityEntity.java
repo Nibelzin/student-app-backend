@@ -10,27 +10,26 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "material")
+@Table(name = "activity")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class MaterialEntity {
+@NoArgsConstructor
+public class ActivityEntity {
 
     @Id
     private UUID id;
 
-    @Column
     private String title;
+    private String description;
 
-    @Column
+    @Column(name = "due_date")
+    private LocalDateTime dueDate;
+
+    @Column(name = "is_completed")
+    private Boolean isCompleted;
+
     private String type;
-
-    @Column(name = "external_url")
-    private String externalUrl;
-
-    @Column(name = "is_favorite")
-    private Boolean isFavorite;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -41,9 +40,5 @@ public class MaterialEntity {
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)
     private SubjectEntity subject;
-
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "file_id")
-    private FileObjectEntity file;
 
 }

@@ -1,25 +1,24 @@
 package com.studentapp.api.infra.adapters.in.web.dto.material;
 
-import com.studentapp.api.domain.model.FileObject;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
-public class MaterialResponse {
+public class MaterialUpdateRequest {
 
-    private UUID id;
     private String title;
     private String type;
     private Boolean isFavorite;
-    private LocalDateTime createdAt;
 
     private UUID subjectId;
-    private String subjectName;
+    private String externalUrl;
 
-    private FileObject fileObject;
+    private MultipartFile file;
 
 }

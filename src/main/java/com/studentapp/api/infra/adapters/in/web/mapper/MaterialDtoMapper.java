@@ -4,6 +4,7 @@ import com.studentapp.api.domain.model.FileObject;
 import com.studentapp.api.domain.model.Material;
 import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.port.in.MaterialUseCase;
+import com.studentapp.api.infra.adapters.in.web.dto.material.MaterialCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.material.MaterialCreateWithFileRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.material.MaterialResponse;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,17 @@ import java.io.IOException;
 
 @Component
 public class MaterialDtoMapper {
+
+    public Material toDomain(MaterialCreateRequest materialCreateRequest, Subject subject){
+        return Material.create(
+                materialCreateRequest.getTitle(),
+                materialCreateRequest.getType(),
+                materialCreateRequest.getExternalUrl(),
+                materialCreateRequest.getIsFavorite(),
+                subject,
+                null
+        );
+    }
 
     public Material withFileToDomain (MaterialCreateWithFileRequest materialCreateWithFileRequest, Subject subject, FileObject fileObject) throws IOException {
 
@@ -38,6 +50,8 @@ public class MaterialDtoMapper {
         response.setCreatedAt(material.getCreatedAt());
         response.setIsFavorite(material.getFavorite());
         response.setSubjectId(material.getSubject().getId());
+        response.setFileObject(material.getFile());
+        response.setSubjectName(material.getSubject().getName());
 
         return response;
     }

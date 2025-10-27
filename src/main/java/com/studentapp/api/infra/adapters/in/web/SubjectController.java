@@ -1,10 +1,14 @@
 package com.studentapp.api.infra.adapters.in.web;
 
+import com.studentapp.api.domain.model.Material;
 import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.port.in.MaterialUseCase;
 import com.studentapp.api.domain.port.in.SubjectUseCase;
+import com.studentapp.api.infra.adapters.in.web.dto.material.MaterialResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.subject.SubjectCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.subject.SubjectResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.subject.SubjectUpdateRequest;
+import com.studentapp.api.infra.adapters.in.web.mapper.MaterialDtoMapper;
 import com.studentapp.api.infra.adapters.in.web.mapper.SubjectDtoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,8 +28,9 @@ import java.util.UUID;
 public class SubjectController {
 
     private final SubjectUseCase subjectUseCase;
-
+    private final MaterialUseCase materialUseCase;
     private final SubjectDtoMapper subjectDtoMapper;
+    private final MaterialDtoMapper materialDtoMapper;
 
     @GetMapping
     public ResponseEntity<Page<SubjectResponse>> getAllSubjects(Pageable pageable){
@@ -41,7 +46,19 @@ public class SubjectController {
 
         Optional<Subject> foundSubject = subjectUseCase.findSubjectById(id);
 
-        return ResponseEntity.ok(subjectDtoMapper.toResponse(foundSubject.get()));
+        return foundSubject
+                .map(subjectDtoMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/materials")
+    public ResponseEntity<Page<MaterialResponse>> getSubjectMaterialsById(@PathVariable UUID id, Pageable pageable){
+        Page<Material> subjectMaterialsPage = materialUseCase.findMaterialsBySubjectId(id, pageable);
+
+        Page<MaterialResponse> subjectMaterialsPageResponse = subjectMaterialsPage.map(materialDtoMapper::toResponse);
+
+        return ResponseEntity.ok(subjectMaterialsPageResponse);
     }
 
     @PostMapping

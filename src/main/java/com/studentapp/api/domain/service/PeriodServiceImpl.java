@@ -90,9 +90,7 @@ public class PeriodServiceImpl implements PeriodUseCase {
 
     @Override
     public Optional<Period> findPeriodById(UUID id) {
-        return Optional.ofNullable(periodRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Período não encontrado.")
-        ));
+        return periodRepository.findById(id);
     }
 
     @Override
@@ -102,6 +100,11 @@ public class PeriodServiceImpl implements PeriodUseCase {
 
     @Override
     public List<Period> findPeriodsByUserId(UUID userId) {
+
+        if (userRepository.findById(userId).isEmpty()){
+            throw new ResourceNotFoundException("Usuário não encontrado.");
+        }
+
         return periodRepository.findByUserId(userId);
     }
 

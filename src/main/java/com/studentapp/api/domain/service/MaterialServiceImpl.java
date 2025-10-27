@@ -36,7 +36,9 @@ public class MaterialServiceImpl implements MaterialUseCase {
                 () -> new ResourceNotFoundException("Matéria não encontrada.")
         );
 
-        FileStorageServicePort.StorageDetails uploadedFileDetails = fileStorageService.save(file);
+        String path = createFilePath(subject, file.originalFilename());
+
+        FileStorageServicePort.StorageDetails uploadedFileDetails = fileStorageService.save(file, path);
 
         FileObject fileObject = FileObject.create(uploadedFileDetails.name(),uploadedFileDetails.provider(), uploadedFileDetails.bucket(), uploadedFileDetails.path(), uploadedFileDetails.mimeType(), uploadedFileDetails.size(), uploadedFileDetails.checksum());
 
@@ -86,7 +88,14 @@ public class MaterialServiceImpl implements MaterialUseCase {
 
         if(file != null){
 
-            FileStorageServicePort.StorageDetails uploadedFileDetails = fileStorageService.save(file);
+            FileObject existingFileObject = existingMaterial.getFile();
+            if(existingFileObject != null){
+                fileStorageService.delete(existingFileObject.getStoragePath());
+            }
+
+            String path = createFilePath(existingMaterial.getSubject(), file.originalFilename());
+
+            FileStorageServicePort.StorageDetails uploadedFileDetails = fileStorageService.save(file, path);
             FileObject fileObject = FileObject.create(uploadedFileDetails.name(), uploadedFileDetails.provider(), uploadedFileDetails.bucket(), uploadedFileDetails.path(), uploadedFileDetails.mimeType(), uploadedFileDetails.size(), uploadedFileDetails.checksum());
             FileObject savedFileObject = fileObjectRepository.save(fileObject);
 
@@ -98,9 +107,7 @@ public class MaterialServiceImpl implements MaterialUseCase {
 
     @Override
     public Optional<Material> findMaterialById(UUID id){
-        return Optional.ofNullable(materialRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Material não encontrado.")
-        ));
+        return materialRepository.findById(id);
     }
 
     @Override
@@ -114,7 +121,29 @@ public class MaterialServiceImpl implements MaterialUseCase {
     }
 
     @Override
+    public Optional<FileObject> findFileObjectByMaterialId(UUID id){
+        Material foundMaterial = materialRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Material não encontrado.")
+        );
+
+        return Optional.ofNullable(foundMaterial.getFile());
+    }
+
+    @Override
     public void deleteMaterial(UUID id){
-        materialRepository.delete(id);
+        Material foundMaterial = materialRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Material não encontrado.")
+        );
+
+        if(foundMaterial.getFile() != null) {
+            fileStorageService.delete(foundMaterial.getFile().getStoragePath());
+        }
+
+        materialRepository.delete(foundMaterial.getId());
+    }
+
+    private String createFilePath(Subject subject, String filename){
+        String safeFilename = filename.replaceAll("[^a-zA-Z0-9._-]", "_");
+        return "user/" + subject.getUser().getId() + "/subject/" + subject.getId() + "/materials/" + safeFilename;
     }
 }
