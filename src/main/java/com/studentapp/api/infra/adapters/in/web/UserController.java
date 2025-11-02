@@ -1,24 +1,16 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.Note;
-import com.studentapp.api.domain.model.Period;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
-import com.studentapp.api.domain.port.in.NoteUseCase;
-import com.studentapp.api.domain.port.in.PeriodUseCase;
-import com.studentapp.api.domain.port.in.SubjectUseCase;
-import com.studentapp.api.domain.port.in.UserUseCase;
+import com.studentapp.api.domain.model.*;
+import com.studentapp.api.domain.port.in.*;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
+import com.studentapp.api.infra.adapters.in.web.dto.plannerEvent.PlannerEventResponseSummary;
 import com.studentapp.api.infra.adapters.in.web.dto.subject.SubjectResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponseSummary;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserUpdateRequest;
-import com.studentapp.api.infra.adapters.in.web.mapper.NoteDtoMapper;
-import com.studentapp.api.infra.adapters.in.web.mapper.PeriodDtoMapper;
-import com.studentapp.api.infra.adapters.in.web.mapper.SubjectDtoMapper;
-import com.studentapp.api.infra.adapters.in.web.mapper.UserDtoMapper;
+import com.studentapp.api.infra.adapters.in.web.mapper.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -46,10 +38,12 @@ public class UserController {
     private final PeriodUseCase periodUseCase;
     private final NoteUseCase noteUseCase;
     private final SubjectUseCase subjectUseCase;
+    private final PlannerEventUseCase plannerEventUseCase;
     private final UserDtoMapper userDtoMapper;
     private final PeriodDtoMapper periodDtoMapper;
     private final NoteDtoMapper noteDtoMapper;
     private final SubjectDtoMapper subjectDtoMapper;
+    private final PlannerEventDtoMapper plannerEventDtoMapper;
 
     @GetMapping
     public ResponseEntity<Page<UserResponseSummary>> findAllUsers(Pageable pageable) {
@@ -108,6 +102,16 @@ public class UserController {
         Page<NoteResponse> userNotesResponsePage = userNotesPage.map(noteDtoMapper::toResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(userNotesResponsePage);
+    }
+
+    @GetMapping("/{id}/planner-events")
+    public ResponseEntity<Page<PlannerEventResponseSummary>> getPlannerEventsByUserId(@PathVariable UUID id, Pageable pageable){
+
+        Page<PlannerEvent> plannerEventPage = plannerEventUseCase.findPlannerEventsByUserId(id, pageable);
+
+        Page<PlannerEventResponseSummary> plannerEventResponsePage = plannerEventPage.map(plannerEventDtoMapper::toSummaryResponse);
+
+        return ResponseEntity.status(HttpStatus.OK).body(plannerEventResponsePage);
     }
 
     @Operation(summary = "Cria um novo usuário", method = "POST")

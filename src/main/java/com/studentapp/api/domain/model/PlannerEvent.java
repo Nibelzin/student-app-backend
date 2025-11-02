@@ -53,6 +53,14 @@ public class PlannerEvent {
         this.activity = activity;
     }
 
+    public static PlannerEvent create(String title, LocalDateTime startAt, LocalDateTime endAt, Boolean allDay, String rule, String color, User user, Subject subject, Activity activity) {
+        return new PlannerEvent(title, startAt, endAt, allDay, rule, color, user, subject, activity);
+    }
+
+    public static PlannerEvent fromState(UUID id, String title, LocalDateTime startAt, LocalDateTime endAt, Boolean allDay, String rule, String color, LocalDateTime createdAt, LocalDateTime updatedAt, User user, Subject subject, Activity activity) {
+        return new PlannerEvent(id, title, startAt, endAt, allDay, rule, color, createdAt, updatedAt, user, subject, activity);
+    }
+
     private void touch() {
         this.updatedAt = LocalDateTime.now();
     }

@@ -35,6 +35,7 @@ public class ActivityDtoMapper {
         response.setCreatedAt(activity.getCreatedAt());
         response.setUpdatedAt(activity.getUpdatedAt());
         response.setSubjectId(activity.getSubject().getId());
+        response.setSubjectName(activity.getSubject().getName());
         return response;
     }
 
