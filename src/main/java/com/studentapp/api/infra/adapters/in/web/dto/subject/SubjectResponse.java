@@ -20,4 +20,6 @@ public class SubjectResponse {
     private UUID userId;
     private UUID periodId;
 
+    private String periodName;
+
 }

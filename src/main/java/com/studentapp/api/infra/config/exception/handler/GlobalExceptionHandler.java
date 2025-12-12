@@ -3,9 +3,11 @@ package com.studentapp.api.infra.config.exception.handler;
 import com.studentapp.api.infra.config.exception.custom.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.security.sasl.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -61,6 +63,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidQueryException.class)
     public ResponseEntity<ApiErrorResponse> handleInvalidQueryException(InvalidQueryException e) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(BadCredentialsException e) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(AuthenticationException e) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 

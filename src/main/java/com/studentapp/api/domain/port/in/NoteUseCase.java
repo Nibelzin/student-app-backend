@@ -21,7 +21,7 @@ public interface NoteUseCase {
 
     Page<Note> findAllNotes(Pageable pageable);
 
-    Page<Note> findNotesByUserId(UUID userId, Pageable pageable);
+    Page<Note> findNotesByUserId(UUID userId, String searchTerm, Pageable pageable);
 
     void deleteNote(UUID id);
 

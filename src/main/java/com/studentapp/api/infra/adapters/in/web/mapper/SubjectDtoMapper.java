@@ -28,6 +28,7 @@ public class SubjectDtoMapper {
         response.setUserId(subject.getUser().getId());
         response.setPeriodId(subject.getPeriod().getId());
         response.setCreatedAt(subject.getCreatedAt());
+        response.setPeriodName(subject.getPeriod().getName());
 
         return response;
     }

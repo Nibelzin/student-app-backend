@@ -54,6 +54,8 @@ public class NoteController {
 
         Note createdNote = noteUseCase.createNote(noteCreateRequest.getContent(), noteCreateRequest.getIsPinned(), noteCreateRequest.getUserId());
 
+        System.out.println("CONTENT: " + noteCreateRequest.getContent());
+
         NoteResponse noteResponse = noteDtoMapper.toResponse(createdNote);
 
         return new ResponseEntity<>(noteResponse, HttpStatus.CREATED);

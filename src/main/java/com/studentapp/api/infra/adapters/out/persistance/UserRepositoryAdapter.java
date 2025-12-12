@@ -5,6 +5,7 @@ import com.studentapp.api.domain.port.out.UserRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import com.studentapp.api.infra.adapters.out.persistance.mapper.UserMapper;
 import com.studentapp.api.infra.adapters.out.persistance.repository.UserJpaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public User save(User user){
 
         UserEntity userEntity = userMapper.toEntity(user);
@@ -32,6 +34,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
+    @Transactional
     public User update(User user){
 
         UserEntity userEntity = userMapper.toEntity(user);
@@ -47,6 +50,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
+    @Transactional
     public Optional<User> findById(UUID id){
         Optional<UserEntity> optionalUserEntity = userJpaRepository.findById(id);
 
@@ -54,6 +58,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
+    @Transactional
     public Optional<User> findByEmail(String email){
         Optional<UserEntity> optionalUserEntity = userJpaRepository.findByEmail(email);
 
@@ -61,6 +66,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
+    @Transactional
     public Page<User> findAll(Pageable pageable){
         Page<UserEntity> userEntityPage = userJpaRepository.findAll(pageable);
 

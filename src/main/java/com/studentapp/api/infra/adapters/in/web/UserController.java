@@ -10,6 +10,7 @@ import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponseSummary;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserUpdateRequest;
+import com.studentapp.api.infra.adapters.in.web.dto.userPreference.UserPreferenceResponse;
 import com.studentapp.api.infra.adapters.in.web.mapper.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,11 +41,13 @@ public class UserController {
     private final NoteUseCase noteUseCase;
     private final SubjectUseCase subjectUseCase;
     private final PlannerEventUseCase plannerEventUseCase;
+    private final UserPreferenceUseCase userPreferenceUseCase;
     private final UserDtoMapper userDtoMapper;
     private final PeriodDtoMapper periodDtoMapper;
     private final NoteDtoMapper noteDtoMapper;
     private final SubjectDtoMapper subjectDtoMapper;
     private final PlannerEventDtoMapper plannerEventDtoMapper;
+    private final UserPreferenceDtoMapper userPreferenceDtoMapper;
 
     @GetMapping
     public ResponseEntity<Page<UserResponseSummary>> findAllUsers(Pageable pageable) {
@@ -54,11 +58,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userResponsePage);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal User user){
+        UserResponse userResponse = userDtoMapper.toResponse(user);
+        return ResponseEntity.ok(userResponse);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
-        Optional<User> founduser = userUseCase.findUserById(id);
+        Optional<User> foundUser = userUseCase.findUserById(id);
 
-        return founduser
+        return foundUser
                 .map(userDtoMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -85,9 +95,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}/notes")
-    public ResponseEntity<Page<NoteResponse>> getNotesByUserId(@PathVariable UUID id, Pageable pageable){
+    public ResponseEntity<Page<NoteResponse>> getNotesByUserId(
+            @PathVariable UUID id,
+            @RequestParam(required = false) String search,
+            Pageable pageable){
 
-        Page<Note> userNotesPage = noteUseCase.findNotesByUserId(id, pageable);
+        Page<Note> userNotesPage = noteUseCase.findNotesByUserId(id, search, pageable);
 
         Page<NoteResponse> userNotesResponsePage = userNotesPage.map(noteDtoMapper::toResponse);
 
@@ -114,6 +127,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(plannerEventResponsePage);
     }
 
+    @GetMapping("/{id}/preferences")
+    public ResponseEntity<UserPreferenceResponse> getUserPreferenceByUserId(@PathVariable UUID id){
+        UserPreference foundUserPreference = userPreferenceUseCase.findUserPreferenceByUserId(id);
+
+        UserPreferenceResponse userPreferenceResponse = userPreferenceDtoMapper.toResponse(foundUserPreference);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userPreferenceResponse);
+    }
+
     @Operation(summary = "Cria um novo usuário", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
@@ -123,6 +145,14 @@ public class UserController {
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
 
         User createdUser = userUseCase.createUser(userCreateRequest.getName(), userCreateRequest.getEmail(), userCreateRequest.getPassword());
+
+        userPreferenceUseCase.createUserPreference(
+                null,
+                null,
+                null,
+                null,
+                createdUser.getId()
+        );
 
         UserResponse userResponse = userDtoMapper.toResponse(createdUser);
 

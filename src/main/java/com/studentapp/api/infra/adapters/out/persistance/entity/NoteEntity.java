@@ -20,7 +20,7 @@ public class NoteEntity {
     @Id
     private UUID id;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "is_pinned")

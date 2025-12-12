@@ -14,6 +14,7 @@ public class NoteResponse {
     private String content;
     private Boolean isPinned;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private UUID userId;
 

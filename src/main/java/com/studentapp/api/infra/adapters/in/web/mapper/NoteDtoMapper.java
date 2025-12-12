@@ -23,6 +23,8 @@ public class NoteDtoMapper {
         response.setContent(note.getContent());
         response.setIsPinned(note.isPinned());
         response.setUserId(note.getUser().getId());
+        response.setCreatedAt(note.getCreatedAt());
+        response.setUpdatedAt(note.getUpdatedAt());
 
         return response;
     }

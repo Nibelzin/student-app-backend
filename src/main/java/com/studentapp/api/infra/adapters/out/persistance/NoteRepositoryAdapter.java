@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -73,6 +74,18 @@ public class NoteRepositoryAdapter implements NoteRepositoryPort {
         Page<NoteEntity> noteEntityPage = noteJpaRepository.findByUser(user, pageable);
 
         return noteEntityPage.map(noteMapper::toDomain);
+    }
+
+    @Override
+    public List<Note> findAllByUserId(UUID id){
+        UserEntity user = userJpaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado.") );
+
+        return noteJpaRepository
+                .findByUser(user)
+                .stream()
+                .map(noteMapper::toDomain)
+                .toList();
     }
 
 }
