@@ -39,8 +39,12 @@ public class MaterialEntity {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id", nullable = false)
+    @JoinColumn(name = "subject_id")
     private SubjectEntity subject;
+
+    @ManyToOne
+    @JoinColumn(name = "activity_id")
+    private ActivityEntity activity;
 
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "file_id")

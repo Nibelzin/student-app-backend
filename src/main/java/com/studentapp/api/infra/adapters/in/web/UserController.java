@@ -6,10 +6,7 @@ import com.studentapp.api.infra.adapters.in.web.dto.note.NoteResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.plannerEvent.PlannerEventResponseSummary;
 import com.studentapp.api.infra.adapters.in.web.dto.subject.SubjectResponse;
-import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
-import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
-import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponseSummary;
-import com.studentapp.api.infra.adapters.in.web.dto.user.UserUpdateRequest;
+import com.studentapp.api.infra.adapters.in.web.dto.user.*;
 import com.studentapp.api.infra.adapters.in.web.dto.userPreference.UserPreferenceResponse;
 import com.studentapp.api.infra.adapters.in.web.mapper.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -144,7 +141,7 @@ public class UserController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
 
-        User createdUser = userUseCase.createUser(userCreateRequest.getName(), userCreateRequest.getEmail(), userCreateRequest.getPassword());
+        User createdUser = userUseCase.createUser(userCreateRequest.getName(), userCreateRequest.getEmail(), userCreateRequest.getPassword(), Role.USER);
 
         userPreferenceUseCase.createUserPreference(
                 null,
@@ -175,6 +172,16 @@ public class UserController {
         UserResponse userResponse = userDtoMapper.toResponse(updatedUser);
 
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
+    @PutMapping("/{id}/role")
+    public ResponseEntity<UserResponse> updateUserRole(@PathVariable UUID id, @Valid @RequestBody UserUpdateRoleRequest userUpdateRoleRequest) {
+
+        User updatedUser = userUseCase.updateUserRole(id, userUpdateRoleRequest.getRole());
+        UserResponse userResponse = userDtoMapper.toResponse(updatedUser);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+
     }
 
 

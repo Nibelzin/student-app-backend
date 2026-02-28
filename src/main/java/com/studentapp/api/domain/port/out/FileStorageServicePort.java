@@ -12,6 +12,8 @@ public interface FileStorageServicePort {
 
     void delete(String filePath);
 
+    String generatePresignedUrl(String storagePath);
+
     record StorageDetails(
             String name,
             String provider,

@@ -1,5 +1,6 @@
 package com.studentapp.api.domain.service;
 
+import com.studentapp.api.domain.model.Role;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.domain.port.in.UserUseCase;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;
@@ -24,15 +25,15 @@ public class UserServiceImpl implements UserUseCase {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User createUser(String name, String email, String password) {
+    public User createUser(String name, String email, String password, Role role) {
 
-        if(userRepositoryPort.findByEmail(email).isPresent()){
+        if (userRepositoryPort.findByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException("O email informado já está em uso");
         }
 
         String hashedPassword = passwordEncoder.encode(password);
 
-        User newUser = User.create(name, email, hashedPassword);
+        User newUser = User.create(name, email, hashedPassword, role);
 
         return userRepositoryPort.save(newUser);
     }
@@ -66,7 +67,18 @@ public class UserServiceImpl implements UserUseCase {
     }
 
     @Override
-    public void deleteUser(UUID id){
+    public User updateUserRole(UUID id, Role role) {
+        User existingUser = this.findUserById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Usuário não encontrado.")
+        );
+
+        existingUser.setRole(role);
+
+        return userRepositoryPort.update(existingUser);
+    }
+
+    @Override
+    public void deleteUser(UUID id) {
         userRepositoryPort.delete(id);
     }
 
@@ -76,7 +88,7 @@ public class UserServiceImpl implements UserUseCase {
     }
 
     @Override
-    public Page<User> findAllUsers(Pageable pageable){
+    public Page<User> findAllUsers(Pageable pageable) {
         return userRepositoryPort.findAll(pageable);
     }
 }

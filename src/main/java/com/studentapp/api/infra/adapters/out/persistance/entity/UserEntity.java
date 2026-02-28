@@ -1,12 +1,13 @@
 package com.studentapp.api.infra.adapters.out.persistance.entity;
 
-import com.studentapp.api.domain.model.Period;
+import com.studentapp.api.domain.model.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,21 @@ public class UserEntity {
     @Column(name = "current_semester")
     private Integer currentSemester;
 
+    @Column(name = "current_xp")
+    private Integer currentXp;
+
+    @Column(name = "current_level")
+    private Integer currentLevel;
+
+    @Column(name = "coins")
+    private Integer coins;
+
+    @Column(name = "current_streak")
+    private Integer currentStreak;
+
+    @Column(name = "last_active_date")
+    private LocalDate lastActiveDate;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -46,6 +62,10 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<PeriodEntity> periods = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
 
 }

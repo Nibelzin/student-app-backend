@@ -17,8 +17,9 @@ public class MaterialCreateWithFileRequest {
     private String type;
     private Boolean isFavorite;
 
-    @NotNull(message = "O ID da matéria é obrigatório")
     private UUID subjectId;
+
+    private UUID activityId;
 
     @NotNull(message = "o arquivo é obrigatório")
     private MultipartFile file;

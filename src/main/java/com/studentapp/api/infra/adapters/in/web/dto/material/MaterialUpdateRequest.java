@@ -17,6 +17,8 @@ public class MaterialUpdateRequest {
     private Boolean isFavorite;
 
     private UUID subjectId;
+    private UUID activityId;
+
     private String externalUrl;
 
     private MultipartFile file;

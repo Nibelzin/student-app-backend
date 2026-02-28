@@ -14,12 +14,16 @@ public class MaterialResponse {
     private UUID id;
     private String title;
     private String type;
+    private String fileUrl;
+    private String externalUrl;
     private Boolean isFavorite;
     private LocalDateTime createdAt;
 
     private UUID subjectId;
     private String subjectName;
 
-    private FileObject fileObject;
+    private UUID activityId;
+    private String activityName;
+
 
 }

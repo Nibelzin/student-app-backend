@@ -1,13 +1,11 @@
 package com.studentapp.api.domain.service;
 
+import com.studentapp.api.domain.model.Activity;
 import com.studentapp.api.domain.model.FileObject;
 import com.studentapp.api.domain.model.Material;
 import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.port.in.MaterialUseCase;
-import com.studentapp.api.domain.port.out.FileObjectRepositoryPort;
-import com.studentapp.api.domain.port.out.FileStorageServicePort;
-import com.studentapp.api.domain.port.out.MaterialRepositoryPort;
-import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
+import com.studentapp.api.domain.port.out.*;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,16 +26,17 @@ public class MaterialServiceImpl implements MaterialUseCase {
     private final FileObjectRepositoryPort fileObjectRepository;
     private final FileStorageServicePort fileStorageService;
     private final SubjectRepositoryPort subjectRepository;
+    private final ActivityRepositoryPort activityRepository;
+
+    private record MaterialContext(Subject subject, Activity activity){};
 
     @Override
     @Transactional
-    public Material createMaterialWithFile(String title, String type, Boolean isFavorite, UUID subjectId, FileInput file) {
+    public Material createMaterialWithFile(String title, String type, Boolean isFavorite, UUID subjectId, UUID activityId, FileInput file) {
 
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                () -> new ResourceNotFoundException("Matéria não encontrada.")
-        );
+        MaterialContext ctx = resolveContext(subjectId, activityId);
 
-        String path = createFilePath(subject, file.originalFilename());
+        String path = createFilePath(ctx.subject, file.originalFilename());
 
         FileStorageServicePort.StorageDetails uploadedFileDetails = fileStorageService.save(file, path);
 
@@ -44,31 +44,45 @@ public class MaterialServiceImpl implements MaterialUseCase {
 
         FileObject savedFileObject = fileObjectRepository.save(fileObject);
 
-        Material material = Material.create(title, type, null, isFavorite, subject, savedFileObject);
+        Material material = Material.create(title, type, null, isFavorite, ctx.subject, ctx.activity, savedFileObject);
 
         return materialRepository.save(material);
     }
 
     @Override
     @Transactional
-    public Material createMaterialWithUrl(String title, String type, Boolean isFavorite, UUID subjectId, String url) {
+    public Material createMaterialWithUrl(String title, String type, Boolean isFavorite, UUID subjectId, UUID activityId, String url) {
 
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                () -> new ResourceNotFoundException("Matéria não encontrada.")
-        );
+        MaterialContext ctx = resolveContext(subjectId, activityId);
 
-        Material material = Material.create(title, type, url, isFavorite, subject, null);
+        Material material = Material.create(title, type, url, isFavorite, ctx.subject, ctx.activity, null);
 
         return materialRepository.save(material);
     }
 
     @Override
     @Transactional
-    public Material updateMaterial(UUID id, String title, String type, Boolean isFavorite, String url, FileInput file){
+    public Material updateMaterial(UUID id, String title, String type, Boolean isFavorite, UUID subjectId, UUID activityId, String url, FileInput file){
 
         Material existingMaterial = materialRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Material não encontrado.")
         );
+
+        if(subjectId != null){
+            Subject exitstingSubject = subjectRepository.findById(subjectId).orElseThrow(
+                    () -> new ResourceNotFoundException("Matéria não encontrada.")
+            );
+
+            existingMaterial.setSubject(exitstingSubject);
+        }
+
+        if(activityId != null){
+            Activity existingActivity = activityRepository.findById(activityId).orElseThrow(
+                    () -> new ResourceNotFoundException("Atividade não encontrada.")
+            );
+
+            existingMaterial.setActivity(existingActivity);
+        }
 
         if(title != null && !title.isBlank()){
             existingMaterial.setTitle(title);
@@ -121,6 +135,11 @@ public class MaterialServiceImpl implements MaterialUseCase {
     }
 
     @Override
+    public List<Material> findMaterialsByActivityId(UUID activityId){
+        return materialRepository.findByActivityId(activityId);
+    }
+
+    @Override
     public Optional<FileObject> findFileObjectByMaterialId(UUID id){
         Material foundMaterial = materialRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Material não encontrado.")
@@ -140,6 +159,34 @@ public class MaterialServiceImpl implements MaterialUseCase {
         }
 
         materialRepository.delete(foundMaterial.getId());
+    }
+
+    private MaterialContext resolveContext(UUID subjectId, UUID activityId){
+        Activity activity = null;
+        Subject subject = null;
+
+        if (activityId != null) {
+            activity = activityRepository.findById(activityId).orElseThrow(
+                    () -> new ResourceNotFoundException("Atividade não encontrada.")
+            );
+            subject = activity.getSubject();
+        }
+
+        if (subject == null) {
+            if (subjectId == null) {
+                throw new IllegalArgumentException("É necessário informar uma Atividade ou uma Matéria para criar o material.");
+            }
+
+            subject = subjectRepository.findById(subjectId).orElseThrow(
+                    () -> new ResourceNotFoundException("Matéria não encontrada.")
+            );
+        } else {
+            if (subjectId != null && !subject.getId().equals(subjectId)) {
+                throw new IllegalArgumentException("A atividade informada não pertence à matéria informada.");
+            }
+        }
+
+        return new MaterialContext(subject, activity);
     }
 
     private String createFilePath(Subject subject, String filename){

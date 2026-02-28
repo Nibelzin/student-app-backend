@@ -1,8 +1,10 @@
 package com.studentapp.api.infra.adapters.in.web;
 
+import com.studentapp.api.domain.model.Activity;
 import com.studentapp.api.domain.model.FileObject;
 import com.studentapp.api.domain.model.Material;
 import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.port.in.ActivityUseCase;
 import com.studentapp.api.domain.port.in.MaterialUseCase;
 import com.studentapp.api.domain.port.in.SubjectUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.fileObject.FileObjectResponse;
@@ -35,6 +37,7 @@ public class MaterialController {
 
     private final MaterialUseCase materialUseCase;
     private final SubjectUseCase subjectUseCase;
+    private final ActivityUseCase activityUseCase;
     private final MaterialDtoMapper materialDtoMapper;
     private final FileObjectDtoMapper fileObjectDtoMapper;
 
@@ -80,11 +83,7 @@ public class MaterialController {
                     dto.getFile().getSize()
             );
 
-            Subject foundSubject = subjectUseCase.findSubjectById(dto.getSubjectId()).orElseThrow(
-                    () -> new ResourceNotFoundException("Matéria não encontrada.")
-            );
-
-            Material createdMaterial = materialUseCase.createMaterialWithFile(dto.getTitle(), dto.getType(), dto.getIsFavorite(), foundSubject.getId(), fileInput);
+            Material createdMaterial = materialUseCase.createMaterialWithFile(dto.getTitle(), dto.getType(), dto.getIsFavorite(), dto.getSubjectId(), dto.getActivityId(), fileInput);
 
             MaterialResponse materialResponse = materialDtoMapper.toResponse(createdMaterial);
 
@@ -97,7 +96,7 @@ public class MaterialController {
     @PostMapping()
     public ResponseEntity<MaterialResponse> createMaterial(@Valid @RequestBody MaterialCreateRequest dto){
 
-        Material createdMaterial = materialUseCase.createMaterialWithUrl(dto.getTitle(), dto.getType(), dto.getIsFavorite(), dto.getSubjectId(), dto.getExternalUrl());
+        Material createdMaterial = materialUseCase.createMaterialWithUrl(dto.getTitle(), dto.getType(), dto.getIsFavorite(), dto.getSubjectId(), dto.getActivityId(), dto.getExternalUrl());
 
         MaterialResponse materialResponse = materialDtoMapper.toResponse(createdMaterial);
 
@@ -113,7 +112,7 @@ public class MaterialController {
 
         try {
 
-            if (!dto.getFile().isEmpty()) {
+            if (dto.getFile() != null && !dto.getFile().isEmpty()) {
                 MaterialUseCase.FileInput fileInput = new MaterialUseCase.FileInput(
                         dto.getFile().getInputStream(),
                         dto.getFile().getOriginalFilename(),
@@ -121,13 +120,13 @@ public class MaterialController {
                         dto.getFile().getSize()
                 );
 
-                Material updatedMaterial = materialUseCase.updateMaterial(foundMaterial.getId(), dto.getTitle(), dto.getType(), dto.getIsFavorite(), null, fileInput);
+                Material updatedMaterial = materialUseCase.updateMaterial(foundMaterial.getId(), dto.getTitle(), dto.getType(), dto.getIsFavorite(), dto.getSubjectId(), dto.getActivityId(), null, fileInput);
 
                 MaterialResponse materialResponse = materialDtoMapper.toResponse(updatedMaterial);
 
                 return ResponseEntity.ok(materialResponse);
             } else {
-                Material updatedMaterial = materialUseCase.updateMaterial(foundMaterial.getId(), dto.getTitle(), dto.getType(), dto.getIsFavorite(), dto.getExternalUrl(), null);
+                Material updatedMaterial = materialUseCase.updateMaterial(foundMaterial.getId(), dto.getTitle(), dto.getType(), dto.getIsFavorite(), dto.getSubjectId(), dto.getActivityId(), dto.getExternalUrl(), null);
 
                 MaterialResponse materialResponse = materialDtoMapper.toResponse(updatedMaterial);
 

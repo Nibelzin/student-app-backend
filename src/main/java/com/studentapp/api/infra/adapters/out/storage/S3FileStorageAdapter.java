@@ -10,7 +10,10 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
+import java.time.Duration;
 import java.util.UUID;
 
 @Component
@@ -20,10 +23,12 @@ public class S3FileStorageAdapter implements FileStorageServicePort {
     private static final Logger log = LoggerFactory.getLogger(S3FileStorageAdapter.class);
 
     private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
     private final String bucketName;
 
-    public S3FileStorageAdapter(S3Client s3Client, @Value("${app.aws.s3.bucket-name}") String bucketName) {
+    public S3FileStorageAdapter(S3Client s3Client, S3Presigner s3Presigner, @Value("${app.aws.s3.bucket-name}") String bucketName) {
         this.s3Client = s3Client;
+        this.s3Presigner = s3Presigner;
         this.bucketName = bucketName;
     }
 
@@ -58,6 +63,26 @@ public class S3FileStorageAdapter implements FileStorageServicePort {
             log.error("Erro ao salvar arquivo no S3. Key: {}. Erro: {}", path, e.awsErrorDetails().errorMessage(), e);
 
             throw new RuntimeException("Erro ao salvar arquivo no S3.", e);
+        }
+    }
+
+    @Override
+    public String generatePresignedUrl(String storagePath){
+        try {
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(storagePath)
+                    .build();
+
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(60))
+                    .getObjectRequest(getObjectRequest)
+                    .build();
+
+            return s3Presigner.presignGetObject(presignRequest).url().toString();
+        } catch (Exception e) {
+            log.error("Erro ao gerar URL de acesso ao arquivo no S3. Key: {}", storagePath, e);
+            return null;
         }
     }
 

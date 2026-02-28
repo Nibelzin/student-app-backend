@@ -20,8 +20,9 @@ public class MaterialCreateRequest {
 
     private Boolean isFavorite;
 
-    @NotNull(message = "O Id da matéria é obrigatório")
     private UUID subjectId;
+
+    private UUID activityId;
 
     private String externalUrl;
 

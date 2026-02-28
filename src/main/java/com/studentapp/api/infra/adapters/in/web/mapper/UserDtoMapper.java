@@ -1,64 +1,22 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
+import com.studentapp.api.domain.model.Role;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponseSummary;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import java.util.stream.Collectors;
-
-@Component
-public class UserDtoMapper {
-
-    private final PeriodDtoMapper periodDtoMapper;
-
-    public UserDtoMapper(PeriodDtoMapper periodDtoMapper) {
-        this.periodDtoMapper = periodDtoMapper;
-    }
+@Mapper(componentModel = "spring", uses = {PeriodDtoMapper.class})
+public abstract class UserDtoMapper {
 
     public User toDomain(UserCreateRequest dto) {
-        return User.create(dto.getName(), dto.getEmail(), dto.getPassword());
+        return User.create(dto.getName(), dto.getEmail(), dto.getPassword(), Role.USER);
     }
 
-    public UserResponse toResponse(User user) {
-        if (user == null) {
-            return null;
-        }
+    @Mapping(target = "periods", source = "periods")
+    public abstract UserResponse toResponse(User user);
 
-        UserResponse response = new UserResponse();
-        response.setId(user.getId());
-        response.setName(user.getName());
-        response.setEmail(user.getEmail());
-        response.setCourse(user.getCourse());
-        response.setCurrentSemester(user.getCurrentSemester());
-        response.setCreatedAt(user.getCreatedAt());
-
-        if (user.getPeriods() != null) {
-            response.setPeriods(
-                    user.getPeriods().stream()
-                            .map(periodDtoMapper::toSummaryResponse)
-                            .collect(Collectors.toList())
-            );
-        }
-
-        return response;
-    }
-
-    public UserResponseSummary toSummaryResponse(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        UserResponseSummary response = new UserResponseSummary();
-        response.setId(user.getId());
-        response.setName(user.getName());
-        response.setEmail(user.getEmail());
-        response.setCourse(user.getCourse());
-        response.setCurrentSemester(user.getCurrentSemester());
-        response.setCreatedAt(user.getCreatedAt());
-
-        return response;
-    }
-
+    public abstract UserResponseSummary toSummaryResponse(User user);
 }
