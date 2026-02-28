@@ -1,9 +1,11 @@
 package com.studentapp.api.domain.service;
 
 import com.studentapp.api.domain.model.Activity;
+import com.studentapp.api.domain.model.Material;
 import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.port.in.ActivityUseCase;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
+import com.studentapp.api.domain.port.out.MaterialRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
 import com.studentapp.api.infra.config.exception.custom.InvalidQueryException;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +26,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
 
     private final ActivityRepositoryPort activityRepositoryPort;
     private final SubjectRepositoryPort subjectRepositoryPort;
+    private final MaterialRepositoryPort materialRepositoryPort;
 
     @Override
     public Activity createActivity(CreateActivityData createActivityData){
@@ -30,7 +34,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
                 () -> new ResourceNotFoundException("Matéria não encontrada.")
         );
 
-        Activity newActivity = Activity.create(createActivityData.title(), createActivityData.description(), createActivityData.dueDate(), false, createActivityData.type(), subject);
+        Activity newActivity = Activity.create(createActivityData.title(), createActivityData.description(), createActivityData.dueDate(), false, createActivityData.type(), subject, null);
 
         return activityRepositoryPort.save(newActivity);
     }
@@ -80,6 +84,14 @@ public class ActivityServiceImpl implements ActivityUseCase {
 
     @Override
     public void deleteActivity(UUID id){
+
+        List<Material> materials = materialRepositoryPort.findByActivityId(id);
+
+        for (Material material : materials) {
+            material.setActivity(null);
+            materialRepositoryPort.save(material);
+        }
+
         activityRepositoryPort.delete(id);
     }
 

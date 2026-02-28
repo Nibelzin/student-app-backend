@@ -4,39 +4,26 @@ import com.studentapp.api.domain.model.Activity;
 import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.infra.adapters.in.web.dto.activity.ActivityCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.activity.ActivityResponse;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class ActivityDtoMapper {
+@Mapper(componentModel = "spring")
+public abstract class ActivityDtoMapper {
 
-    public Activity toDomain(ActivityCreateRequest activityCreateRequest, Subject subject) {
+    public Activity toDomain(ActivityCreateRequest request, Subject subject) {
         return Activity.create(
-                activityCreateRequest.getTitle(),
-                activityCreateRequest.getDescription(),
-                activityCreateRequest.getDueDate(),
-                activityCreateRequest.getIsCompleted(),
-                activityCreateRequest.getType(),
-                subject
+                request.getTitle(),
+                request.getDescription(),
+                request.getDueDate(),
+                request.getIsCompleted(),
+                request.getType(),
+                subject,
+                request.getChecklist()
         );
     }
 
-    public ActivityResponse toResponse(Activity activity) {
-        if (activity == null) {
-            return null;
-        }
-
-        ActivityResponse response = new ActivityResponse();
-        response.setId(activity.getId());
-        response.setTitle(activity.getTitle());
-        response.setDescription(activity.getDescription());
-        response.setDueDate(activity.getDueDate());
-        response.setIsCompleted(activity.getCompleted());
-        response.setType(activity.getType());
-        response.setCreatedAt(activity.getCreatedAt());
-        response.setUpdatedAt(activity.getUpdatedAt());
-        response.setSubjectId(activity.getSubject().getId());
-        response.setSubjectName(activity.getSubject().getName());
-        return response;
-    }
-
+    @Mapping(target = "isCompleted", source = "completed")
+    @Mapping(target = "subjectId", expression = "java(activity.getSubject().getId())")
+    @Mapping(target = "subjectName", expression = "java(activity.getSubject().getName())")
+    public abstract ActivityResponse toResponse(Activity activity);
 }

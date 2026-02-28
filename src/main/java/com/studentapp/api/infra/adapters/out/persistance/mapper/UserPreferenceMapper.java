@@ -4,61 +4,42 @@ import com.studentapp.api.domain.model.User;
 import com.studentapp.api.domain.model.UserPreference;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserPreferenceEntity;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.ArrayList;
 
-@Component
-public class UserPreferenceMapper {
+@Mapper(componentModel = "spring")
+public abstract class UserPreferenceMapper {
 
-    private final UserMapper userMapper;
+    @Autowired
+    @Lazy
+    protected UserMapper userMapper;
 
-    public UserPreferenceMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
+    @Mapping(target = "user", expression = "java(userMapper.toEntity(userPreference.getUser()))")
+    public abstract UserPreferenceEntity toEntity(UserPreference userPreference);
 
-    public UserPreferenceEntity toEntity(UserPreference userPreference){
-        if(userPreference == null){
-            return null;
-        }
-
-        UserEntity userEntity = userMapper.toEntity(userPreference.getUser());
-
-        return new UserPreferenceEntity(
-                userPreference.getId(),
-                userEntity,
-                userPreference.getTheme(),
-                userPreference.getLanguage(),
-                userPreference.getDashboardLayout(),
-                userPreference.getSettings(),
-                userPreference.getCreatedAt(),
-                userPreference.getUpdatedAt()
-        );
-    }
-
-    public UserPreference toDomain(UserPreferenceEntity entity){
-        if (entity == null) {
-            return null;
-        }
+    public UserPreference toDomain(UserPreferenceEntity entity) {
+        if (entity == null) return null;
 
         User userDomain = null;
-        if(entity.getUser() != null){
-            UserEntity userEntity = entity.getUser();
-
+        if (entity.getUser() != null) {
+            UserEntity u = entity.getUser();
             userDomain = User.fromState(
-                    userEntity.getId(),
-                    userEntity.getName(),
-                    userEntity.getEmail(),
-                    userEntity.getPasswordHash(),
-                    userEntity.getCourse(),
-                    userEntity.getCurrentSemester(),
-                    userEntity.getCreatedAt(),
-                    userEntity.getUpdatedAt(),
-                    new ArrayList<>()
+                    u.getId(), u.getName(), u.getEmail(), u.getPasswordHash(),
+                    u.getCourse(), u.getCurrentSemester(), u.getCurrentXp(),
+                    u.getCurrentLevel(), u.getCoins(), u.getCurrentStreak(),
+                    u.getLastActiveDate(), u.getCreatedAt(), u.getUpdatedAt(),
+                    new ArrayList<>(), u.getRole()
             );
         }
 
-        return UserPreference.fromState(entity.getId(), userDomain, entity.getTheme(), entity.getLanguage(), entity.getDashboardLayout(), entity.getSettings(), entity.getCreatedAt(), entity.getUpdatedAt());
+        return UserPreference.fromState(
+                entity.getId(), userDomain, entity.getTheme(), entity.getLanguage(),
+                entity.getDashboardLayout(), entity.getSettings(),
+                entity.getCreatedAt(), entity.getUpdatedAt()
+        );
     }
-
 }

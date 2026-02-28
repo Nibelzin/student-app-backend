@@ -6,12 +6,13 @@ import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.infra.adapters.in.web.dto.plannerEvent.PlannerEventCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.plannerEvent.PlannerEventResponseSummary;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class PlannerEventDtoMapper {
+@Mapper(componentModel = "spring")
+public abstract class PlannerEventDtoMapper {
 
-    public PlannerEvent toDomain(PlannerEventCreateRequest request, User user, Subject subject, Activity activity){
+    public PlannerEvent toDomain(PlannerEventCreateRequest request, User user, Subject subject, Activity activity) {
         return PlannerEvent.create(
                 request.getTitle(),
                 request.getStartAt(),
@@ -25,37 +26,11 @@ public class PlannerEventDtoMapper {
         );
     }
 
-    public PlannerEventResponseSummary toSummaryResponse(PlannerEvent plannerEvent){
-        if(plannerEvent == null){
-            return null;
-        }
-
-        PlannerEventResponseSummary response = new PlannerEventResponseSummary();
-        response.setId(plannerEvent.getId());
-        response.setTitle(plannerEvent.getTitle());
-        response.setStartAt(plannerEvent.getStartAt());
-        response.setEndAt(plannerEvent.getEndAt());
-        response.setAllDay(plannerEvent.getAllDay());
-        response.setRule(plannerEvent.getRule());
-        response.setColor(plannerEvent.getColor());
-        response.setUserId(plannerEvent.getUser().getId());
-        response.setUserName(plannerEvent.getUser().getName());
-
-        if(plannerEvent.getSubject() != null) {
-            response.setSubjectId(plannerEvent.getSubject().getId());
-            response.setSubjectName(plannerEvent.getSubject().getName());
-        }
-
-        if(plannerEvent.getActivity() != null) {
-            response.setActivityId(plannerEvent.getActivity().getId());
-            response.setActivityName(plannerEvent.getActivity().getTitle());
-        }
-
-        response.setCreatedAt(plannerEvent.getCreatedAt());
-        response.setUpdatedAt(plannerEvent.getUpdatedAt());
-
-        return response;
-
-    }
-
+    @Mapping(target = "userId", expression = "java(plannerEvent.getUser().getId())")
+    @Mapping(target = "userName", expression = "java(plannerEvent.getUser().getName())")
+    @Mapping(target = "subjectId", expression = "java(plannerEvent.getSubject() != null ? plannerEvent.getSubject().getId() : null)")
+    @Mapping(target = "subjectName", expression = "java(plannerEvent.getSubject() != null ? plannerEvent.getSubject().getName() : null)")
+    @Mapping(target = "activityId", expression = "java(plannerEvent.getActivity() != null ? plannerEvent.getActivity().getId() : null)")
+    @Mapping(target = "activityName", expression = "java(plannerEvent.getActivity() != null ? plannerEvent.getActivity().getTitle() : null)")
+    public abstract PlannerEventResponseSummary toSummaryResponse(PlannerEvent plannerEvent);
 }

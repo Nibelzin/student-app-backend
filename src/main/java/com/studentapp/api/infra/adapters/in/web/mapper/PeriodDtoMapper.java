@@ -5,46 +5,20 @@ import com.studentapp.api.domain.model.User;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponseSummary;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class PeriodDtoMapper {
+@Mapper(componentModel = "spring")
+public abstract class PeriodDtoMapper {
 
-    public Period toDomain(PeriodCreateRequest request, User user){
+    public Period toDomain(PeriodCreateRequest request, User user) {
         return Period.create(request.getName(), request.getStartDate(), request.getEndDate(), request.getIsCurrent(), user);
     }
 
-    public PeriodResponseSummary toSummaryResponse(Period period) {
-        if (period == null) {
-            return null;
-        }
+    @Mapping(target = "isCurrent", source = "current")
+    public abstract PeriodResponseSummary toSummaryResponse(Period period);
 
-        PeriodResponseSummary response = new PeriodResponseSummary();
-        response.setId(period.getId());
-        response.setName(period.getName());
-        response.setStartDate(period.getStartDate());
-        response.setEndDate(period.getEndDate());
-        response.setIsCurrent(period.getCurrent());
-        response.setCreatedAt(period.getCreatedAt());
-
-        return response;
-    }
-
-    public PeriodResponse toResponse(Period period) {
-        if (period == null) {
-            return null;
-        }
-
-        PeriodResponse response = new PeriodResponse();
-        response.setId(period.getId());
-        response.setName(period.getName());
-        response.setStartDate(period.getStartDate());
-        response.setEndDate(period.getEndDate());
-        response.setIsCurrent(period.getCurrent());
-        response.setUserId(period.getUser().getId());
-        response.setCreatedAt(period.getCreatedAt());
-
-        return response;
-    }
-
+    @Mapping(target = "isCurrent", source = "current")
+    @Mapping(target = "userId", expression = "java(period.getUser().getId())")
+    public abstract PeriodResponse toResponse(Period period);
 }

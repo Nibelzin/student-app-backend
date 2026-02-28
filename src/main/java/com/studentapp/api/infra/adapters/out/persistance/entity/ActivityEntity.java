@@ -1,12 +1,16 @@
 package com.studentapp.api.infra.adapters.out.persistance.entity;
 
+import com.studentapp.api.domain.model.ChecklistItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,6 +25,8 @@ public class ActivityEntity {
     private UUID id;
 
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "due_date")
@@ -40,5 +46,9 @@ public class ActivityEntity {
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)
     private SubjectEntity subject;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "checklist", columnDefinition = "jsonb")
+    private List<ChecklistItem> checklist;
 
 }

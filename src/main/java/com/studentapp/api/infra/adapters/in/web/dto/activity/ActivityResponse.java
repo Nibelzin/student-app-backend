@@ -1,9 +1,11 @@
 package com.studentapp.api.infra.adapters.in.web.dto.activity;
 
+import com.studentapp.api.domain.model.ChecklistItem;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -21,5 +23,6 @@ public class ActivityResponse {
 
     private UUID subjectId;
     private String subjectName;
+    private List<ChecklistItem> checklist;
 
 }

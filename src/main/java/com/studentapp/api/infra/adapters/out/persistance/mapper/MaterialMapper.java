@@ -1,57 +1,51 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
+import com.studentapp.api.domain.model.Activity;
 import com.studentapp.api.domain.model.FileObject;
 import com.studentapp.api.domain.model.Material;
 import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.infra.adapters.out.persistance.entity.FileObjectEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.MaterialEntity;
-import com.studentapp.api.infra.adapters.out.persistance.entity.SubjectEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
-@Component
-public class MaterialMapper {
+@Mapper(componentModel = "spring")
+public abstract class MaterialMapper {
 
-    private final FileObjectMapper fileObjectMapper;
-    private final SubjectMapper subjectMapper;
+    @Autowired
+    @Lazy
+    protected FileObjectMapper fileObjectMapper;
 
-    public MaterialMapper(@Lazy FileObjectMapper fileObjectMapper, @Lazy SubjectMapper subjectMapper) {
-        this.fileObjectMapper = fileObjectMapper;
-        this.subjectMapper = subjectMapper;
-    }
+    @Autowired
+    @Lazy
+    protected SubjectMapper subjectMapper;
 
-    public MaterialEntity toEntity(Material material) {
-        if(material == null){
-            return null;
-        }
+    @Autowired
+    @Lazy
+    protected ActivityMapper activityMapper;
 
-        SubjectEntity subjectEntity = subjectMapper.toEntity(material.getSubject());
+    @Mapping(target = "isFavorite", source = "favorite")
+    @Mapping(target = "subject", expression = "java(subjectMapper.toEntity(material.getSubject()))")
+    @Mapping(target = "activity", expression = "java(activityMapper.toEntity(material.getActivity()))")
+    @Mapping(target = "file", expression = "java(fileObjectMapper.toEntity(material.getFile()))")
+    public abstract MaterialEntity toEntity(Material material);
 
-        FileObjectEntity fileObjectEntity = null;
-        if(material.getFile() != null){
-            FileObject fileObject = material.getFile();
-
-            fileObjectEntity = fileObjectMapper.toEntity(fileObject);
-        }
-
-        return new MaterialEntity(material.getId(), material.getTitle(), material.getType(), material.getExternalUrl(), material.getFavorite(), material.getCreatedAt(), material.getUpdatedAt(), subjectEntity, fileObjectEntity);
-    }
-
-    public Material toDomain(MaterialEntity entity){
-        if(entity == null){
-            return null;
-        }
+    public Material toDomain(MaterialEntity entity) {
+        if (entity == null) return null;
 
         Subject subjectDomain = subjectMapper.toDomain(entity.getSubject());
+        Activity activityDomain = activityMapper.toDomain(entity.getActivity());
 
         FileObject fileObjectDomain = null;
-        if(entity.getFile() != null){
-            FileObjectEntity fileObjectEntity = entity.getFile();
-
-            fileObjectDomain = fileObjectMapper.toDomain(fileObjectEntity);
+        if (entity.getFile() != null) {
+            fileObjectDomain = fileObjectMapper.toDomain(entity.getFile());
         }
 
-        return Material.fromState(entity.getId(), entity.getTitle(), entity.getType(), entity.getExternalUrl(), entity.getIsFavorite(), entity.getCreatedAt(), entity.getUpdatedAt(), subjectDomain, fileObjectDomain);
+        return Material.fromState(
+                entity.getId(), entity.getTitle(), entity.getType(), entity.getExternalUrl(),
+                entity.getIsFavorite(), entity.getCreatedAt(), entity.getUpdatedAt(),
+                subjectDomain, activityDomain, fileObjectDomain
+        );
     }
-
 }

@@ -4,29 +4,17 @@ import com.studentapp.api.domain.model.Note;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteResponse;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class NoteDtoMapper {
+@Mapper(componentModel = "spring")
+public abstract class NoteDtoMapper {
 
-    public Note toDomain(NoteCreateRequest noteCreateRequest, User user){
-        return Note.create(noteCreateRequest.getContent(), noteCreateRequest.getIsPinned(), user);
+    public Note toDomain(NoteCreateRequest request, User user) {
+        return Note.create(request.getContent(), request.getIsPinned(), user);
     }
 
-    public NoteResponse toResponse(Note note) {
-        if (note == null) {
-            return null;
-        }
-
-        NoteResponse response = new NoteResponse();
-        response.setId(note.getId());
-        response.setContent(note.getContent());
-        response.setIsPinned(note.isPinned());
-        response.setUserId(note.getUser().getId());
-        response.setCreatedAt(note.getCreatedAt());
-        response.setUpdatedAt(note.getUpdatedAt());
-
-        return response;
-    }
-
+    @Mapping(target = "isPinned", source = "pinned")
+    @Mapping(target = "userId", expression = "java(note.getUser().getId())")
+    public abstract NoteResponse toResponse(Note note);
 }
