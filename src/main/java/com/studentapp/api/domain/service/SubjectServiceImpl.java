@@ -1,9 +1,11 @@
 package com.studentapp.api.domain.service;
 
+import com.studentapp.api.domain.model.AbsenceLog;
 import com.studentapp.api.domain.model.Period;
 import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.domain.port.in.SubjectUseCase;
+import com.studentapp.api.domain.port.out.AbsenceLogRepositoryPort;
 import com.studentapp.api.domain.port.out.PeriodRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;
@@ -24,6 +26,7 @@ public class SubjectServiceImpl implements SubjectUseCase {
     private final SubjectRepositoryPort subjectRepository;
     private final PeriodRepositoryPort periodRepository;
     private final UserRepositoryPort userRepository;
+    private final AbsenceLogRepositoryPort absenceLogRepository;
 
     @Override
     public Subject createSubject(String name, String professor, String classroom, String color, UUID periodId, UUID userId){
@@ -117,6 +120,9 @@ public class SubjectServiceImpl implements SubjectUseCase {
 
     @Override
     public void deleteSubject(UUID id){
+        Page<AbsenceLog> absenceLogs = absenceLogRepository.findBySubjectId(id, Pageable.unpaged());
+        absenceLogs.forEach(absenceLog -> absenceLogRepository.delete(absenceLog.getId()));
+
         subjectRepository.delete(id);
     }
 

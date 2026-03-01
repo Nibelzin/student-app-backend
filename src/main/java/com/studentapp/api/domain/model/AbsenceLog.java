@@ -1,7 +1,5 @@
 package com.studentapp.api.domain.model;
 
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
