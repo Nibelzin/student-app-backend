@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,6 +48,14 @@ public class ActivityRepositoryAdapter implements ActivityRepositoryPort {
         Page<ActivityEntity> activityEntityPage = activityJpaRepository.findAll(spec, pageable);
 
         return activityEntityPage.map(activityMapper::toDomain);
+    }
+
+    @Override
+    public List<Activity> findIncompleteAndDueBetween(LocalDateTime from, LocalDateTime to) {
+        return activityJpaRepository.findIncompleteAndDueBetween(from, to)
+                .stream()
+                .map(activityMapper::toDomain)
+                .toList();
     }
 
     @Override

@@ -64,7 +64,7 @@ public class SubjectController {
     @PostMapping
     public ResponseEntity<SubjectResponse> createSubject(@Valid @RequestBody SubjectCreateRequest subjectCreateRequest) {
 
-        Subject createdSubject = subjectUseCase.createSubject(subjectCreateRequest.getName(), subjectCreateRequest.getProfessor(), subjectCreateRequest.getClassroom(), subjectCreateRequest.getColor(), subjectCreateRequest.getPeriodId(), subjectCreateRequest.getUserId());
+        Subject createdSubject = subjectUseCase.createSubject(subjectCreateRequest.getName(), subjectCreateRequest.getProfessor(), subjectCreateRequest.getClassroom(), subjectCreateRequest.getColor(), subjectCreateRequest.getMaxAbsencesAllowed(), subjectCreateRequest.getPeriodId(), subjectCreateRequest.getUserId());
 
         SubjectResponse subjectResponse = subjectDtoMapper.toResponse(createdSubject);
 
@@ -78,6 +78,7 @@ public class SubjectController {
                 subjectUpdateRequest.getProfessor(),
                 subjectUpdateRequest.getClassroom(),
                 subjectUpdateRequest.getColor(),
+                subjectUpdateRequest.getMaxAbsencesAllowed(),
                 subjectUpdateRequest.getPeriodId()
         );
 

@@ -1,9 +1,9 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.Period;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.Notification;
+import com.studentapp.api.domain.model.NotificationType;
 import com.studentapp.api.domain.model.User;
-import com.studentapp.api.infra.adapters.out.persistance.entity.SubjectEntity;
+import com.studentapp.api.infra.adapters.out.persistance.entity.NotificationEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,27 +13,23 @@ import org.springframework.context.annotation.Lazy;
 import java.util.ArrayList;
 
 @Mapper(componentModel = "spring")
-public abstract class SubjectMapper {
+public abstract class NotificationMapper {
 
     @Autowired
     @Lazy
     protected UserMapper userMapper;
 
-    @Autowired
-    @Lazy
-    protected PeriodMapper periodMapper;
+    @Mapping(target = "type", expression = "java(notification.getType().name())")
+    @Mapping(target = "user", expression = "java(userMapper.toEntity(notification.getUser()))")
+    public abstract NotificationEntity toEntity(Notification notification);
 
-    @Mapping(target = "user", expression = "java(userMapper.toEntity(subject.getUser()))")
-    @Mapping(target = "period", expression = "java(periodMapper.toEntity(subject.getPeriod()))")
-    public abstract SubjectEntity toEntity(Subject subject);
-
-    public Subject toDomain(SubjectEntity entity) {
+    public Notification toDomain(NotificationEntity entity) {
         if (entity == null) return null;
 
-        User userDomain = null;
+        User user = null;
         if (entity.getUser() != null) {
             UserEntity u = entity.getUser();
-            userDomain = User.fromState(
+            user = User.fromState(
                     u.getId(), u.getName(), u.getEmail(), u.getPasswordHash(),
                     u.getCourse(), u.getCurrentSemester(), u.getCurrentXp(),
                     u.getCurrentLevel(), u.getCoins(), u.getCurrentStreak(),
@@ -42,12 +38,14 @@ public abstract class SubjectMapper {
             );
         }
 
-        Period periodDomain = periodMapper.toDomain(entity.getPeriod());
-
-        return Subject.fromState(
-                entity.getId(), entity.getName(), entity.getProfessor(),
-                entity.getClassroom(), entity.getColor(), entity.getMaxAbsencesAllowed(), userDomain,
-                periodDomain, entity.getCreatedAt(), entity.getUpdatedAt()
+        return Notification.fromState(
+                entity.getId(),
+                NotificationType.valueOf(entity.getType()),
+                entity.getMessage(),
+                entity.isRead(),
+                entity.getReferenceId(),
+                entity.getCreatedAt(),
+                user
         );
     }
 }

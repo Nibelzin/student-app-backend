@@ -55,6 +55,14 @@ public class AbsenceLogRepositoryAdapter implements AbsenceLogRepositoryPort {
     }
 
     @Override
+    public long countBySubjectId(UUID subjectId) {
+        SubjectEntity subjectEntity = subjectJpaRepository.findById(subjectId).orElseThrow(
+                () -> new ResourceNotFoundException("Matéria não encontrada.")
+        );
+        return absenceLogJpaRepository.countBySubject(subjectEntity);
+    }
+
+    @Override
     public void delete(UUID id) {
         absenceLogJpaRepository.deleteById(id);
     }

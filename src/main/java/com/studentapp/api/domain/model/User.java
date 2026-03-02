@@ -79,6 +79,24 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
+    /**
+     * Awards XP and handles level-up. Returns true if the user leveled up.
+     * XP threshold is progressive: GamificationConfig.XP_LEVEL_BASE * currentLevel (100 for lv1→2, 200 for lv2→3, …).
+     * Overflow XP is preserved.
+     */
+    public boolean awardXp(int amount) {
+        this.currentXp += amount;
+        int xpRequired = GamificationConfig.XP_LEVEL_BASE * this.currentLevel;
+        if (this.currentXp >= xpRequired) {
+            this.currentXp -= xpRequired;
+            this.currentLevel++;
+            touch();
+            return true;
+        }
+        touch();
+        return false;
+    }
+
     public UUID getId() {
         return id;
     }

@@ -16,6 +16,7 @@ public class SubjectUpdateRequest {
     private String professor;
     private String classroom;
     private String color;
+    private Integer maxAbsencesAllowed;
 
     private UUID periodId;
 

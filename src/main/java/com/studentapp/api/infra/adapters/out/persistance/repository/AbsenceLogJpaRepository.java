@@ -12,4 +12,6 @@ public interface AbsenceLogJpaRepository extends JpaRepository<AbsenceLogEntity,
 
     Page<AbsenceLogEntity> findBySubject(SubjectEntity subject, Pageable pageable);
 
+    long countBySubject(SubjectEntity subject);
+
 }

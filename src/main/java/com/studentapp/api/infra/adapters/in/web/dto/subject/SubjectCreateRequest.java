@@ -19,6 +19,7 @@ public class SubjectCreateRequest {
     private String professor;
     private String classroom;
     private String color;
+    private Integer maxAbsencesAllowed;
 
     @NotNull
     private UUID userId;

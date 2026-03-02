@@ -10,40 +10,32 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "subject")
+@Table(name = "notification")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectEntity {
+public class NotificationEntity {
 
     @Id
     private UUID id;
 
     @Column(nullable = false)
-    private String name;
+    private String type;
 
-    private String professor;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String message;
 
-    private String classroom;
+    @Column(name = "is_read", nullable = false)
+    private boolean isRead;
 
-    private String color;
-
-    @Column(name = "max_absences_allowed")
-    private Integer maxAbsencesAllowed;
+    @Column(name = "reference_id")
+    private UUID referenceId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
-
-    @ManyToOne
-    @JoinColumn(name = "period_id", nullable = false)
-    private PeriodEntity period;
-
 }

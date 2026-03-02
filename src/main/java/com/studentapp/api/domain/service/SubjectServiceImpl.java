@@ -33,7 +33,7 @@ public class SubjectServiceImpl implements SubjectUseCase {
     private final ClassScheduleRepositoryPort classScheduleRepository;
 
     @Override
-    public Subject createSubject(String name, String professor, String classroom, String color, UUID periodId, UUID userId){
+    public Subject createSubject(String name, String professor, String classroom, String color, Integer maxAbsencesAllowed, UUID periodId, UUID userId){
 
         if (periodId == null) {
             throw new IllegalArgumentException("O ID do período é obrigatório para criar uma matéria");
@@ -52,7 +52,7 @@ public class SubjectServiceImpl implements SubjectUseCase {
             throw new InvalidPeriodException("Periodo fornecido não pertence ao usuário informado.");
         }
 
-        Subject newSubject = Subject.create(name, professor, classroom, color, user, period);
+        Subject newSubject = Subject.create(name, professor, classroom, color, maxAbsencesAllowed, user, period);
 
         return subjectRepository.save(newSubject);
     }
@@ -78,6 +78,10 @@ public class SubjectServiceImpl implements SubjectUseCase {
 
         if (subjectUpdateData.color() != null && !subjectUpdateData.color().isBlank()) {
             existingSubject.setColor(subjectUpdateData.color());
+        }
+
+        if (subjectUpdateData.maxAbsencesAllowed() != null) {
+            existingSubject.setMaxAbsencesAllowed(subjectUpdateData.maxAbsencesAllowed());
         }
 
         if (subjectUpdateData.periodId() != null) {

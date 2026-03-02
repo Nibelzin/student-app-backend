@@ -1,12 +1,17 @@
 package com.studentapp.api.domain.service;
 
 import com.studentapp.api.domain.model.Activity;
+import com.studentapp.api.domain.model.GamificationConfig;
 import com.studentapp.api.domain.model.Material;
+import com.studentapp.api.domain.model.NotificationType;
 import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.User;
 import com.studentapp.api.domain.port.in.ActivityUseCase;
+import com.studentapp.api.domain.port.in.NotificationUseCase;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
 import com.studentapp.api.domain.port.out.MaterialRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
+import com.studentapp.api.domain.port.out.UserRepositoryPort;
 import com.studentapp.api.infra.config.exception.custom.InvalidQueryException;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +32,8 @@ public class ActivityServiceImpl implements ActivityUseCase {
     private final ActivityRepositoryPort activityRepositoryPort;
     private final SubjectRepositoryPort subjectRepositoryPort;
     private final MaterialRepositoryPort materialRepositoryPort;
+    private final UserRepositoryPort userRepositoryPort;
+    private final NotificationUseCase notificationUseCase;
 
     @Override
     public Activity createActivity(CreateActivityData createActivityData){
@@ -57,6 +64,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
             existingActivity.setDueDate(updateActivityData.dueDate());
         }
 
+        boolean wasCompleted = Boolean.TRUE.equals(existingActivity.getCompleted());
         if(updateActivityData.isCompleted() != null){
             existingActivity.setCompleted(updateActivityData.isCompleted());
         }
@@ -65,7 +73,24 @@ public class ActivityServiceImpl implements ActivityUseCase {
             existingActivity.setType(updateActivityData.type());
         }
 
-        return activityRepositoryPort.save(existingActivity);
+        Activity saved = activityRepositoryPort.save(existingActivity);
+
+        boolean nowCompleted = Boolean.TRUE.equals(saved.getCompleted());
+        if (!wasCompleted && nowCompleted) {
+            User user = saved.getSubject().getUser();
+            boolean leveledUp = user.awardXp(GamificationConfig.XP_ACTIVITY_COMPLETION);
+            userRepositoryPort.save(user);
+            if (leveledUp) {
+                notificationUseCase.createNotification(new NotificationUseCase.CreateNotificationData(
+                        user,
+                        NotificationType.LEVEL_UP,
+                        "Você avançou para o nível " + user.getCurrentLevel() + "!",
+                        null
+                ));
+            }
+        }
+
+        return saved;
     }
 
     @Override

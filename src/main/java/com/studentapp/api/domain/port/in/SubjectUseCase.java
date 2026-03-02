@@ -9,9 +9,9 @@ import java.util.UUID;
 
 public interface SubjectUseCase {
 
-    record SubjectUpdateData(String name, String professor, String classroom, String color, UUID periodId){};
+    record SubjectUpdateData(String name, String professor, String classroom, String color, Integer maxAbsencesAllowed, UUID periodId){};
 
-    Subject createSubject(String name, String professor, String classroom, String color, UUID periodId, UUID userId);
+    Subject createSubject(String name, String professor, String classroom, String color, Integer maxAbsencesAllowed, UUID periodId, UUID userId);
 
     Subject updateSubject(UUID id, SubjectUpdateData subjectUpdateData);
 

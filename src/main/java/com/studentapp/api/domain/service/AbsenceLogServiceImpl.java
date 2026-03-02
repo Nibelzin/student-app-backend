@@ -1,9 +1,12 @@
 package com.studentapp.api.domain.service;
 
 import com.studentapp.api.domain.model.AbsenceLog;
+import com.studentapp.api.domain.model.NotificationType;
 import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.port.in.AbsenceLogUseCase;
+import com.studentapp.api.domain.port.in.NotificationUseCase;
 import com.studentapp.api.domain.port.out.AbsenceLogRepositoryPort;
+import com.studentapp.api.domain.port.out.NotificationRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,8 @@ public class AbsenceLogServiceImpl implements AbsenceLogUseCase {
 
     private final AbsenceLogRepositoryPort absenceLogRepositoryPort;
     private final SubjectRepositoryPort subjectRepositoryPort;
+    private final NotificationUseCase notificationUseCase;
+    private final NotificationRepositoryPort notificationRepositoryPort;
 
     @Override
     public AbsenceLog createAbsenceLog(CreateAbsenceLogData createAbsenceLogData) {
@@ -28,8 +33,26 @@ public class AbsenceLogServiceImpl implements AbsenceLogUseCase {
         );
 
         AbsenceLog newAbsenceLog = AbsenceLog.create(createAbsenceLogData.absenceDate(), createAbsenceLogData.notes(), subject);
+        AbsenceLog saved = absenceLogRepositoryPort.save(newAbsenceLog);
 
-        return absenceLogRepositoryPort.save(newAbsenceLog);
+        if (subject.getMaxAbsencesAllowed() != null) {
+            long totalAbsences = absenceLogRepositoryPort.countBySubjectId(subject.getId());
+            int threshold = (int) Math.ceil(0.75 * subject.getMaxAbsencesAllowed());
+            UUID userId = subject.getUser().getId();
+            UUID subjectId = subject.getId();
+
+            if (totalAbsences >= threshold &&
+                    !notificationRepositoryPort.existsUnreadByUserIdAndTypeAndReferenceId(userId, NotificationType.ABSENCE_LIMIT, subjectId)) {
+                notificationUseCase.createNotification(new NotificationUseCase.CreateNotificationData(
+                        subject.getUser(),
+                        NotificationType.ABSENCE_LIMIT,
+                        "Você atingiu " + totalAbsences + " de " + subject.getMaxAbsencesAllowed() + " faltas permitidas em " + subject.getName() + ".",
+                        subjectId
+                ));
+            }
+        }
+
+        return saved;
     }
 
     @Override

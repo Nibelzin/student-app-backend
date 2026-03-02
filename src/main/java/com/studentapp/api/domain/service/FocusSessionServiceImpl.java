@@ -2,9 +2,12 @@ package com.studentapp.api.domain.service;
 
 import com.studentapp.api.domain.model.Activity;
 import com.studentapp.api.domain.model.FocusSession;
+import com.studentapp.api.domain.model.GamificationConfig;
+import com.studentapp.api.domain.model.NotificationType;
 import com.studentapp.api.domain.model.Subject;
 import com.studentapp.api.domain.model.User;
 import com.studentapp.api.domain.port.in.FocusSessionUseCase;
+import com.studentapp.api.domain.port.in.NotificationUseCase;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
 import com.studentapp.api.domain.port.out.FocusSessionRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
@@ -26,9 +29,10 @@ public class FocusSessionServiceImpl implements FocusSessionUseCase {
     private final UserRepositoryPort userRepositoryPort;
     private final SubjectRepositoryPort subjectRepositoryPort;
     private final ActivityRepositoryPort activityRepositoryPort;
+    private final NotificationUseCase notificationUseCase;
 
     private int calculateXp(int durationSeconds, boolean isCompleted) {
-        return isCompleted ? Math.max(1, durationSeconds / 60) : 0;
+        return isCompleted ? Math.max(GamificationConfig.XP_FOCUS_PER_MINUTE, (durationSeconds / 60) * GamificationConfig.XP_FOCUS_PER_MINUTE) : 0;
     }
 
     @Override
@@ -54,7 +58,22 @@ public class FocusSessionServiceImpl implements FocusSessionUseCase {
         int xpEarned = calculateXp(data.durationSeconds(), data.isCompleted());
         FocusSession newSession = FocusSession.create(data.durationSeconds(), data.isCompleted(), xpEarned, user, subject, activity);
 
-        return focusSessionRepositoryPort.save(newSession);
+        FocusSession saved = focusSessionRepositoryPort.save(newSession);
+
+        if (data.isCompleted() && xpEarned > 0) {
+            boolean leveledUp = user.awardXp(xpEarned);
+            userRepositoryPort.save(user);
+            if (leveledUp) {
+                notificationUseCase.createNotification(new NotificationUseCase.CreateNotificationData(
+                        user,
+                        NotificationType.LEVEL_UP,
+                        "Você avançou para o nível " + user.getCurrentLevel() + "!",
+                        null
+                ));
+            }
+        }
+
+        return saved;
     }
 
     @Override
@@ -62,6 +81,8 @@ public class FocusSessionServiceImpl implements FocusSessionUseCase {
         FocusSession existing = focusSessionRepositoryPort.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Sessão de foco não encontrada.")
         );
+
+        boolean wasCompleted = existing.isCompleted();
 
         if (data.durationSeconds() != null) {
             if (data.durationSeconds() < existing.getDurationSeconds()) {
@@ -74,9 +95,27 @@ public class FocusSessionServiceImpl implements FocusSessionUseCase {
             existing.setCompleted(data.isCompleted());
         }
 
-        existing.setXpEarned(calculateXp(existing.getDurationSeconds(), existing.isCompleted()));
+        int xpEarned = calculateXp(existing.getDurationSeconds(), existing.isCompleted());
+        existing.setXpEarned(xpEarned);
 
-        return focusSessionRepositoryPort.save(existing);
+        FocusSession saved = focusSessionRepositoryPort.save(existing);
+
+        boolean nowCompleted = saved.isCompleted();
+        if (!wasCompleted && nowCompleted && xpEarned > 0) {
+            User user = saved.getUser();
+            boolean leveledUp = user.awardXp(xpEarned);
+            userRepositoryPort.save(user);
+            if (leveledUp) {
+                notificationUseCase.createNotification(new NotificationUseCase.CreateNotificationData(
+                        user,
+                        NotificationType.LEVEL_UP,
+                        "Você avançou para o nível " + user.getCurrentLevel() + "!",
+                        null
+                ));
+            }
+        }
+
+        return saved;
     }
 
     @Override

@@ -11,6 +11,7 @@ public class Subject {
     private String professor;
     private String classroom;
     private String color;
+    private Integer maxAbsencesAllowed;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -18,13 +19,14 @@ public class Subject {
     private User user;
     private Period period;
 
-    private Subject(String name, String professor, String classroom, String color, User user, Period period) {
+    private Subject(String name, String professor, String classroom, String color, Integer maxAbsencesAllowed, User user, Period period) {
 
         this.id = UUID.randomUUID();
         this.name = Objects.requireNonNull(name, "name nao pode ser nulo");
         this.professor = professor;
         this.classroom = classroom;
         this.color = color;
+        this.maxAbsencesAllowed = maxAbsencesAllowed;
 
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
@@ -34,13 +36,14 @@ public class Subject {
 
     }
 
-    private Subject(UUID id, String name, String professor, String classroom, String color, User user, Period period, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private Subject(UUID id, String name, String professor, String classroom, String color, Integer maxAbsencesAllowed, User user, Period period, LocalDateTime createdAt, LocalDateTime updatedAt) {
 
         this.id = id;
         this.name = name;
         this.professor = professor;
         this.classroom = classroom;
         this.color = color;
+        this.maxAbsencesAllowed = maxAbsencesAllowed;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.user = user;
@@ -48,12 +51,12 @@ public class Subject {
 
     }
 
-    public static Subject create(String name, String professor, String classroom, String color, User user, Period period) {
-        return new Subject(name, professor, classroom, color, user, period);
+    public static Subject create(String name, String professor, String classroom, String color, Integer maxAbsencesAllowed, User user, Period period) {
+        return new Subject(name, professor, classroom, color, maxAbsencesAllowed, user, period);
     }
 
-    public static Subject fromState(UUID id, String name, String professor, String classroom, String color, User user, Period period, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new Subject(id, name, professor, classroom, color, user, period, createdAt, updatedAt);
+    public static Subject fromState(UUID id, String name, String professor, String classroom, String color, Integer maxAbsencesAllowed, User user, Period period, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new Subject(id, name, professor, classroom, color, maxAbsencesAllowed, user, period, createdAt, updatedAt);
     }
 
     public void touch() {
@@ -97,6 +100,15 @@ public class Subject {
 
     public void setColor(String color) {
         this.color = color;
+        touch();
+    }
+
+    public Integer getMaxAbsencesAllowed() {
+        return maxAbsencesAllowed;
+    }
+
+    public void setMaxAbsencesAllowed(Integer maxAbsencesAllowed) {
+        this.maxAbsencesAllowed = maxAbsencesAllowed;
         touch();
     }
 

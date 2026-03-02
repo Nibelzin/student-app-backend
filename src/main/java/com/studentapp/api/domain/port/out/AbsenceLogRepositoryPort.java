@@ -13,5 +13,6 @@ public interface AbsenceLogRepositoryPort {
     Optional<AbsenceLog> findById(UUID id);
     Page<AbsenceLog> findAll(Pageable pageable);
     Page<AbsenceLog> findBySubjectId(UUID subjectId, Pageable pageable);
+    long countBySubjectId(UUID subjectId);
     void delete(UUID id);
 }

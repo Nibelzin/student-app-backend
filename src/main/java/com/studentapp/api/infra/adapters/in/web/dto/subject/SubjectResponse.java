@@ -15,6 +15,7 @@ public class SubjectResponse {
     private String professor;
     private String classroom;
     private String color;
+    private Integer maxAbsencesAllowed;
     private LocalDateTime createdAt;
 
     private UUID userId;

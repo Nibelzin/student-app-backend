@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class SubjectDtoMapper {
 
     public Subject toDomain(SubjectCreateRequest request, User user, Period period){
-        return Subject.create(request.getName(), request.getProfessor(), request.getClassroom(), request.getColor(), user, period);
+        return Subject.create(request.getName(), request.getProfessor(), request.getClassroom(), request.getColor(), request.getMaxAbsencesAllowed(), user, period);
     }
 
     public SubjectResponse toResponse(Subject subject) {
@@ -25,6 +25,7 @@ public class SubjectDtoMapper {
         response.setProfessor(subject.getProfessor());
         response.setClassroom(subject.getClassroom());
         response.setColor(subject.getColor());
+        response.setMaxAbsencesAllowed(subject.getMaxAbsencesAllowed());
         response.setUserId(subject.getUser().getId());
         response.setPeriodId(subject.getPeriod().getId());
         response.setCreatedAt(subject.getCreatedAt());
