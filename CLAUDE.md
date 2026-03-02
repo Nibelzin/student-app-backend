@@ -94,3 +94,17 @@ Follow the pattern established by any existing feature (e.g. `Subject`):
 8. Repository adapter in `infra/adapters/out/persistance/`
 9. DTOs and DTO mapper in `infra/adapters/in/web/dto/` and `mapper/`
 10. Controller in `infra/adapters/in/web/`
+
+### Testing Strategy
+
+- Focus on Unit Tests for the Domain Layer (`domain/model/` and `domain/service/`).
+- Use JUnit 5 and Mockito.
+- Do not write integration tests (`@SpringBootTest`, `@DataJpaTest`, `@WebMvcTest`) unless explicitly requested.
+- Every new Domain Model or ServiceImpl generated must be accompanied by its respective test class.
+
+### Current Business Focus: Gamification & Productivity
+
+We are shifting the app from a simple CRUD to a gamified productivity tool.
+- **User Gamification:** `User` entity now manages `currentXp`, `currentLevel`, `coins`, and `currentStreak`. Leveling up requires progressively more XP.
+- **Activity Checklists:** `Activity` entity now contains a simple to-do list instead of relational subtasks. This is mapped in JPA using a JSON/JSONB column via Hibernate 6 `@JdbcTypeCode(SqlTypes.JSON)`. XP is ONLY awarded when the entire `Activity` is marked as completed.
+- **Focus Sessions:** A new feature to track study time (Pomodoro) and award XP based on `durationSeconds`.
