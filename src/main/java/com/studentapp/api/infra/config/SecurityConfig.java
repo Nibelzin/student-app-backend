@@ -26,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -53,6 +54,7 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/auth/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
