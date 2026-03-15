@@ -1,15 +1,46 @@
-spring.application.name=
-spring.datasource.url=
-spring.datasource.username=
-spring.datasource.password=
+spring.application.name=backend
+spring.jackson.mapper.accept-case-insensitive-properties=true
+
+# Database (Docker defaults)
+spring.datasource.url=jdbc:postgresql://localhost:5432/student_app_db
+spring.datasource.username=admin
+spring.datasource.password=admin123
 
 # JPA/Hibernate
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 
-# Endpoints do Swagger
+logging.level.org.springframework.security=DEBUG
+logging.level.org.springframework.web=DEBUG
+
+# Swagger
 springdoc.api-docs.path=/v3/api-docs
 springdoc.swagger-ui.path=/swagger-ui.html
 
-jwt.secret=
+# JWT — use a long random hex string
+jwt.secret=YOUR_JWT_SECRET_HERE
+
+# Mail (Mailtrap or real SMTP)
+spring.mail.host=smtp.mailtrap.io
+spring.mail.port=2525
+spring.mail.username=YOUR_MAIL_USERNAME
+spring.mail.password=YOUR_MAIL_PASSWORD
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Storage profile (s3 or local)
+spring.profiles.active=s3
+
+# AWS S3
+spring.cloud.aws.credentials.access-key=YOUR_AWS_ACCESS_KEY
+spring.cloud.aws.credentials.secret-key=YOUR_AWS_SECRET_KEY
+spring.cloud.aws.region.static=us-east-1
+app.aws.s3.bucket-name=YOUR_BUCKET_NAME
+
+# Upload
+spring.servlet.multipart.max-file-size=50MB
+spring.servlet.multipart.max-request-size=50MB
+
+# CORS
+app.cors.allowed-origins=http://localhost:5173
