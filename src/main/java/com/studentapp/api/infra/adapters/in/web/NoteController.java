@@ -1,8 +1,7 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.Note;
+import com.studentapp.api.domain.model.note.Note;
 import com.studentapp.api.domain.port.in.NoteUseCase;
-import com.studentapp.api.domain.port.in.UserUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteUpdateRequest;

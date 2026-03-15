@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.PeriodEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.SubjectEntity;

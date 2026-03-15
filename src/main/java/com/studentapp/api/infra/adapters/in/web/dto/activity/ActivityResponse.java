@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web.dto.activity;
 
-import com.studentapp.api.domain.model.ChecklistItem;
+import com.studentapp.api.domain.model.activity.ChecklistItem;
 import lombok.Getter;
 import lombok.Setter;
 

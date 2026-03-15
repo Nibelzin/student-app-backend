@@ -1,6 +1,6 @@
 package com.studentapp.api.domain.port.in;
 
-import com.studentapp.api.domain.model.UserPreference;
+import com.studentapp.api.domain.model.user.UserPreference;
 
 import java.util.List;
 import java.util.Map;

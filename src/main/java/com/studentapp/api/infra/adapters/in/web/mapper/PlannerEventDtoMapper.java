@@ -1,9 +1,9 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.PlannerEvent;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.model.plannerEvent.PlannerEvent;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.infra.adapters.in.web.dto.plannerEvent.PlannerEventCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.plannerEvent.PlannerEventResponseSummary;
 import org.mapstruct.Mapper;

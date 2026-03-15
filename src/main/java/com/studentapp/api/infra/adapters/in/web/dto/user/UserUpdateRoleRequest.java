@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web.dto.user;
 
-import com.studentapp.api.domain.model.Role;
+import com.studentapp.api.domain.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 

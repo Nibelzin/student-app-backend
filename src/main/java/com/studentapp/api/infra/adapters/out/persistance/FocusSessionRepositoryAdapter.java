@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.FocusSession;
+import com.studentapp.api.domain.model.focusSession.FocusSession;
 import com.studentapp.api.domain.port.in.FocusSessionUseCase;
 import com.studentapp.api.domain.port.out.FocusSessionRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.FocusSessionEntity;
@@ -44,5 +44,10 @@ public class FocusSessionRepositoryAdapter implements FocusSessionRepositoryPort
     @Override
     public void delete(UUID id) {
         focusSessionJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByActivityId(UUID activityId) {
+        focusSessionJpaRepository.deleteByActivityId(activityId);
     }
 }

@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.config;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.NotificationType;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.enums.NotificationType;
 import com.studentapp.api.domain.port.in.NotificationUseCase;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
 import com.studentapp.api.domain.port.out.NotificationRepositoryPort;

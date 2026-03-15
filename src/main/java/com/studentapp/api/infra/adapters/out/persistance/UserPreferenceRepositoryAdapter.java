@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.UserPreference;
+import com.studentapp.api.domain.model.user.UserPreference;
 import com.studentapp.api.domain.port.out.UserPreferenceRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserPreferenceEntity;

@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.Assessment;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.assessment.Assessment;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.infra.adapters.out.persistance.entity.AssessmentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

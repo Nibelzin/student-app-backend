@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.Assessment;
+import com.studentapp.api.domain.model.assessment.Assessment;
 import com.studentapp.api.domain.port.out.AssessmentRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.AssessmentEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.SubjectEntity;

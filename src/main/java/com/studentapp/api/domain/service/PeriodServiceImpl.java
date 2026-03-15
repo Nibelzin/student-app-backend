@@ -1,13 +1,12 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.Period;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.period.Period;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.PeriodUseCase;
 import com.studentapp.api.domain.port.out.PeriodRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;
-import com.studentapp.api.infra.adapters.out.persistance.mapper.PeriodMapper;
 import com.studentapp.api.infra.config.exception.custom.DependentEntitiesExistException;
 import com.studentapp.api.infra.config.exception.custom.PeriodConflictException;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;

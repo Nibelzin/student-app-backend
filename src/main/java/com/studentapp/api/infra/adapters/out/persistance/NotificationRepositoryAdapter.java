@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.Notification;
-import com.studentapp.api.domain.model.NotificationType;
+import com.studentapp.api.domain.model.notification.Notification;
+import com.studentapp.api.domain.enums.NotificationType;
 import com.studentapp.api.domain.port.out.NotificationRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.NotificationEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;

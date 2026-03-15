@@ -1,7 +1,7 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.Role;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.enums.Role;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.UserUseCase;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;
 import com.studentapp.api.infra.config.exception.custom.EmailAlreadyExistsException;

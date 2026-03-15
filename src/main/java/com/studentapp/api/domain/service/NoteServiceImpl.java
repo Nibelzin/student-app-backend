@@ -2,8 +2,8 @@ package com.studentapp.api.domain.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.studentapp.api.domain.model.Note;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.note.Note;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.NoteUseCase;
 import com.studentapp.api.domain.port.out.NoteRepositoryPort;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;

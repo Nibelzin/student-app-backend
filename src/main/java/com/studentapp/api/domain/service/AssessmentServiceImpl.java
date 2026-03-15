@@ -1,7 +1,7 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.Assessment;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.assessment.Assessment;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.domain.port.in.AssessmentUseCase;
 import com.studentapp.api.domain.port.out.AssessmentRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;

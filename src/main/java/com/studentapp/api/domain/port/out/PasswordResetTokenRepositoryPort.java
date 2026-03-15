@@ -1,6 +1,6 @@
 package com.studentapp.api.domain.port.out;
 
-import com.studentapp.api.domain.model.PasswordResetToken;
+import com.studentapp.api.domain.model.passwordResetToken.PasswordResetToken;
 
 import java.util.Optional;
 

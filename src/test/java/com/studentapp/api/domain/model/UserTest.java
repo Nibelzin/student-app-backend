@@ -1,5 +1,7 @@
 package com.studentapp.api.domain.model;
 
+import com.studentapp.api.domain.enums.Role;
+import com.studentapp.api.domain.model.user.User;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

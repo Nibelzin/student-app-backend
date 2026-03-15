@@ -1,11 +1,10 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.FileObject;
+import com.studentapp.api.domain.model.material.FileObject;
 import com.studentapp.api.domain.port.out.FileObjectRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.FileObjectEntity;
 import com.studentapp.api.infra.adapters.out.persistance.mapper.FileObjectMapper;
 import com.studentapp.api.infra.adapters.out.persistance.repository.FileObjectJpaRepository;
-import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

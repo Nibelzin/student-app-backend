@@ -1,0 +1,307 @@
+% =========================================================
+%  Capítulo 4 — Desenvolvimento
+% =========================================================
+
+\chapter{Desenvolvimento}
+\label{cap:desenvolvimento}
+
+Este capítulo descreve as decisões de projeto e a implementação do \textit{backend}
+da plataforma \textit{Student App}.
+
+% -----------------------------------------------------------
+\section{Visão Geral do Sistema}
+\label{sec:visao-geral}
+
+O \textit{Student App} é uma plataforma \textit{web} voltada para estudantes
+universitários que desejam organizar sua vida acadêmica de forma gamificada. O
+sistema é composto por um \textit{backend} em Java/Spring Boot que expõe uma API
+REST consumida por um \textit{frontend} (fora do escopo deste trabalho).
+
+A Figura~\ref{fig:visao-geral} apresenta a arquitetura de alto nível da solução.
+
+\begin{figure}[H]
+  \centering
+  \fbox{\parbox{0.85\textwidth}{\centering\vspace{2cm}[Inserir diagrama de visão geral do sistema]\vspace{2cm}}}
+  \caption{Visão geral da arquitetura do Student App}
+  \label{fig:visao-geral}
+  \fonte{Elaborado pelo autor (\imprimirdata).}
+\end{figure}
+
+% -----------------------------------------------------------
+\section{Arquitetura do Sistema}
+\label{sec:arquitetura}
+
+\subsection{Estrutura de Pacotes}
+\label{subsec:estrutura-pacotes}
+
+A estrutura de pacotes do projeto reflete diretamente a separação de camadas
+da Arquitetura Hexagonal:
+
+\begin{lstlisting}[language=,caption={Estrutura de pacotes do projeto},label={lst:estrutura-pacotes}]
+com.studentapp.api
+  domain/
+    model/          -- Entidades de domínio puras (sem anotações JPA)
+    port/in/        -- Interfaces de casos de uso (portas de entrada)
+    port/out/       -- Interfaces de repositórios e serviços (portas de saída)
+    service/        -- Implementações dos casos de uso (XxxServiceImpl)
+  infra/
+    adapters/in/web/          -- Controllers REST, DTOs e mapeadores DTO
+    adapters/out/persistance/ -- Entidades JPA, repositórios JPA,
+                              --   mapeadores de persistência, adaptadores
+    adapters/out/email/       -- Adaptador JavaMail
+    adapters/out/storage/     -- Adaptador AWS S3
+    config/                   -- Segurança, JWT, S3, CORS, tratamento de erros
+\end{lstlisting}
+
+\subsection{Fluxo de Requisição}
+\label{subsec:fluxo-requisicao}
+
+O fluxo de processamento de uma requisição segue a sequência ilustrada na
+Figura~\ref{fig:fluxo-requisicao}:
+
+\[
+  \text{Controller} \rightarrow \text{UseCase (porta/in)} \rightarrow
+  \text{ServiceImpl} \rightarrow \text{RepositoryPort (porta/out)}
+  \rightarrow \text{RepositoryAdapter} \rightarrow \text{JpaRepository}
+\]
+
+\begin{figure}[H]
+  \centering
+  \fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}[Inserir diagrama de sequência do fluxo de requisição]\vspace{2cm}}}
+  \caption{Fluxo de processamento de uma requisição REST}
+  \label{fig:fluxo-requisicao}
+  \fonte{Elaborado pelo autor (\imprimirdata).}
+\end{figure}
+
+% -----------------------------------------------------------
+\section{Modelagem do Domínio}
+\label{sec:modelagem-dominio}
+
+\subsection{Entidades Principais}
+\label{subsec:entidades}
+
+O domínio da aplicação é composto por dezoito entidades, conforme o Diagrama de
+Classes do Apêndice~\ref{apendice:diagrama-classes}. O Quadro~\ref{qdr:entidades}
+apresenta as entidades e suas responsabilidades.
+
+\begin{table}[H]
+  \centering
+  \caption{Entidades do domínio e suas responsabilidades}
+  \label{qdr:entidades}
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Entidade}       & \textbf{Responsabilidade}                                   \\
+    \midrule
+    \texttt{User}           & Usuário do sistema; gerencia gamificação (XP, nível, moedas) \\
+    \texttt{UserPreference} & Preferências e configurações do usuário                      \\
+    \texttt{Period}         & Período letivo (semestre/ano)                                \\
+    \texttt{Subject}        & Disciplina cursada em um período                             \\
+    \texttt{ClassSchedule}  & Horário de aula de uma disciplina                            \\
+    \texttt{Activity}       & Atividade com \textit{checklist} e prazo                     \\
+    \texttt{ChecklistItem}  & Item individual da lista de tarefas de uma atividade         \\
+    \texttt{Assessment}     & Avaliação/prova de uma disciplina                            \\
+    \texttt{AbsenceLog}     & Registro de falta em uma disciplina                          \\
+    \texttt{Note}           & Nota de estudo em texto livre                                \\
+    \texttt{Material}       & Material de estudo (arquivo ou \textit{link})                \\
+    \texttt{FileObject}     & Metadados de arquivo armazenado no AWS S3                    \\
+    \texttt{FocusSession}   & Sessão de foco com duração e XP ganho                        \\
+    \texttt{PlannerEvent}   & Evento no planejador do estudante                            \\
+    \texttt{Reminder}       & Lembrete pessoal                                             \\
+    \texttt{Notification}   & Notificação do sistema para o usuário                        \\
+    \texttt{PasswordResetToken} & Token para redefinição de senha                         \\
+    \texttt{GamificationConfig} & Configurações globais de gamificação                   \\
+    \bottomrule
+  \end{tabular}
+  \fonte{Elaborado pelo autor (\imprimirdata).}
+\end{table}
+
+\subsection{Padrão de Construção das Entidades}
+\label{subsec:padrao-construcao}
+
+As entidades de domínio utilizam o padrão \textit{factory method} estático com
+construtores privados, garantindo a integridade dos objetos e evitando estados
+inválidos. Dois \textit{factory methods} são definidos para cada entidade:
+
+\begin{lstlisting}[language=Java, caption={Factory methods da entidade User},label={lst:factory-methods}]
+public class User {
+    // Construtor privado: impede instanciação direta
+    private User() {}
+
+    // Criação de nova instância: gera UUID e timestamps
+    public static User create(String name, String email,
+                              String passwordHash, Role role) { ... }
+
+    // Reconstituição a partir da persistência
+    public static User fromState(UUID id, String name, String email,
+                                 String passwordHash, ...) { ... }
+}
+\end{lstlisting}
+
+% -----------------------------------------------------------
+\section{Sistema de Gamificação}
+\label{sec:gamificacao-impl}
+
+\subsection{Progressão de XP e Níveis}
+\label{subsec:progressao-xp}
+
+O sistema de gamificação utiliza uma progressão de nível baseada em um limiar
+crescente de XP. A equação~\ref{eq:xp-threshold} define a quantidade de XP
+necessária para avançar do nível atual para o próximo:
+
+\begin{equation}
+  \label{eq:xp-threshold}
+  \text{XP}_{\text{necessário}} = 100 \times \text{nível\_atual}
+\end{equation}
+
+O método \texttt{User.awardXp(int amount)}, apresentado no
+Código~\ref{lst:award-xp}, implementa a lógica de concessão de XP com preservação
+de XP excedente (\textit{overflow}) ao subir de nível:
+
+\begin{lstlisting}[language=Java, caption={Método awardXp da entidade User},label={lst:award-xp}]
+public boolean awardXp(int amount) {
+    this.currentXp += amount;
+    int threshold = 100 * this.currentLevel;
+    if (this.currentXp >= threshold) {
+        this.currentXp -= threshold;  // preserva overflow
+        this.currentLevel++;
+        touch();
+        return true;  // indica subida de nível
+    }
+    touch();
+    return false;
+}
+\end{lstlisting}
+
+\subsection{Eventos de Gamificação}
+\label{subsec:eventos-gamificacao}
+
+A concessão de XP ocorre em três eventos principais:
+
+\begin{itemize}
+  \item \textbf{Conclusão de Atividade:} ao marcar uma \texttt{Activity} como
+        concluída pela primeira vez, o usuário recebe 50 XP. O
+        \texttt{ActivityServiceImpl} verifica se a atividade não estava
+        previamente concluída para evitar concessão duplicada;
+
+  \item \textbf{Sessão de Foco:} ao encerrar uma \texttt{FocusSession},
+        o XP é proporcional à duração da sessão (\texttt{durationSeconds}),
+        calculado via \texttt{GamificationConfig};
+
+  \item \textbf{Notificação de Subida de Nível:} quando \texttt{awardXp()}
+        retorna \texttt{true}, uma \texttt{Notification} do tipo
+        \texttt{LEVEL\_UP} é criada automaticamente.
+\end{itemize}
+
+\subsection{Controle de Faltas e Notificações}
+\label{subsec:controle-faltas}
+
+O \texttt{AbsenceLogServiceImpl} monitora o percentual de faltas em relação ao
+máximo permitido pela disciplina. Quando o limite de 75\% é atingido, uma
+\texttt{Notification} do tipo \texttt{ABSENCE\_LIMIT} é criada, com deduplicação
+via \texttt{NotificationRepositoryPort.existsUnreadByUserIdAndTypeAndReferenceId()}.
+
+% -----------------------------------------------------------
+\section{Segurança}
+\label{sec:seguranca}
+
+\subsection{Autenticação JWT}
+\label{subsec:auth-jwt}
+
+A autenticação é implementada com JWT (\textit{JSON Web Token}) em modelo
+\textit{stateless}. O fluxo de autenticação é:
+
+\begin{enumerate}
+  \item O cliente realiza \textit{login} em \texttt{POST /auth/login} com
+        \textit{e-mail} e senha;
+  \item O \texttt{JwtService} gera um token assinado com a chave secreta
+        configurada em \texttt{jwt.secret};
+  \item Nas requisições subsequentes, o cliente inclui o token no cabeçalho
+        \texttt{Authorization: Bearer <token>};
+  \item O filtro \texttt{JwtAuthFilter} valida o token e carrega o
+        \texttt{UserDetails} para cada requisição.
+\end{enumerate}
+
+\subsection{Autorização}
+\label{subsec:autorizacao}
+
+O controle de acesso utiliza \textit{roles} definidas no enum \texttt{Role}:
+
+\begin{itemize}
+  \item \textbf{USER:} acesso aos próprios recursos acadêmicos e de gamificação;
+  \item \textbf{ADMIN:} acesso às rotas \texttt{/admin/**} para operações
+        administrativas.
+\end{itemize}
+
+% -----------------------------------------------------------
+\section{Módulos Funcionais}
+\label{sec:modulos}
+
+[Descreva cada módulo funcional com mais detalhe: Organização Acadêmica
+(Subject, Period, ClassSchedule, Assessment, AbsenceLog), Atividades com Checklist,
+Sessões de Foco (Pomodoro), Materiais e Notas, Planejador, Notificações.
+Inclua trechos de código relevantes e diagramas de sequência para os fluxos
+mais importantes.]
+
+% -----------------------------------------------------------
+\section{Camada de Persistência}
+\label{sec:persistencia}
+
+\subsection{Entidades JPA e Mapeamento}
+\label{subsec:entidades-jpa}
+
+A camada de persistência é implementada com Spring Data JPA (Hibernate 6) e
+PostgreSQL. As entidades JPA espelham as entidades de domínio, porém com anotações
+de mapeamento ORM. Os mapeadores de persistência, gerados pelo MapStruct, convertem
+entre os dois modelos.
+
+Um caso especial é o mapeamento da lista de \texttt{ChecklistItem} na entidade
+\texttt{Activity}: a lista é serializada diretamente como JSON na coluna
+\texttt{checklist} usando a anotação do Hibernate 6:
+
+\begin{lstlisting}[language=Java, caption={Mapeamento JSON de ChecklistItem},label={lst:json-mapping}]
+@JdbcTypeCode(SqlTypes.JSON)
+@Column(columnDefinition = "jsonb")
+private List<ChecklistItem> checklist;
+\end{lstlisting}
+
+\subsection{Diagrama Entidade-Relacionamento}
+\label{subsec:der}
+
+O Diagrama Entidade-Relacionamento completo do banco de dados PostgreSQL está
+disponível no Apêndice~\ref{apendice:der}.
+
+% -----------------------------------------------------------
+\section{API REST e Documentação}
+\label{sec:api-rest}
+
+A API expõe [NÚMERO] \textit{endpoints} organizados em [NÚMERO] grupos de recursos.
+O Quadro~\ref{qdr:endpoints-principais} lista os principais grupos de recursos.
+
+\begin{table}[H]
+  \centering
+  \caption{Grupos de recursos da API REST}
+  \label{qdr:endpoints-principais}
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Prefixo}          & \textbf{Recurso}            \\
+    \midrule
+    \texttt{/auth}            & Autenticação e registro      \\
+    \texttt{/users}           & Gerenciamento de usuários    \\
+    \texttt{/periods}         & Períodos letivos             \\
+    \texttt{/subjects}        & Disciplinas                  \\
+    \texttt{/class-schedules} & Horários de aula             \\
+    \texttt{/activities}      & Atividades com \textit{checklist} \\
+    \texttt{/assessments}     & Avaliações                   \\
+    \texttt{/absence-logs}    & Registros de falta           \\
+    \texttt{/focus-sessions}  & Sessões de foco              \\
+    \texttt{/notes}           & Notas de estudo              \\
+    \texttt{/materials}       & Materiais de estudo          \\
+    \texttt{/planner-events}  & Eventos do planejador        \\
+    \texttt{/notifications}   & Notificações                 \\
+    \bottomrule
+  \end{tabular}
+  \fonte{Elaborado pelo autor (\imprimirdata).}
+\end{table}
+
+A documentação interativa da API está disponível via Swagger UI no caminho
+\texttt{/swagger-ui.html}, sem necessidade de autenticação.

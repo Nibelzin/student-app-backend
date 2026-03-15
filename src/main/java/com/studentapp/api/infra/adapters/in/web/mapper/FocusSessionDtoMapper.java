@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.FocusSession;
+import com.studentapp.api.domain.model.focusSession.FocusSession;
 import com.studentapp.api.infra.adapters.in.web.dto.focusSession.FocusSessionResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

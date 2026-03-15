@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.UUID;
 
 public interface FocusSessionJpaRepository extends JpaRepository<FocusSessionEntity, UUID>, JpaSpecificationExecutor<FocusSessionEntity> {
+    void deleteByActivityId(UUID activityId);
 }

@@ -1,0 +1,111 @@
+% =========================================================
+%  Capítulo 3 — Metodologia
+% =========================================================
+
+\chapter{Metodologia}
+\label{cap:metodologia}
+
+Este capítulo descreve a metodologia adotada para o planejamento, desenvolvimento
+e validação da plataforma.
+
+% -----------------------------------------------------------
+\section{Classificação da Pesquisa}
+\label{sec:classificacao-pesquisa}
+
+Do ponto de vista da sua natureza, este trabalho caracteriza-se como uma pesquisa
+aplicada, pois tem como objetivo gerar conhecimento para solução de um problema
+específico \cite{[REFERENCIA_METODOLOGIA]}. Quanto à abordagem, é predominantemente
+qualitativa, uma vez que a avaliação do sistema envolve análise de funcionalidades
+e usabilidade. Com relação aos procedimentos técnicos, trata-se de um estudo de
+caso de desenvolvimento de \textit{software}.
+
+% -----------------------------------------------------------
+\section{Metodologia de Desenvolvimento}
+\label{sec:metodologia-desenvolvimento}
+
+O desenvolvimento foi conduzido de forma iterativa e incremental, com ênfase
+em entregas funcionais a cada ciclo. As funcionalidades foram organizadas em
+etapas:
+
+\begin{enumerate}
+  \item \textbf{Modelagem do domínio:} levantamento e especificação das entidades,
+        regras de negócio e casos de uso;
+
+  \item \textbf{Implementação do \textit{backend}:} desenvolvimento em Java/Spring Boot
+        seguindo a Arquitetura Hexagonal, com cobertura de testes unitários;
+
+  \item \textbf{Integração e testes:} validação dos componentes por meio de testes
+        unitários da camada de domínio (modelos e serviços) e testes de controladores;
+
+  \item \textbf{Documentação:} geração automática da documentação da API via Swagger/
+        OpenAPI e elaboração deste documento.
+\end{enumerate}
+
+% -----------------------------------------------------------
+\section{Ferramentas e Ambiente de Desenvolvimento}
+\label{sec:ferramentas}
+
+O Quadro~\ref{qdr:ferramentas} lista as principais ferramentas e tecnologias
+utilizadas no desenvolvimento da plataforma.
+
+\begin{table}[H]
+  \centering
+  \caption{Ferramentas e tecnologias utilizadas}
+  \label{qdr:ferramentas}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Categoria}        & \textbf{Tecnologia/Ferramenta}    & \textbf{Versão} \\
+    \midrule
+    Linguagem                 & Java                              & 17              \\
+    Framework                 & Spring Boot                       & 3.5.6           \\
+    Persistência              & Spring Data JPA / Hibernate       & 6.x             \\
+    Banco de dados            & PostgreSQL                        & 15              \\
+    Mapeamento objeto-relacional & MapStruct                      & 1.5.x           \\
+    Autenticação              & JWT (JJWT)                        & 0.12.x          \\
+    Armazenamento             & AWS S3 (SDK v2)                   & 2.x             \\
+    Conteinerização           & Docker / Docker Compose           & 24.x            \\
+    Build                     & Apache Maven                      & 3.x (wrapper)   \\
+    Documentação de API       & Springdoc OpenAPI (Swagger UI)    & 2.x             \\
+    IDE                       & IntelliJ IDEA                     & --              \\
+    Controle de versão        & Git / GitHub                      & --              \\
+    Testes unitários          & JUnit 5 + Mockito                 & --              \\
+    \bottomrule
+  \end{tabular}
+  \fonte{Elaborado pelo autor (\imprimirdata).}
+\end{table}
+
+% -----------------------------------------------------------
+\section{Estratégia de Testes}
+\label{sec:estrategia-testes}
+
+A estratégia de testes adotada concentra-se na camada de domínio, em conformidade
+com os princípios da Arquitetura Hexagonal, que recomenda que o núcleo da aplicação
+seja testável de forma isolada, sem dependência de frameworks ou infraestrutura.
+
+Os testes foram implementados com JUnit 5 e Mockito, cobrindo:
+
+\begin{itemize}
+  \item \textbf{Testes de modelos de domínio:} verificação das regras de negócio
+        encapsuladas nos métodos das entidades, como \texttt{User.awardXp()} e
+        os construtores via \textit{factory methods};
+
+  \item \textbf{Testes de serviços (casos de uso):} verificação do comportamento
+        dos \texttt{ServiceImpl} com repositórios \textit{mockados}, garantindo
+        o fluxo correto de orquestração entre domínio e portas de saída;
+
+  \item \textbf{Testes de controladores:} verificação dos \textit{endpoints} REST
+        com \texttt{@WebMvcTest}, cobrindo casos de sucesso, validações de entrada
+        e tratamento de erros HTTP.
+\end{itemize}
+
+Testes de integração (\texttt{@SpringBootTest}, \texttt{@DataJpaTest}) estão fora
+do escopo deste trabalho.
+
+% -----------------------------------------------------------
+\section{Controle de Versão}
+\label{sec:controle-versao}
+
+O código-fonte foi versionado com Git, hospedado em repositório privado no GitHub.
+O fluxo de trabalho adotado foi baseado em \textit{commits} incrementais organizados
+por funcionalidade, com mensagens no formato convencional
+(\textit{feat}, \textit{fix}, \textit{refactor}).

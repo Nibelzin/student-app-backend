@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.Assessment;
+import com.studentapp.api.domain.model.assessment.Assessment;
 import com.studentapp.api.infra.adapters.in.web.dto.assessment.AssessmentResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,0 +1,346 @@
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+% =========================================================
+%  TCC -- Trabalho de Conclusão de Curso
+%  Norma: ABNT NBR 14724:2011
+%  Classe: abnTeX2
+% =========================================================
+
+\documentclass[
+  12pt,             % tamanho da fonte
+  openright,        % capítulos começam em pág ímpar
+  twoside,          % impressão em frente e verso
+  a4paper,          % tamanho do papel
+  english,          % idioma adicional
+  brazilian         % idioma principal
+]{abntex2}
+
+% -----------------------------------------------------------
+% PACOTES
+% -----------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}           % fontes Latin Modern
+\usepackage{microtype}         % melhor justificação
+\usepackage{graphicx}          % inclusão de imagens
+\usepackage{float}             % controle de posição de floats
+\usepackage{booktabs}          % tabelas profissionais
+\usepackage{multirow}          % células multi-linha em tabelas
+\usepackage[table]{xcolor}     % cores
+\usepackage{listings}          % trechos de código-fonte
+\usepackage{caption}           % personalização de legendas
+\usepackage{subcaption}        % subfiguras
+\usepackage{amsmath}           % matemática
+\usepackage{hyperref}          % links e metadados PDF
+\usepackage{url}               % URLs
+\usepackage{indentfirst}       % indentar 1.º parágrafo de cada seção
+\usepackage[alf,abnt-emphasize=bf]{abntex2cite} % citações ABNT
+
+% -----------------------------------------------------------
+% CONFIGURAÇÃO DE LISTINGS (CÓDIGO-FONTE)
+% -----------------------------------------------------------
+\lstset{
+  basicstyle=\small\ttfamily,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape,
+  stringstyle=\ttfamily,
+  showstringspaces=false,
+  captionpos=b,
+  literate=
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+    {ã}{{\~a}}1 {õ}{{\~o}}1 {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1
+    {à}{{\`a}}1 {ç}{{\c{c}}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ã}{{\~A}}1
+}
+
+% -----------------------------------------------------------
+% CONFIGURAÇÃO DO HYPERREF
+% -----------------------------------------------------------
+\hypersetup{
+  pdftitle={Desenvolvimento de uma Plataforma Web Gamificada para Gestão de Estudos Universitários},
+  pdfauthor={[SEU NOME]},
+  pdfsubject={Trabalho de Conclusão de Curso},
+  pdfkeywords={gamificação, gestão de estudos, Spring Boot, arquitetura hexagonal, REST API},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+}
+
+% -----------------------------------------------------------
+% INFORMAÇÕES DO TRABALHO (PREENCHA AQUI)
+% -----------------------------------------------------------
+\titulo{Desenvolvimento de uma Plataforma Web Gamificada para Gestão de Estudos Universitários}
+\autor{[SEU NOME COMPLETO]}
+\local{[CIDADE]}
+\data{2026}
+\orientador{[NOME DO ORIENTADOR]}
+% \coorientador{[NOME DO COORIENTADOR]}  % descomente se houver
+\instituicao{%
+  [NOME DA INSTITUIÇÃO]\\
+  [FACULDADE / DEPARTAMENTO]
+}
+\tipotrabalho{Trabalho de Conclusão de Curso}
+\preambulo{%
+  Trabalho de Conclusão de Curso apresentado ao [FACULDADE/DEPARTAMENTO]
+  da [NOME DA INSTITUIÇÃO] como requisito parcial para a obtenção do grau de
+  Bacharel em [NOME DO CURSO].%
+}
+
+% -----------------------------------------------------------
+% INÍCIO DO DOCUMENTO
+% -----------------------------------------------------------
+\begin{document}
+
+\frenchspacing % espaçamento correto após ponto final
+
+% ==========================================================
+% ELEMENTOS PRÉ-TEXTUAIS
+% ==========================================================
+\pretextual
+
+% Capa (obrigatório)
+\imprimircapa
+
+% Folha de rosto (obrigatório)
+\imprimirfolhaderosto*  % * = para ficha catalográfica no verso
+
+% -----------------------------------------------------------
+% FICHA CATALOGRÁFICA (verso da folha de rosto)
+% A ficha é gerada pela biblioteca da sua instituição.
+% Substitua pela imagem fornecida pela biblioteca.
+% -----------------------------------------------------------
+\begin{fichacatalografica}
+  \vspace*{\fill}
+  \begin{center}
+    \fbox{%
+      \begin{minipage}[c][8cm]{13cm}
+        \small
+        \textbf{[SEU NOME COMPLETO]}
+
+        \hspace{0.5cm} \textit{Desenvolvimento de uma Plataforma Web Gamificada para
+        Gestão de Estudos Universitários} / [SEU NOME COMPLETO]. --
+        [CIDADE], \imprimirdata.
+
+        \hspace{0.5cm} [NNN] p.; 30 cm.
+
+        \hspace{0.5cm} \imprimirorientadorRotulo~\imprimirorientador
+
+        \hspace{0.5cm}
+        \parbox[t]{\textwidth}{\imprimirtipotrabalho~--~\imprimirinstituicao,
+        \imprimirdata.}
+
+        \hspace{0.5cm}
+          1. Gamificação.
+          2. Gestão de estudos.
+          3. Arquitetura hexagonal.
+          4. Spring Boot.
+          5. API REST.
+          I. \imprimirorientador.
+          II. \imprimirinstituicao.
+          III. \imprimirtitulo.
+      \end{minipage}
+    }
+  \end{center}
+\end{fichacatalografica}
+
+% -----------------------------------------------------------
+% FOLHA DE APROVAÇÃO
+% Após a defesa, substitua este ambiente pela digitalização
+% da folha assinada pela banca.
+% -----------------------------------------------------------
+\begin{folhadeaprovacao}
+  \begin{center}
+    {\ABNTEXchapterfont\large\imprimirautor}
+
+    \vspace*{\fill}\vspace*{\fill}
+
+    \begin{center}
+      \ABNTEXchapterfont\bfseries\Large\imprimirtitulo
+    \end{center}
+
+    \vspace*{\fill}
+
+    \hspace{.45\textwidth}
+    \begin{minipage}{.5\textwidth}
+      \imprimirpreambulo
+    \end{minipage}
+
+    \vspace*{\fill}
+  \end{center}
+
+  \center Aprovado em: \underline{\hspace{2cm}} de \underline{\hspace{3cm}} de \underline{\hspace{1.5cm}}.
+
+  \assinatura{\textbf{\imprimirorientador} \\ Orientador}
+  \assinatura{\textbf{[NOME DO MEMBRO 2]} \\ [Titulação e Instituição]}
+  \assinatura{\textbf{[NOME DO MEMBRO 3]} \\ [Titulação e Instituição]}
+
+  \begin{center}
+    \imprimirlocal, \imprimirdata
+  \end{center}
+\end{folhadeaprovacao}
+
+% Dedicatória (opcional)
+\begin{dedicatoria}
+  \vspace*{\fill}
+  \centering
+  \noindent
+  \textit{[Escreva aqui sua dedicatória.]}
+  \vspace*{\fill}
+\end{dedicatoria}
+
+% Agradecimentos (opcional)
+\begin{agradecimentos}
+  [Escreva aqui seus agradecimentos.]
+\end{agradecimentos}
+
+% Epígrafe (opcional)
+\begin{epigrafe}
+  \vspace*{\fill}
+  \begin{flushright}
+    \textit{``[Citação inspiradora.]''}\\
+    [Autor da citação]
+  \end{flushright}
+\end{epigrafe}
+
+% -----------------------------------------------------------
+% RESUMO EM PORTUGUÊS (obrigatório)
+% -----------------------------------------------------------
+\setlength{\absparsep}{18pt}
+\begin{resumo}
+  Este trabalho apresenta o desenvolvimento de uma plataforma \textit{web} gamificada
+  para apoio à gestão de estudos de estudantes universitários. A solução, denominada
+  \textit{Student App}, oferece funcionalidades de organização acadêmica -- controle de
+  disciplinas, períodos, atividades, avaliações e horários -- integradas a um sistema
+  de gamificação baseado em pontos de experiência (XP), níveis, moedas virtuais e
+  sequências de estudo (\textit{streak}). O \textit{backend} da aplicação foi
+  desenvolvido em Java com o \textit{framework} Spring Boot, adotando a Arquitetura
+  Hexagonal (\textit{Ports \& Adapters}) para garantir isolamento do domínio de negócio
+  em relação à infraestrutura. O sistema expõe uma API REST documentada via Swagger e
+  utiliza autenticação stateless com JSON Web Tokens (JWT). Os resultados demonstram
+  que a abordagem gamificada tem potencial para aumentar o engajamento dos estudantes
+  com a plataforma, promovendo hábitos de estudo mais consistentes.
+
+  \vspace{\onelineskip}
+  \noindent
+  \textbf{Palavras-chave}: gamificação; gestão de estudos; Spring Boot; arquitetura
+  hexagonal; API REST; Java.
+\end{resumo}
+
+% -----------------------------------------------------------
+% ABSTRACT EM INGLÊS (obrigatório)
+% -----------------------------------------------------------
+\begin{resumo}[Abstract]
+  \begin{otherlanguage*}{english}
+    This work presents the development of a gamified web platform for academic
+    management support aimed at university students. The solution, named
+    \textit{Student App}, provides academic organization features -- subject and period
+    management, activities, assessments, and class schedules -- integrated with a
+    gamification system based on experience points (XP), levels, virtual coins, and
+    study streaks. The application backend was developed in Java using the Spring Boot
+    framework, adopting the Hexagonal Architecture (\textit{Ports \& Adapters}) pattern
+    to ensure domain isolation from infrastructure concerns. The system exposes a
+    REST API documented via Swagger and uses stateless authentication with JSON Web
+    Tokens (JWT). Results indicate that the gamified approach has the potential to
+    increase student engagement with the platform, promoting more consistent study
+    habits.
+
+    \vspace{\onelineskip}
+    \noindent
+    \textbf{Keywords}: gamification; study management; Spring Boot; hexagonal
+    architecture; REST API; Java.
+  \end{otherlanguage*}
+\end{resumo}
+
+% -----------------------------------------------------------
+% LISTAS
+% -----------------------------------------------------------
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+
+% Lista de abreviaturas e siglas
+\begin{siglas}
+  \item[API]   \textit{Application Programming Interface}
+  \item[ABNT]  Associação Brasileira de Normas Técnicas
+  \item[AWS]   \textit{Amazon Web Services}
+  \item[CORS]  \textit{Cross-Origin Resource Sharing}
+  \item[CRUD]  \textit{Create, Read, Update, Delete}
+  \item[DTO]   \textit{Data Transfer Object}
+  \item[HTTP]  \textit{HyperText Transfer Protocol}
+  \item[JPA]   \textit{Java Persistence API}
+  \item[JSON]  \textit{JavaScript Object Notation}
+  \item[JWT]   \textit{JSON Web Token}
+  \item[MVC]   \textit{Model-View-Controller}
+  \item[ORM]   \textit{Object-Relational Mapping}
+  \item[REST]  \textit{Representational State Transfer}
+  \item[S3]    \textit{Simple Storage Service}
+  \item[SQL]   \textit{Structured Query Language}
+  \item[TCC]   Trabalho de Conclusão de Curso
+  \item[UUID]  \textit{Universally Unique Identifier}
+  \item[XP]    Pontos de Experiência (\textit{Experience Points})
+\end{siglas}
+
+% Sumário
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% ==========================================================
+% ELEMENTOS TEXTUAIS
+% ==========================================================
+\textual
+
+\include{capitulos/01-introducao}
+\include{capitulos/02-referencial-teorico}
+\include{capitulos/03-metodologia}
+\include{capitulos/04-desenvolvimento}
+\include{capitulos/05-resultados}
+\include{capitulos/06-conclusao}
+
+% ==========================================================
+% ELEMENTOS PÓS-TEXTUAIS
+% ==========================================================
+\postextual
+
+% Referências (obrigatório)
+\bibliography{referencias}
+
+% Glossário (opcional)
+% \glossary
+
+% Apêndices (opcional — material do próprio autor)
+\begin{apendicesenv}
+  \partapendices
+  \chapter{Diagrama de Classes do Domínio}
+  \label{apendice:diagrama-classes}
+
+  [Insira aqui o diagrama de classes UML do domínio da aplicação.]
+
+  \chapter{Endpoints da API REST}
+  \label{apendice:endpoints}
+
+  [Insira aqui a documentação completa dos endpoints. A documentação interativa
+  está disponível em \texttt{/swagger-ui.html} quando a aplicação está em execução.]
+
+  \chapter{Diagrama Entidade-Relacionamento}
+  \label{apendice:der}
+
+  [Insira aqui o DER do banco de dados PostgreSQL.]
+
+\end{apendicesenv}
+
+% Anexos (opcional — material de terceiros)
+% \begin{anexosenv}
+%   \partanexos
+%   \chapter{...}
+% \end{anexosenv}
+
+\end{document}

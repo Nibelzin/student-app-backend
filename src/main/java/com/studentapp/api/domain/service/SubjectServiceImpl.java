@@ -1,9 +1,9 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.AbsenceLog;
-import com.studentapp.api.domain.model.Period;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.absenceLog.AbsenceLog;
+import com.studentapp.api.domain.model.period.Period;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.SubjectUseCase;
 import com.studentapp.api.domain.port.out.AbsenceLogRepositoryPort;
 import com.studentapp.api.domain.port.out.AssessmentRepositoryPort;

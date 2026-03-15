@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.Note;
+import com.studentapp.api.domain.model.note.Note;
 import com.studentapp.api.domain.port.out.NoteRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.NoteEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;

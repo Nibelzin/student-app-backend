@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.Note;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.note.Note;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteResponse;
 import org.mapstruct.Mapper;

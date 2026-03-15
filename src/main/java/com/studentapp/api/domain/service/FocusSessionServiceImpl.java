@@ -1,11 +1,11 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.FocusSession;
-import com.studentapp.api.domain.model.GamificationConfig;
-import com.studentapp.api.domain.model.NotificationType;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.model.focusSession.FocusSession;
+import com.studentapp.api.domain.GamificationConfig;
+import com.studentapp.api.domain.enums.NotificationType;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.FocusSessionUseCase;
 import com.studentapp.api.domain.port.in.NotificationUseCase;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
@@ -131,5 +131,22 @@ public class FocusSessionServiceImpl implements FocusSessionUseCase {
     @Override
     public void deleteFocusSession(UUID id) {
         focusSessionRepositoryPort.delete(id);
+    }
+
+    @Override
+    public FocusSessionTickResult awardTickXp(UUID userId) {
+        User user = userRepositoryPort.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+        boolean leveledUp = user.awardXp(GamificationConfig.XP_FOCUS_TICK);
+        userRepositoryPort.save(user);
+        if (leveledUp) {
+            notificationUseCase.createNotification(new NotificationUseCase.CreateNotificationData(
+                    user,
+                    NotificationType.LEVEL_UP,
+                    "Você avançou para o nível " + user.getCurrentLevel() + "!",
+                    null
+            ));
+        }
+        return new FocusSessionTickResult(user.getCurrentXp(), user.getCurrentLevel(), leveledUp);
     }
 }

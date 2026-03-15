@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.ClassSchedule;
+import com.studentapp.api.domain.model.classSchedule.ClassSchedule;
 import com.studentapp.api.infra.adapters.in.web.dto.classSchedule.ClassScheduleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

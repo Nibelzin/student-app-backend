@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.Assessment;
+import com.studentapp.api.domain.model.assessment.Assessment;
 import com.studentapp.api.domain.port.in.AssessmentUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.assessment.AssessmentCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.assessment.AssessmentResponse;

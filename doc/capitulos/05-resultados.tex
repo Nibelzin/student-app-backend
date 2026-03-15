@@ -1,0 +1,112 @@
+% =========================================================
+%  Capítulo 5 — Resultados
+% =========================================================
+
+\chapter{Resultados}
+\label{cap:resultados}
+
+Este capítulo apresenta os resultados obtidos com o desenvolvimento da plataforma,
+abrangendo os testes realizados, as funcionalidades entregues e uma avaliação
+qualitativa do sistema.
+
+% -----------------------------------------------------------
+\section{Funcionalidades Implementadas}
+\label{sec:funcionalidades}
+
+Ao final do desenvolvimento, as seguintes funcionalidades foram entregues:
+
+\begin{itemize}
+  \item \textbf{Autenticação e autorização:} cadastro de usuários, \textit{login}
+        com JWT, redefinição de senha por e-mail e controle de acesso baseado em
+        \textit{roles};
+
+  \item \textbf{Organização acadêmica:} gerenciamento completo de períodos letivos,
+        disciplinas, horários de aula, avaliações e registros de falta;
+
+  \item \textbf{Atividades com \textit{checklist}:} criação e conclusão de
+        atividades com lista de tarefas embutida, serializada como JSON;
+
+  \item \textbf{Sessões de foco:} registro de sessões de estudo baseadas no método
+        Pomodoro, com concessão de XP proporcional ao tempo dedicado;
+
+  \item \textbf{Notas e materiais:} criação de notas de estudo e upload de
+        materiais (arquivos) com armazenamento no AWS S3;
+
+  \item \textbf{Planejador e lembretes:} criação de eventos e lembretes pessoais;
+
+  \item \textbf{Gamificação:} sistema de XP, níveis, moedas e \textit{streak} com
+        progressão baseada em ações do usuário;
+
+  \item \textbf{Notificações:} alertas automáticos para atividades próximas do
+        prazo, limite de faltas e subida de nível, com deduplicação.
+\end{itemize}
+
+% -----------------------------------------------------------
+\section{Testes Realizados}
+\label{sec:testes}
+
+\subsection{Cobertura dos Testes Unitários}
+\label{subsec:cobertura-testes}
+
+[Apresente aqui os resultados dos testes unitários. Inclua uma tabela com as
+classes testadas, número de casos de teste e a cobertura obtida. Execute
+\texttt{./mvnw test} e insira o relatório.]
+
+\begin{table}[H]
+  \centering
+  \caption{Resumo dos testes unitários implementados}
+  \label{qdr:testes}
+  \begin{tabular}{llc}
+    \toprule
+    \textbf{Classe testada}          & \textbf{Tipo}      & \textbf{N.º de casos} \\
+    \midrule
+    \texttt{UserTest}                & Modelo de domínio  & [N]                   \\
+    \texttt{UserServiceImplTest}     & Serviço            & [N]                   \\
+    \texttt{NotificationServiceImplTest} & Serviço        & [N]                   \\
+    \texttt{UserControllerTest}      & Controlador        & [N]                   \\
+    [Demais classes\ldots]           & --                 & --                    \\
+    \bottomrule
+  \end{tabular}
+  \fonte{Elaborado pelo autor (\imprimirdata).}
+\end{table}
+
+\subsection{Casos de Teste Relevantes}
+\label{subsec:casos-teste}
+
+[Descreva os casos de teste mais importantes, especialmente os que validam
+regras de negócio críticas como o sistema de XP/nível e a deduplicação de
+notificações.]
+
+% -----------------------------------------------------------
+\section{Avaliação da Arquitetura}
+\label{sec:avaliacao-arquitetura}
+
+A adoção da Arquitetura Hexagonal trouxe benefícios observáveis durante o
+desenvolvimento:
+
+\begin{itemize}
+  \item \textbf{Testabilidade:} os serviços de domínio podem ser testados de
+        forma completamente isolada, sem necessidade de instanciar \textit{beans}
+        do Spring, banco de dados ou outros componentes de infraestrutura;
+
+  \item \textbf{Substituição de adapters:} a implementação de armazenamento
+        pode ser trocada de AWS S3 para outro provedor sem alteração da lógica
+        de domínio, bastando implementar a interface \texttt{FileStorageServicePort};
+
+  \item \textbf{Legibilidade:} a separação clara de responsabilidades facilita
+        a localização e manutenção do código, especialmente para novos
+        contribuidores.
+\end{itemize}
+
+Como contrapartida, a arquitetura exige a criação de um número maior de classes
+(duas camadas de mapeamento, interfaces de porta, adaptadores), o que aumenta
+o \textit{boilerplate} inicial.
+
+% -----------------------------------------------------------
+\section{Discussão}
+\label{sec:discussao}
+
+[Discuta os resultados obtidos em relação aos objetivos definidos no
+Capítulo~\ref{cap:introducao}. Analise pontos fortes e limitações da
+solução. Relacione com o referencial teórico apresentado no
+Capítulo~\ref{cap:referencial}.]

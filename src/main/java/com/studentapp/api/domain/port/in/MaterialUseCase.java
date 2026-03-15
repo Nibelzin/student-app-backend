@@ -1,7 +1,7 @@
 package com.studentapp.api.domain.port.in;
 
-import com.studentapp.api.domain.model.FileObject;
-import com.studentapp.api.domain.model.Material;
+import com.studentapp.api.domain.model.material.FileObject;
+import com.studentapp.api.domain.model.material.Material;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

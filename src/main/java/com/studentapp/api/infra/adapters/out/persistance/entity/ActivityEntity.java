@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance.entity;
 
-import com.studentapp.api.domain.model.ChecklistItem;
+import com.studentapp.api.domain.model.activity.ChecklistItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +34,9 @@ public class ActivityEntity {
 
     @Column(name = "is_completed")
     private Boolean isCompleted;
+
+    @Column(name = "xp_awarded", nullable = false)
+    private Boolean xpAwarded = false;
 
     private String type;
 

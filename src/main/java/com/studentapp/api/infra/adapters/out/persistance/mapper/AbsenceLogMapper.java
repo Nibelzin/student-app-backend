@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.AbsenceLog;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.absenceLog.AbsenceLog;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.infra.adapters.out.persistance.entity.AbsenceLogEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

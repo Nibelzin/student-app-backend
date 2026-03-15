@@ -1,0 +1,88 @@
+% =========================================================
+%  Capítulo 1 — Introdução
+% =========================================================
+
+\chapter{Introdução}
+\label{cap:introducao}
+
+O ambiente universitário impõe aos estudantes a necessidade de gerenciar,
+simultaneamente, múltiplas disciplinas, avaliações, atividades extracurriculares e
+compromissos pessoais. Essa sobrecarga cognitiva frequentemente resulta em baixa
+produtividade, procrastinação e abandono dos estudos \cite{[REFERENCIA_1]}.
+Ferramentas digitais de organização pessoal têm sido amplamente adotadas como
+alternativa para mitigar esses problemas, mas muitas carecem de mecanismos que
+promovam o engajamento contínuo do usuário.
+
+A gamificação -- aplicação de elementos e mecânicas de jogos em contextos não
+lúdicos -- surge como uma abordagem promissora para aumentar a motivação e a
+persistência em plataformas educacionais \cite{[REFERENCIA_2]}. Ao incorporar
+sistemas de pontuação, níveis e recompensas ao processo de organização acadêmica,
+é possível criar um ciclo de \textit{feedback} positivo que incentiva o estudante
+a manter hábitos de estudo regulares.
+
+% -----------------------------------------------------------
+\section{Contextualização e Motivação}
+\label{sec:contextualizacao}
+
+[Descreva aqui o cenário que motivou a criação do projeto. Inclua dados sobre
+a dificuldade dos estudantes universitários em gerir a própria vida acadêmica,
+pesquisas sobre procrastinação, evasão escolar, etc.]
+
+% -----------------------------------------------------------
+\section{Objetivos}
+\label{sec:objetivos}
+
+\subsection{Objetivo Geral}
+\label{subsec:objetivo-geral}
+
+Desenvolver uma plataforma \textit{web} gamificada para gestão de estudos
+universitários, fornecendo ferramentas de organização acadêmica integradas a
+mecânicas de engajamento baseadas em gamificação.
+
+\subsection{Objetivos Específicos}
+\label{subsec:objetivos-especificos}
+
+\begin{itemize}
+  \item Implementar o módulo de organização acadêmica, contemplando o cadastro e
+        gerenciamento de disciplinas, períodos letivos, atividades, avaliações e
+        horários de aula;
+
+  \item Projetar e implementar um sistema de gamificação com pontos de experiência
+        (XP), níveis progressivos, moedas virtuais e controle de sequência de estudo
+        (\textit{streak});
+
+  \item Desenvolver um módulo de sessões de foco (\textit{Focus Sessions}) baseado
+        na técnica Pomodoro para recompensar o tempo de estudo dedicado;
+
+  \item Construir o \textit{backend} da aplicação adotando a Arquitetura Hexagonal
+        (\textit{Ports \& Adapters}) para garantir o isolamento da lógica de negócio
+        da infraestrutura;
+
+  \item Expor os recursos da aplicação por meio de uma API REST segura, documentada
+        com Swagger e protegida por autenticação JWT;
+
+  \item Implementar um sistema de notificações para alertar o usuário sobre prazos
+        de atividades, limites de faltas e conquistas de gamificação.
+\end{itemize}
+
+% -----------------------------------------------------------
+\section{Justificativa}
+\label{sec:justificativa}
+
+[Explique por que este trabalho é relevante. Relacione a necessidade de ferramentas
+de gestão acadêmica com o potencial da gamificação para aumentar o engajamento.
+Justifique a escolha das tecnologias (Java/Spring Boot, arquitetura hexagonal).]
+
+% -----------------------------------------------------------
+\section{Estrutura do Trabalho}
+\label{sec:estrutura}
+
+Este trabalho está organizado em seis capítulos. O Capítulo~\ref{cap:referencial}
+apresenta o referencial teórico que fundamenta as escolhas tecnológicas e
+metodológicas. O Capítulo~\ref{cap:metodologia} descreve a metodologia de
+desenvolvimento adotada e as ferramentas utilizadas. O
+Capítulo~\ref{cap:desenvolvimento} detalha a implementação do sistema, cobrindo
+arquitetura, modelagem de domínio e principais funcionalidades. O
+Capítulo~\ref{cap:resultados} apresenta os resultados obtidos. Por fim, o
+Capítulo~\ref{cap:conclusao} conclui o trabalho e aponta direções para trabalhos
+futuros.

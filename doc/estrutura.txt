@@ -1,0 +1,44 @@
+ ---
+  Mudanças necessárias no documento
+
+  Título
+
+  Ajustar para deixar claro que é full-stack, ex:
+  "Student App: Desenvolvimento de uma Plataforma Web Gamificada para Gestão de Estudos Universitários"
+
+  Capítulo 2 — Referencial Teórico
+
+  Adicionar seções:
+  - 2.5 Desenvolvimento Frontend com React — SPA, componentes, Vite como bundler
+  - 2.6 Comunicação Cliente-Servidor — consumo de API REST via fetch/Axios, autenticação com token JWT no client
+
+  Capítulo 3 — Metodologia
+
+  Ampliar a tabela de ferramentas com React, Vite, biblioteca de UI (tem alguma? Tailwind, Shadcn, MUI?), React Router,
+  gerenciador de estado etc.
+
+  Capítulo 4 — Desenvolvimento (maior mudança)
+
+  Dividir em duas partes grandes:
+
+  4.1  Visão Geral da Arquitetura (diagrama frontend + backend + DB + S3)
+  4.2  Backend  ← conteúdo que já existe
+    4.2.1  Estrutura de pacotes
+    4.2.2  Modelagem do domínio
+    4.2.3  Gamificação
+    4.2.4  Segurança (JWT)
+    4.2.5  API REST
+  4.3  Frontend  ← seção nova
+    4.3.1  Estrutura do projeto React/Vite
+    4.3.2  Roteamento e fluxo de navegação
+    4.3.3  Gerenciamento de estado e autenticação
+    4.3.4  Principais telas (com prints/wireframes)
+    4.3.5  Integração com a API
+
+  Capítulo 5 — Resultados
+
+  Adicionar prints de tela das funcionalidades implementadas — isso valoriza muito o TCC.
+
+  ---
+  Quer que eu atualize o tcc.html com toda essa estrutura expandida agora? E me diz: você usa alguma biblioteca de UI
+  (Tailwind, Material UI, Shadcn…) e gerenciador de estado (Zustand, Redux, Context API)?

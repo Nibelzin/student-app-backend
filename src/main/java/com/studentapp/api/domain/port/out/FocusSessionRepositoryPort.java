@@ -1,6 +1,6 @@
 package com.studentapp.api.domain.port.out;
 
-import com.studentapp.api.domain.model.FocusSession;
+import com.studentapp.api.domain.model.focusSession.FocusSession;
 import com.studentapp.api.domain.port.in.FocusSessionUseCase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,4 +13,5 @@ public interface FocusSessionRepositoryPort {
     Optional<FocusSession> findById(UUID id);
     Page<FocusSession> findByQuery(FocusSessionUseCase.FocusSessionQueryData query, Pageable pageable);
     void delete(UUID id);
+    void deleteByActivityId(UUID activityId);
 }

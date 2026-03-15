@@ -1,9 +1,7 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.FileObject;
-import com.studentapp.api.domain.model.Material;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.material.FileObject;
+import com.studentapp.api.domain.model.material.Material;
 import com.studentapp.api.domain.port.in.ActivityUseCase;
 import com.studentapp.api.domain.port.in.MaterialUseCase;
 import com.studentapp.api.domain.port.in.SubjectUseCase;

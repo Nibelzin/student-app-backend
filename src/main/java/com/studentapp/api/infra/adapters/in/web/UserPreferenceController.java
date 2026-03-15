@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.UserPreference;
+import com.studentapp.api.domain.model.user.UserPreference;
 import com.studentapp.api.domain.port.in.UserPreferenceUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.userPreference.UserPreferenceRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.userPreference.UserPreferenceResponse;

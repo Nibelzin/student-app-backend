@@ -1,9 +1,9 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.FocusSession;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.model.focusSession.FocusSession;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.infra.adapters.out.persistance.entity.FocusSessionEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import org.mapstruct.Mapper;

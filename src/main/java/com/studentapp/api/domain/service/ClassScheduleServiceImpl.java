@@ -1,7 +1,7 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.ClassSchedule;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.classSchedule.ClassSchedule;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.domain.port.in.ClassScheduleUseCase;
 import com.studentapp.api.domain.port.out.ClassScheduleRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;

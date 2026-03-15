@@ -1,10 +1,12 @@
 package com.studentapp.api.domain.port.in;
 
-import com.studentapp.api.domain.model.Activity;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.model.activity.ChecklistItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,7 +18,8 @@ public interface ActivityUseCase {
             LocalDateTime dueDate,
             String type,
             Optional<LocalDateTime> reminderAt,
-            UUID subjectId
+            UUID subjectId,
+            List<ChecklistItem> checklist
     ) {}
 
     public record UpdateActivityData(
@@ -25,7 +28,8 @@ public interface ActivityUseCase {
             LocalDateTime dueDate,
             Boolean isCompleted,
             String type,
-            Optional<LocalDateTime> reminderAt
+            Optional<LocalDateTime> reminderAt,
+            List<ChecklistItem> checklist
     ) {}
 
     public record ActivityQueryData(

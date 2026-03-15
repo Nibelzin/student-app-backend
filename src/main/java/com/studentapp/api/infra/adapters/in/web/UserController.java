@@ -1,6 +1,12 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.*;
+import com.studentapp.api.domain.enums.Role;
+import com.studentapp.api.domain.model.note.Note;
+import com.studentapp.api.domain.model.period.Period;
+import com.studentapp.api.domain.model.plannerEvent.PlannerEvent;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
+import com.studentapp.api.domain.model.user.UserPreference;
 import com.studentapp.api.domain.port.in.*;
 import com.studentapp.api.infra.adapters.in.web.dto.note.NoteResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;

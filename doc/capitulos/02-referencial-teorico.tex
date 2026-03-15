@@ -1,0 +1,154 @@
+% =========================================================
+%  Capítulo 2 — Referencial Teórico
+% =========================================================
+
+\chapter{Referencial Teórico}
+\label{cap:referencial}
+
+Este capítulo apresenta os conceitos e tecnologias que fundamentam o desenvolvimento
+da plataforma proposta.
+
+% -----------------------------------------------------------
+\section{Gamificação}
+\label{sec:gamificacao}
+
+O termo \textit{gamificação} (\textit{gamification}) foi popularizado por
+\citeonline{[REFERENCIA_DETERDING_2011]} e designa o uso de elementos de \textit{design}
+de jogos em contextos que não são jogos, com o objetivo de aumentar o engajamento,
+a motivação e o comportamento dos usuários.
+
+\subsection{Elementos de Gamificação}
+\label{subsec:elementos-gamificacao}
+
+Os principais elementos gamificados utilizados neste trabalho são:
+
+\begin{itemize}
+  \item \textbf{Pontos de Experiência (XP):} representam o progresso do usuário ao
+        completar atividades e sessões de estudo. O acúmulo de XP determina o nível
+        atual do estudante;
+
+  \item \textbf{Níveis:} estrutura de progressão que requer quantidades crescentes
+        de XP. O limiar de XP por nível é calculado como $100 \times \text{nível\_atual}$;
+
+  \item \textbf{Moedas Virtuais:} recompensas adicionais que podem ser utilizadas
+        para obter benefícios dentro da plataforma;
+
+  \item \textbf{Sequência de Estudo (\textit{Streak}):} contador de dias consecutivos
+        em que o usuário realiza atividades na plataforma, incentivando a consistência.
+\end{itemize}
+
+\subsection{Gamificação no Contexto Educacional}
+\label{subsec:gamificacao-educacional}
+
+[Apresente pesquisas e estudos sobre o impacto da gamificação em ambientes
+educacionais. Cite trabalhos que demonstrem melhoria no engajamento e desempenho
+dos estudantes.]
+
+% -----------------------------------------------------------
+\section{Gestão de Estudos e Técnica Pomodoro}
+\label{sec:gestao-estudos}
+
+[Descreva o problema da gestão de tempo no contexto acadêmico. Apresente a Técnica
+Pomodoro -- desenvolvida por Francesco Cirillo -- como método de organização de
+sessões de foco com intervalos regulares, e como ela foi integrada ao sistema de
+gamificação desta plataforma.]
+
+% -----------------------------------------------------------
+\section{Arquitetura de \textit{Software}}
+\label{sec:arquitetura-software}
+
+\subsection{Arquitetura Hexagonal (\textit{Ports \& Adapters})}
+\label{subsec:arquitetura-hexagonal}
+
+A Arquitetura Hexagonal, proposta por \citeonline{[REFERENCIA_COCKBURN_2005]}, também
+conhecida como \textit{Ports \& Adapters}, tem como objetivo central isolar o núcleo
+da aplicação (domínio de negócio) de agentes externos, como interfaces de usuário,
+bancos de dados e sistemas de mensageria.
+
+O modelo é composto por três camadas principais:
+
+\begin{itemize}
+  \item \textbf{Núcleo (Domínio):} contém as regras de negócio, entidades e casos
+        de uso, sem qualquer dependência de frameworks ou tecnologias externas;
+
+  \item \textbf{Portas de Entrada (\textit{Input Ports}):} interfaces que definem
+        os casos de uso que o domínio expõe para o mundo externo;
+
+  \item \textbf{Portas de Saída (\textit{Output Ports}):} interfaces que definem
+        os recursos externos que o domínio necessita (repositórios, serviços de e-mail,
+        armazenamento de arquivos etc.).
+\end{itemize}
+
+Os \textit{Adapters} implementam essas interfaces, conectando o domínio à tecnologia
+concreta. A Figura~\ref{fig:arquitetura-hexagonal} ilustra a estrutura de camadas
+adotada neste trabalho.
+
+\begin{figure}[H]
+  \centering
+  % \includegraphics[width=0.8\textwidth]{figuras/arquitetura-hexagonal.png}
+  \fbox{\parbox{0.8\textwidth}{\centering\vspace{2cm}[Inserir diagrama da Arquitetura Hexagonal]\vspace{2cm}}}
+  \caption{Arquitetura Hexagonal do Student App}
+  \label{fig:arquitetura-hexagonal}
+  \fonte{Elaborado pelo autor (\imprimirdata).}
+\end{figure}
+
+\subsection{API REST}
+\label{subsec:api-rest}
+
+O estilo arquitetural \textit{Representational State Transfer} (REST), descrito por
+\citeonline{[REFERENCIA_FIELDING_2000]}, define um conjunto de restrições para o
+projeto de sistemas distribuídos baseados em hipermídia. Os princípios REST incluem:
+comunicação \textit{stateless}, interface uniforme, uso dos verbos HTTP de forma
+semântica e recursos identificados por URIs.
+
+[Continue descrevendo REST e como foi aplicado no projeto.]
+
+% -----------------------------------------------------------
+\section{Tecnologias Utilizadas}
+\label{sec:tecnologias}
+
+\subsection{Java e Spring Boot}
+\label{subsec:spring-boot}
+
+Java é uma linguagem de programação orientada a objetos amplamente adotada no
+desenvolvimento de sistemas corporativos \cite{[REFERENCIA_JAVA]}. O framework
+Spring Boot, na versão 3.x, simplifica a criação de aplicações Java ao fornecer
+convenções de configuração automática, um servidor embutido e um ecossistema rico
+de bibliotecas \cite{[REFERENCIA_SPRING]}.
+
+Neste trabalho, utiliza-se o Spring Boot versão 3.5.6 com Java 17 como plataforma
+base para o \textit{backend}.
+
+\subsection{Spring Data JPA e PostgreSQL}
+\label{subsec:jpa-postgres}
+
+[Descreva a camada de persistência. Explique JPA (Java Persistence API), Hibernate
+como implementação ORM, e PostgreSQL como banco de dados relacional escolhido.]
+
+\subsection{MapStruct}
+\label{subsec:mapstruct}
+
+[Descreva o MapStruct como gerador de código para mapeamento entre objetos (domain
+models → JPA entities e vice-versa), e por que ele foi escolhido em relação a
+alternativas como ModelMapper.]
+
+\subsection{JSON Web Tokens (JWT)}
+\label{subsec:jwt}
+
+[Descreva JWT como mecanismo de autenticação stateless. Explique a estrutura do
+token (header, payload, signature) e como ele é validado a cada requisição no
+filtro JwtAuthFilter.]
+
+\subsection{Amazon S3}
+\label{subsec:aws-s3}
+
+[Descreva o uso do AWS S3 para armazenamento de arquivos (materiais de estudo)
+enviados pelos usuários.]
+
+% -----------------------------------------------------------
+\section{Trabalhos Relacionados}
+\label{sec:trabalhos-relacionados}
+
+[Apresente e compare aplicações similares como Google Classroom, Notion, Duolingo
+(gamificação), Habitica (gamificação para hábitos), etc. Identifique o diferencial
+do Student App em relação a essas soluções.]

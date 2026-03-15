@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.ClassSchedule;
+import com.studentapp.api.domain.model.classSchedule.ClassSchedule;
 import com.studentapp.api.domain.port.in.ClassScheduleUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.classSchedule.ClassScheduleCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.classSchedule.ClassScheduleResponse;

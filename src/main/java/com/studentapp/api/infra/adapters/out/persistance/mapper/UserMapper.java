@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.Period;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.period.Period;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -35,10 +35,10 @@ public abstract class UserMapper {
                 entity.getPasswordHash(),
                 entity.getCourse(),
                 entity.getCurrentSemester(),
-                entity.getCurrentXp(),
-                entity.getCurrentLevel(),
-                entity.getCoins(),
-                entity.getCurrentStreak(),
+                entity.getCurrentXp() != null ? entity.getCurrentXp() : 0,
+                entity.getCurrentLevel() != null ? entity.getCurrentLevel() : 1,
+                entity.getCoins() != null ? entity.getCoins() : 0,
+                entity.getCurrentStreak() != null ? entity.getCurrentStreak() : 0,
                 entity.getLastActiveDate(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),

@@ -1,14 +1,15 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.GamificationConfig;
-import com.studentapp.api.domain.model.Material;
-import com.studentapp.api.domain.model.NotificationType;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.GamificationConfig;
+import com.studentapp.api.domain.model.material.Material;
+import com.studentapp.api.domain.enums.NotificationType;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.ActivityUseCase;
 import com.studentapp.api.domain.port.in.NotificationUseCase;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
+import com.studentapp.api.domain.port.out.FocusSessionRepositoryPort;
 import com.studentapp.api.domain.port.out.MaterialRepositoryPort;
 import com.studentapp.api.domain.port.out.SubjectRepositoryPort;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;
@@ -18,9 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +32,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
     private final ActivityRepositoryPort activityRepositoryPort;
     private final SubjectRepositoryPort subjectRepositoryPort;
     private final MaterialRepositoryPort materialRepositoryPort;
+    private final FocusSessionRepositoryPort focusSessionRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
     private final NotificationUseCase notificationUseCase;
 
@@ -41,7 +42,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
                 () -> new ResourceNotFoundException("Matéria não encontrada.")
         );
 
-        Activity newActivity = Activity.create(createActivityData.title(), createActivityData.description(), createActivityData.dueDate(), false, createActivityData.type(), subject, null);
+        Activity newActivity = Activity.create(createActivityData.title(), createActivityData.description(), createActivityData.dueDate(), false, createActivityData.type(), subject, createActivityData.checklist());
 
         return activityRepositoryPort.save(newActivity);
     }
@@ -64,7 +65,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
             existingActivity.setDueDate(updateActivityData.dueDate());
         }
 
-        boolean wasCompleted = Boolean.TRUE.equals(existingActivity.getCompleted());
+        boolean xpAlreadyAwarded = Boolean.TRUE.equals(existingActivity.getXpAwarded());
         if(updateActivityData.isCompleted() != null){
             existingActivity.setCompleted(updateActivityData.isCompleted());
         }
@@ -73,11 +74,19 @@ public class ActivityServiceImpl implements ActivityUseCase {
             existingActivity.setType(updateActivityData.type());
         }
 
+        if (updateActivityData.checklist() != null) {
+            existingActivity.setChecklist(updateActivityData.checklist());
+        }
+
         Activity saved = activityRepositoryPort.save(existingActivity);
 
         boolean nowCompleted = Boolean.TRUE.equals(saved.getCompleted());
-        if (!wasCompleted && nowCompleted) {
-            User user = saved.getSubject().getUser();
+        if (!xpAlreadyAwarded && nowCompleted) {
+            saved.setXpAwarded(true);
+            activityRepositoryPort.save(saved);
+            User user = userRepositoryPort.findById(saved.getSubject().getUser().getId()).orElseThrow(
+                    () -> new ResourceNotFoundException("Usuário não encontrado.")
+            );
             boolean leveledUp = user.awardXp(GamificationConfig.XP_ACTIVITY_COMPLETION);
             userRepositoryPort.save(user);
             if (leveledUp) {
@@ -108,6 +117,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
     }
 
     @Override
+    @Transactional
     public void deleteActivity(UUID id){
 
         List<Material> materials = materialRepositoryPort.findByActivityId(id);
@@ -116,6 +126,8 @@ public class ActivityServiceImpl implements ActivityUseCase {
             material.setActivity(null);
             materialRepositoryPort.save(material);
         }
+
+        focusSessionRepositoryPort.deleteByActivityId(id);
 
         activityRepositoryPort.delete(id);
     }

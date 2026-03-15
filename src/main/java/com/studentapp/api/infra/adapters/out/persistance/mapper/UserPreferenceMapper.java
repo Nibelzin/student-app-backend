@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.User;
-import com.studentapp.api.domain.model.UserPreference;
+import com.studentapp.api.domain.model.user.User;
+import com.studentapp.api.domain.model.user.UserPreference;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.UserPreferenceEntity;
 import org.mapstruct.Mapper;

@@ -1,9 +1,9 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.PlannerEvent;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.model.plannerEvent.PlannerEvent;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.PlannerEventUseCase;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
 import com.studentapp.api.domain.port.out.PlannerEventRepositoryPort;

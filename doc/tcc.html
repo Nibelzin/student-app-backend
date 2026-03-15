@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCC — Student App</title>
+  <style>
+    /* =====================================================
+       VARIÁVEIS E RESET
+    ===================================================== */
+    :root {
+      --font-main: "Times New Roman", Times, serif;
+      --font-size: 12pt;
+      --line-height: 1.5;
+      --margin-page: 3cm 2cm 2cm 3cm; /* ABNT: sup/dir/inf/esq */
+      --color-text: #000;
+      --indent: 1.25cm;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-main);
+      font-size: var(--font-size);
+      line-height: var(--line-height);
+      color: var(--color-text);
+      background: #e8e8e8;
+    }
+
+    /* =====================================================
+       FOLHAS (simulam páginas A4)
+    ===================================================== */
+    .page {
+      background: white;
+      width: 21cm;
+      min-height: 29.7cm;
+      margin: 1cm auto;
+      padding: var(--margin-page);
+      page-break-after: always;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+
+    .page:last-child { page-break-after: avoid; }
+
+    /* =====================================================
+       CAPA
+    ===================================================== */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      height: 100%;
+      min-height: 25cm;
+      padding: 0;
+    }
+
+    .cover-top { width: 100%; }
+    .cover-top .institution { font-size: 12pt; font-weight: bold; text-transform: uppercase; }
+    .cover-top .department  { font-size: 12pt; margin-top: 0.3cm; }
+    .cover-top .author      { font-size: 12pt; margin-top: 1.5cm; text-transform: uppercase; }
+
+    .cover-middle { width: 100%; }
+    .cover-middle .title {
+      font-size: 14pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-top: 2cm;
+      line-height: 1.6;
+    }
+
+    .cover-bottom { width: 100%; }
+    .cover-bottom .city-year { font-size: 12pt; margin-top: 1cm; }
+
+    /* =====================================================
+       FOLHA DE ROSTO
+    ===================================================== */
+    .title-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 25cm;
+    }
+
+    .title-page .author  { text-align: center; font-size: 12pt; text-transform: uppercase; margin-bottom: 4cm; }
+    .title-page .title   { text-align: center; font-size: 14pt; font-weight: bold; text-transform: uppercase; margin-bottom: 3cm; }
+    .title-page .preamble-block {
+      align-self: flex-end;
+      width: 8cm;
+      font-size: 11pt;
+      text-align: justify;
+      margin-bottom: 1cm;
+    }
+    .title-page .advisor { text-align: center; font-size: 12pt; margin-top: 1cm; }
+    .title-page .city-year { text-align: center; font-size: 12pt; margin-top: auto; padding-top: 2cm; }
+
+    /* =====================================================
+       FOLHA DE APROVAÇÃO
+    ===================================================== */
+    .approval-page { min-height: 25cm; }
+    .approval-page .title { text-align: center; font-size: 14pt; font-weight: bold; text-transform: uppercase; margin: 1cm 0; }
+    .approval-page .preamble-block {
+      align-self: flex-end;
+      margin-left: auto;
+      width: 8cm;
+      font-size: 11pt;
+      text-align: justify;
+      margin-bottom: 1.5cm;
+    }
+    .approval-date { margin: 1.5cm 0 2cm; }
+    .signature-line {
+      border-top: 1px solid #000;
+      width: 10cm;
+      margin: 2cm auto 0.3cm;
+      text-align: center;
+      font-size: 11pt;
+    }
+
+    /* =====================================================
+       ELEMENTOS PRÉ-TEXTUAIS SIMPLES
+    ===================================================== */
+    .pre-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 25cm;
+    }
+
+    .pre-section.right-align { align-items: flex-end; }
+    .pre-section p { margin-bottom: 0.5cm; font-style: italic; }
+
+    /* =====================================================
+       RESUMO / ABSTRACT
+    ===================================================== */
+    .abstract-title {
+      text-align: center;
+      font-size: 12pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 1cm;
+    }
+
+    .abstract-body { text-align: justify; }
+    .keywords { margin-top: 0.5cm; }
+    .keywords strong { font-weight: bold; }
+
+    /* =====================================================
+       LISTAS (figuras, tabelas, siglas, sumário)
+    ===================================================== */
+    .list-title {
+      text-align: center;
+      font-size: 12pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 1cm;
+    }
+
+    .toc-entry {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.3cm;
+    }
+
+    .toc-entry.chapter { font-weight: bold; text-transform: uppercase; margin-top: 0.4cm; }
+    .toc-entry.section { padding-left: 0.8cm; }
+    .toc-entry.subsection { padding-left: 1.6cm; font-size: 11pt; }
+    .toc-dots {
+      flex: 1;
+      border-bottom: 1px dotted #555;
+      margin: 0 0.3cm 0.25cm;
+    }
+
+    .sigla-entry {
+      display: flex;
+      margin-bottom: 0.2cm;
+    }
+    .sigla-key { width: 2.5cm; font-weight: bold; }
+
+    /* =====================================================
+       CAPÍTULOS E SEÇÕES
+    ===================================================== */
+    h1.chapter-title {
+      font-size: 14pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 1cm;
+      padding-top: 0.5cm;
+    }
+
+    h2.section-title {
+      font-size: 12pt;
+      font-weight: bold;
+      margin: 0.8cm 0 0.4cm;
+    }
+
+    h3.subsection-title {
+      font-size: 12pt;
+      font-weight: bold;
+      font-style: italic;
+      margin: 0.6cm 0 0.3cm;
+    }
+
+    h4.subsubsection-title {
+      font-size: 12pt;
+      font-weight: bold;
+      margin: 0.4cm 0 0.2cm;
+    }
+
+    /* =====================================================
+       PARÁGRAFOS, LISTAS, EQUAÇÕES
+    ===================================================== */
+    p {
+      text-align: justify;
+      text-indent: var(--indent);
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    p + p { margin-top: 0; }
+
+    ul, ol {
+      margin: 0.5cm 0 0.5cm var(--indent);
+      padding-left: 0.5cm;
+    }
+
+    li { margin-bottom: 0.3cm; text-align: justify; }
+
+    .equation {
+      text-align: center;
+      margin: 0.8cm 0;
+      font-style: italic;
+    }
+
+    /* =====================================================
+       CÓDIGO-FONTE (listings)
+    ===================================================== */
+    pre, code {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 10pt;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+
+    pre {
+      padding: 0.5cm;
+      margin: 0.6cm 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .code-caption {
+      text-align: center;
+      font-size: 10pt;
+      margin-top: 0.2cm;
+      margin-bottom: 0.6cm;
+    }
+
+    /* =====================================================
+       TABELAS
+    ===================================================== */
+    .table-wrapper { margin: 0.6cm 0; overflow-x: auto; }
+
+    .table-caption {
+      text-align: center;
+      font-size: 11pt;
+      margin-bottom: 0.3cm;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11pt;
+    }
+
+    th {
+      border-top: 2px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 0.2cm 0.4cm;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    td { padding: 0.15cm 0.4cm; }
+
+    tr:last-child td { border-bottom: 2px solid #000; }
+    tr:nth-child(even) td { background: #f9f9f9; }
+
+    .table-source {
+      font-size: 10pt;
+      margin-top: 0.2cm;
+      margin-bottom: 0.6cm;
+    }
+
+    /* =====================================================
+       FIGURAS (placeholder)
+    ===================================================== */
+    .figure-placeholder {
+      border: 2px dashed #aaa;
+      background: #fafafa;
+      padding: 1.5cm;
+      text-align: center;
+      color: #888;
+      margin: 0.6cm 0;
+      font-style: italic;
+    }
+
+    .figure-caption {
+      text-align: center;
+      font-size: 11pt;
+      margin-top: 0.2cm;
+    }
+
+    .figure-source {
+      text-align: center;
+      font-size: 10pt;
+      margin-bottom: 0.6cm;
+    }
+
+    /* =====================================================
+       FICHA CATALOGRÁFICA
+    ===================================================== */
+    .ficha {
+      border: 1px solid #000;
+      padding: 0.5cm;
+      margin: 2cm auto;
+      width: 12cm;
+      font-size: 10pt;
+      line-height: 1.4;
+    }
+
+    /* =====================================================
+       REFERÊNCIAS
+    ===================================================== */
+    .reference {
+      text-align: justify;
+      padding-left: 2cm;
+      text-indent: -2cm;
+      margin-bottom: 0.5cm;
+      font-size: 12pt;
+    }
+
+    /* =====================================================
+       APÊNDICES
+    ===================================================== */
+    .appendix-label {
+      text-align: center;
+      font-size: 12pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 0.5cm;
+    }
+
+    /* =====================================================
+       PLACEHOLDER / NOTA DO AUTOR
+    ===================================================== */
+    .todo {
+      background: #fff8dc;
+      border-left: 4px solid #f0c040;
+      padding: 0.3cm 0.5cm;
+      margin: 0.5cm 0;
+      font-style: italic;
+      font-size: 11pt;
+      color: #555;
+      text-indent: 0;
+    }
+
+    /* =====================================================
+       IMPRESSÃO — remove sombra e fundo cinza
+    ===================================================== */
+    @media print {
+      body { background: white; }
+      .page {
+        width: 100%;
+        margin: 0;
+        padding: var(--margin-page);
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- =====================================================
+     CAPA
+===================================================== -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-top">
+      <div class="institution">[NOME DA INSTITUIÇÃO]</div>
+      <div class="department">[FACULDADE / DEPARTAMENTO]</div>
+      <div class="author">[SEU NOME COMPLETO]</div>
+    </div>
+
+    <div class="cover-middle">
+      <div class="title">
+        Desenvolvimento de uma Plataforma Web Gamificada<br>
+        para Gestão de Estudos Universitários
+      </div>
+    </div>
+
+    <div class="cover-bottom">
+      <div class="city-year">[CIDADE]<br>2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     FOLHA DE ROSTO
+===================================================== -->
+<div class="page">
+  <div class="title-page">
+    <div class="author">[SEU NOME COMPLETO]</div>
+
+    <div class="title">
+      Desenvolvimento de uma Plataforma Web Gamificada<br>
+      para Gestão de Estudos Universitários
+    </div>
+
+    <div class="preamble-block">
+      Trabalho de Conclusão de Curso apresentado ao [Faculdade/Departamento]
+      da [Nome da Instituição] como requisito parcial para a obtenção do grau de
+      Bacharel em [Nome do Curso].
+      <br><br>
+      Orientador: [Nome do Orientador]
+    </div>
+
+    <div class="city-year">[CIDADE]<br>2026</div>
+  </div>
+</div>
+
+<!-- =====================================================
+     FICHA CATALOGRÁFICA
+===================================================== -->
+<div class="page">
+  <div style="display:flex; align-items:center; justify-content:center; min-height:25cm;">
+    <div class="ficha">
+      <strong>[SEU NOME COMPLETO]</strong><br><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<em>Desenvolvimento de uma Plataforma Web Gamificada para Gestão de
+      Estudos Universitários</em> / [SEU NOME COMPLETO]. — [CIDADE], 2026.<br><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;[NNN] p.; 30 cm.<br><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;Orientador: [Nome do Orientador]<br><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;Trabalho de Conclusão de Curso — [Nome da Instituição], 2026.<br><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;1. Gamificação. 2. Gestão de estudos. 3. Arquitetura hexagonal.
+      4. Spring Boot. 5. API REST.
+      I. [Nome do Orientador]. II. [Nome da Instituição]. III. Título.
+    </div>
+  </div>
+  <p class="todo" style="text-indent:0">
+    ⚠️ Nota: a ficha catalográfica definitiva é gerada pela biblioteca da sua instituição.
+    Substitua este bloco pela ficha oficial quando recebê-la.
+  </p>
+</div>
+
+<!-- =====================================================
+     FOLHA DE APROVAÇÃO
+===================================================== -->
+<div class="page">
+  <div class="approval-page">
+    <div style="text-align:center; text-transform:uppercase; font-weight:bold; margin-bottom:1.5cm;">
+      [SEU NOME COMPLETO]
+    </div>
+    <div class="title">
+      Desenvolvimento de uma Plataforma Web Gamificada<br>
+      para Gestão de Estudos Universitários
+    </div>
+    <div class="preamble-block" style="margin-left:auto; width:8cm; font-size:11pt; text-align:justify; margin-bottom:1.5cm;">
+      Trabalho de Conclusão de Curso apresentado ao [Faculdade/Departamento]
+      da [Nome da Instituição] como requisito parcial para a obtenção do grau de
+      Bacharel em [Nome do Curso].
+    </div>
+    <div class="approval-date">
+      Aprovado em: _____ de ________________ de 2026.
+    </div>
+    <div style="text-align:center; font-weight:bold; margin-top:1cm; margin-bottom:0.5cm;">BANCA EXAMINADORA</div>
+    <div class="signature-line">[Nome do Orientador]<br>Orientador — [Titulação e Instituição]</div>
+    <div class="signature-line">[Nome do Membro 2]<br>[Titulação e Instituição]</div>
+    <div class="signature-line">[Nome do Membro 3]<br>[Titulação e Instituição]</div>
+  </div>
+</div>
+
+<!-- =====================================================
+     DEDICATÓRIA
+===================================================== -->
+<div class="page">
+  <div class="pre-section right-align" style="justify-content:flex-end;">
+    <p style="font-style:italic; text-align:right; text-indent:0;">
+      [Escreva aqui sua dedicatória.]
+    </p>
+  </div>
+</div>
+
+<!-- =====================================================
+     AGRADECIMENTOS
+===================================================== -->
+<div class="page">
+  <div class="abstract-title">Agradecimentos</div>
+  <p class="todo" style="text-indent:0">⚠️ Escreva aqui seus agradecimentos.</p>
+</div>
+
+<!-- =====================================================
+     EPÍGRAFE
+===================================================== -->
+<div class="page">
+  <div class="pre-section right-align" style="justify-content:flex-end;">
+    <blockquote style="font-style:italic; text-align:right; width:8cm; margin-left:auto;">
+      "[Citação inspiradora.]"<br>
+      <span style="font-style:normal;">— [Autor da citação]</span>
+    </blockquote>
+  </div>
+</div>
+
+<!-- =====================================================
+     RESUMO
+===================================================== -->
+<div class="page">
+  <div class="abstract-title">Resumo</div>
+  <div class="abstract-body">
+    <p>
+      Este trabalho apresenta o desenvolvimento de uma plataforma <em>web</em> gamificada
+      para apoio à gestão de estudos de estudantes universitários. A solução, denominada
+      <em>Student App</em>, oferece funcionalidades de organização acadêmica — controle de
+      disciplinas, períodos, atividades, avaliações e horários — integradas a um sistema
+      de gamificação baseado em pontos de experiência (XP), níveis, moedas virtuais e
+      sequências de estudo (<em>streak</em>). O <em>backend</em> da aplicação foi
+      desenvolvido em Java com o <em>framework</em> Spring Boot, adotando a Arquitetura
+      Hexagonal (<em>Ports &amp; Adapters</em>) para garantir isolamento do domínio de
+      negócio em relação à infraestrutura. O sistema expõe uma API REST documentada via
+      Swagger e utiliza autenticação <em>stateless</em> com JSON Web Tokens (JWT). Os
+      resultados demonstram que a abordagem gamificada tem potencial para aumentar o
+      engajamento dos estudantes com a plataforma, promovendo hábitos de estudo mais
+      consistentes.
+    </p>
+    <p class="keywords">
+      <strong>Palavras-chave:</strong> gamificação; gestão de estudos; Spring Boot;
+      arquitetura hexagonal; API REST; Java.
+    </p>
+  </div>
+</div>
+
+<!-- =====================================================
+     ABSTRACT
+===================================================== -->
+<div class="page">
+  <div class="abstract-title">Abstract</div>
+  <div class="abstract-body" lang="en">
+    <p>
+      This work presents the development of a gamified web platform for academic
+      management support aimed at university students. The solution, named
+      <em>Student App</em>, provides academic organization features — subject and period
+      management, activities, assessments, and class schedules — integrated with a
+      gamification system based on experience points (XP), levels, virtual coins, and
+      study streaks. The application backend was developed in Java using the Spring Boot
+      framework, adopting the Hexagonal Architecture (<em>Ports &amp; Adapters</em>)
+      pattern to ensure domain isolation from infrastructure concerns. The system exposes
+      a REST API documented via Swagger and uses stateless authentication with JSON Web
+      Tokens (JWT). Results indicate that the gamified approach has the potential to
+      increase student engagement with the platform, promoting more consistent study
+      habits.
+    </p>
+    <p class="keywords">
+      <strong>Keywords:</strong> gamification; study management; Spring Boot; hexagonal
+      architecture; REST API; Java.
+    </p>
+  </div>
+</div>
+
+<!-- =====================================================
+     LISTA DE SIGLAS
+===================================================== -->
+<div class="page">
+  <div class="list-title">Lista de Abreviaturas e Siglas</div>
+  <div class="sigla-entry"><span class="sigla-key">API</span><span><em>Application Programming Interface</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">ABNT</span><span>Associação Brasileira de Normas Técnicas</span></div>
+  <div class="sigla-entry"><span class="sigla-key">AWS</span><span><em>Amazon Web Services</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">CORS</span><span><em>Cross-Origin Resource Sharing</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">CRUD</span><span><em>Create, Read, Update, Delete</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">DTO</span><span><em>Data Transfer Object</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">HTTP</span><span><em>HyperText Transfer Protocol</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">JPA</span><span><em>Java Persistence API</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">JSON</span><span><em>JavaScript Object Notation</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">JWT</span><span><em>JSON Web Token</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">MVC</span><span><em>Model-View-Controller</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">ORM</span><span><em>Object-Relational Mapping</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">REST</span><span><em>Representational State Transfer</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">S3</span><span><em>Simple Storage Service</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">SQL</span><span><em>Structured Query Language</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">TCC</span><span>Trabalho de Conclusão de Curso</span></div>
+  <div class="sigla-entry"><span class="sigla-key">UUID</span><span><em>Universally Unique Identifier</em></span></div>
+  <div class="sigla-entry"><span class="sigla-key">XP</span><span>Pontos de Experiência (<em>Experience Points</em>)</span></div>
+</div>
+
+<!-- =====================================================
+     SUMÁRIO
+===================================================== -->
+<div class="page">
+  <div class="list-title">Sumário</div>
+
+  <div class="toc-entry chapter"><span>1&nbsp;&nbsp;Introdução</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>1.1&nbsp;&nbsp;Contextualização e Motivação</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>1.2&nbsp;&nbsp;Objetivos</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry subsection"><span>1.2.1&nbsp;&nbsp;Objetivo Geral</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry subsection"><span>1.2.2&nbsp;&nbsp;Objetivos Específicos</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>1.3&nbsp;&nbsp;Justificativa</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>1.4&nbsp;&nbsp;Estrutura do Trabalho</span><span class="toc-dots"></span><span>X</span></div>
+
+  <div class="toc-entry chapter"><span>2&nbsp;&nbsp;Referencial Teórico</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>2.1&nbsp;&nbsp;Gamificação</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>2.2&nbsp;&nbsp;Gestão de Estudos e Técnica Pomodoro</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>2.3&nbsp;&nbsp;Arquitetura de Software</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry subsection"><span>2.3.1&nbsp;&nbsp;Arquitetura Hexagonal</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry subsection"><span>2.3.2&nbsp;&nbsp;API REST</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>2.4&nbsp;&nbsp;Tecnologias Utilizadas</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>2.5&nbsp;&nbsp;Trabalhos Relacionados</span><span class="toc-dots"></span><span>X</span></div>
+
+  <div class="toc-entry chapter"><span>3&nbsp;&nbsp;Metodologia</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>3.1&nbsp;&nbsp;Classificação da Pesquisa</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>3.2&nbsp;&nbsp;Metodologia de Desenvolvimento</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>3.3&nbsp;&nbsp;Ferramentas e Ambiente de Desenvolvimento</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>3.4&nbsp;&nbsp;Estratégia de Testes</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>3.5&nbsp;&nbsp;Controle de Versão</span><span class="toc-dots"></span><span>X</span></div>
+
+  <div class="toc-entry chapter"><span>4&nbsp;&nbsp;Desenvolvimento</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>4.1&nbsp;&nbsp;Visão Geral do Sistema</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>4.2&nbsp;&nbsp;Arquitetura do Sistema</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>4.3&nbsp;&nbsp;Modelagem do Domínio</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>4.4&nbsp;&nbsp;Sistema de Gamificação</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>4.5&nbsp;&nbsp;Segurança</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>4.6&nbsp;&nbsp;Módulos Funcionais</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>4.7&nbsp;&nbsp;Camada de Persistência</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>4.8&nbsp;&nbsp;API REST e Documentação</span><span class="toc-dots"></span><span>X</span></div>
+
+  <div class="toc-entry chapter"><span>5&nbsp;&nbsp;Resultados</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>5.1&nbsp;&nbsp;Funcionalidades Implementadas</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>5.2&nbsp;&nbsp;Testes Realizados</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>5.3&nbsp;&nbsp;Avaliação da Arquitetura</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>5.4&nbsp;&nbsp;Discussão</span><span class="toc-dots"></span><span>X</span></div>
+
+  <div class="toc-entry chapter"><span>6&nbsp;&nbsp;Conclusão</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>6.1&nbsp;&nbsp;Limitações</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry section"><span>6.2&nbsp;&nbsp;Trabalhos Futuros</span><span class="toc-dots"></span><span>X</span></div>
+
+  <div class="toc-entry chapter"><span>Referências</span><span class="toc-dots"></span><span>X</span></div>
+
+  <div class="toc-entry chapter"><span>Apêndice A — Diagrama de Classes do Domínio</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry chapter"><span>Apêndice B — Endpoints da API REST</span><span class="toc-dots"></span><span>X</span></div>
+  <div class="toc-entry chapter"><span>Apêndice C — Diagrama Entidade-Relacionamento</span><span class="toc-dots"></span><span>X</span></div>
+</div>
+
+<!-- =====================================================
+     CAPÍTULO 1 — INTRODUÇÃO
+===================================================== -->
+<div class="page">
+  <h1 class="chapter-title">1 Introdução</h1>
+
+  <p>
+    O ambiente universitário impõe aos estudantes a necessidade de gerenciar,
+    simultaneamente, múltiplas disciplinas, avaliações, atividades extracurriculares e
+    compromissos pessoais. Essa sobrecarga cognitiva frequentemente resulta em baixa
+    produtividade, procrastinação e abandono dos estudos.
+    Ferramentas digitais de organização pessoal têm sido amplamente adotadas como
+    alternativa para mitigar esses problemas, mas muitas carecem de mecanismos que
+    promovam o engajamento contínuo do usuário.
+  </p>
+
+  <p>
+    A gamificação — aplicação de elementos e mecânicas de jogos em contextos não
+    lúdicos — surge como uma abordagem promissora para aumentar a motivação e a
+    persistência em plataformas educacionais. Ao incorporar sistemas de pontuação,
+    níveis e recompensas ao processo de organização acadêmica, é possível criar um
+    ciclo de <em>feedback</em> positivo que incentiva o estudante a manter hábitos de
+    estudo regulares.
+  </p>
+
+  <h2 class="section-title">1.1 Contextualização e Motivação</h2>
+  <p class="todo">⚠️ Descreva aqui o cenário que motivou a criação do projeto. Inclua dados sobre a dificuldade dos estudantes universitários em gerir a própria vida acadêmica, pesquisas sobre procrastinação, evasão escolar etc.</p>
+
+  <h2 class="section-title">1.2 Objetivos</h2>
+
+  <h3 class="subsection-title">1.2.1 Objetivo Geral</h3>
+  <p>
+    Desenvolver uma plataforma <em>web</em> gamificada para gestão de estudos
+    universitários, fornecendo ferramentas de organização acadêmica integradas a
+    mecânicas de engajamento baseadas em gamificação.
+  </p>
+
+  <h3 class="subsection-title">1.2.2 Objetivos Específicos</h3>
+  <ul>
+    <li>Implementar o módulo de organização acadêmica, contemplando o cadastro e
+        gerenciamento de disciplinas, períodos letivos, atividades, avaliações e
+        horários de aula;</li>
+    <li>Projetar e implementar um sistema de gamificação com pontos de experiência (XP),
+        níveis progressivos, moedas virtuais e controle de sequência de estudo
+        (<em>streak</em>);</li>
+    <li>Desenvolver um módulo de sessões de foco (<em>Focus Sessions</em>) baseado
+        na técnica Pomodoro para recompensar o tempo de estudo dedicado;</li>
+    <li>Construir o <em>backend</em> da aplicação adotando a Arquitetura Hexagonal
+        (<em>Ports &amp; Adapters</em>) para garantir isolamento da lógica de negócio
+        da infraestrutura;</li>
+    <li>Expor os recursos da aplicação por meio de uma API REST segura, documentada
+        com Swagger e protegida por autenticação JWT;</li>
+    <li>Implementar um sistema de notificações para alertar o usuário sobre prazos
+        de atividades, limites de faltas e conquistas de gamificação.</li>
+  </ul>
+
+  <h2 class="section-title">1.3 Justificativa</h2>
+  <p class="todo">⚠️ Explique por que este trabalho é relevante. Relacione a necessidade de ferramentas de gestão acadêmica com o potencial da gamificação para aumentar o engajamento. Justifique a escolha das tecnologias.</p>
+
+  <h2 class="section-title">1.4 Estrutura do Trabalho</h2>
+  <p>
+    Este trabalho está organizado em seis capítulos. O Capítulo 2 apresenta o referencial
+    teórico que fundamenta as escolhas tecnológicas e metodológicas. O Capítulo 3
+    descreve a metodologia de desenvolvimento adotada e as ferramentas utilizadas. O
+    Capítulo 4 detalha a implementação do sistema, cobrindo arquitetura, modelagem de
+    domínio e principais funcionalidades. O Capítulo 5 apresenta os resultados obtidos.
+    Por fim, o Capítulo 6 conclui o trabalho e aponta direções para trabalhos futuros.
+  </p>
+</div>
+
+<!-- =====================================================
+     CAPÍTULO 2 — REFERENCIAL TEÓRICO
+===================================================== -->
+<div class="page">
+  <h1 class="chapter-title">2 Referencial Teórico</h1>
+
+  <p>
+    Este capítulo apresenta os conceitos e tecnologias que fundamentam o desenvolvimento
+    da plataforma proposta.
+  </p>
+
+  <h2 class="section-title">2.1 Gamificação</h2>
+  <p>
+    O termo <em>gamificação</em> (<em>gamification</em>) foi popularizado por Deterding
+    et al. (2011) e designa o uso de elementos de <em>design</em> de jogos em contextos
+    que não são jogos, com o objetivo de aumentar o engajamento, a motivação e o
+    comportamento dos usuários.
+  </p>
+
+  <h3 class="subsection-title">2.1.1 Elementos de Gamificação</h3>
+  <p>Os principais elementos gamificados utilizados neste trabalho são:</p>
+  <ul>
+    <li><strong>Pontos de Experiência (XP):</strong> representam o progresso do usuário
+        ao completar atividades e sessões de estudo. O acúmulo de XP determina o nível
+        atual do estudante;</li>
+    <li><strong>Níveis:</strong> estrutura de progressão que requer quantidades crescentes
+        de XP. O limiar por nível é calculado como 100 × nível_atual;</li>
+    <li><strong>Moedas Virtuais:</strong> recompensas adicionais que podem ser utilizadas
+        para obter benefícios dentro da plataforma;</li>
+    <li><strong>Sequência de Estudo (<em>Streak</em>):</strong> contador de dias
+        consecutivos em que o usuário realiza atividades na plataforma.</li>
+  </ul>
+
+  <h3 class="subsection-title">2.1.2 Gamificação no Contexto Educacional</h3>
+  <p class="todo">⚠️ Apresente pesquisas sobre o impacto da gamificação em ambientes educacionais. Cite trabalhos que demonstrem melhoria no engajamento e desempenho dos estudantes.</p>
+
+  <h2 class="section-title">2.2 Gestão de Estudos e Técnica Pomodoro</h2>
+  <p class="todo">⚠️ Descreva o problema da gestão de tempo no contexto acadêmico. Apresente a Técnica Pomodoro e como ela foi integrada ao sistema de gamificação desta plataforma.</p>
+
+  <h2 class="section-title">2.3 Arquitetura de Software</h2>
+
+  <h3 class="subsection-title">2.3.1 Arquitetura Hexagonal (Ports &amp; Adapters)</h3>
+  <p>
+    A Arquitetura Hexagonal, proposta por Cockburn (2005), tem como objetivo central
+    isolar o núcleo da aplicação (domínio de negócio) de agentes externos, como
+    interfaces de usuário, bancos de dados e sistemas de mensageria. O modelo é composto
+    por três camadas:
+  </p>
+  <ul>
+    <li><strong>Núcleo (Domínio):</strong> contém as regras de negócio, entidades e
+        casos de uso, sem qualquer dependência de <em>frameworks</em> ou tecnologias
+        externas;</li>
+    <li><strong>Portas de Entrada (<em>Input Ports</em>):</strong> interfaces que definem
+        os casos de uso que o domínio expõe para o mundo externo;</li>
+    <li><strong>Portas de Saída (<em>Output Ports</em>):</strong> interfaces que definem
+        os recursos externos que o domínio necessita.</li>
+  </ul>
+
+  <div class="figure-placeholder">
+    [Inserir diagrama da Arquitetura Hexagonal do Student App]
+  </div>
+  <div class="figure-caption">Figura 1 — Arquitetura Hexagonal do Student App</div>
+  <div class="figure-source">Fonte: Elaborado pelo autor (2026).</div>
+
+  <h3 class="subsection-title">2.3.2 API REST</h3>
+  <p>
+    O estilo arquitetural <em>Representational State Transfer</em> (REST), descrito por
+    Fielding (2000), define restrições para o projeto de sistemas distribuídos baseados
+    em hipermídia, incluindo comunicação <em>stateless</em>, interface uniforme e uso
+    semântico dos verbos HTTP.
+  </p>
+  <p class="todo">⚠️ Continue descrevendo REST e como foi aplicado no projeto.</p>
+
+  <h2 class="section-title">2.4 Tecnologias Utilizadas</h2>
+
+  <h3 class="subsection-title">2.4.1 Java e Spring Boot</h3>
+  <p>
+    Java é uma linguagem de programação orientada a objetos amplamente adotada no
+    desenvolvimento de sistemas corporativos. O <em>framework</em> Spring Boot, na
+    versão 3.x, simplifica a criação de aplicações Java ao fornecer convenções de
+    configuração automática, servidor embutido e ecossistema rico de bibliotecas.
+    Neste trabalho, utiliza-se o Spring Boot versão 3.5.6 com Java 17.
+  </p>
+
+  <h3 class="subsection-title">2.4.2 Spring Data JPA e PostgreSQL</h3>
+  <p class="todo">⚠️ Descreva JPA, Hibernate como implementação ORM e PostgreSQL como banco de dados.</p>
+
+  <h3 class="subsection-title">2.4.3 MapStruct</h3>
+  <p class="todo">⚠️ Descreva o MapStruct como gerador de código para mapeamento entre objetos.</p>
+
+  <h3 class="subsection-title">2.4.4 JSON Web Tokens (JWT)</h3>
+  <p class="todo">⚠️ Descreva JWT como mecanismo de autenticação stateless.</p>
+
+  <h3 class="subsection-title">2.4.5 Amazon S3</h3>
+  <p class="todo">⚠️ Descreva o uso do AWS S3 para armazenamento de arquivos.</p>
+
+  <h2 class="section-title">2.5 Trabalhos Relacionados</h2>
+  <p class="todo">⚠️ Apresente e compare aplicações similares (Google Classroom, Notion, Duolingo, Habitica). Identifique o diferencial do Student App.</p>
+</div>
+
+<!-- =====================================================
+     CAPÍTULO 3 — METODOLOGIA
+===================================================== -->
+<div class="page">
+  <h1 class="chapter-title">3 Metodologia</h1>
+
+  <h2 class="section-title">3.1 Classificação da Pesquisa</h2>
+  <p>
+    Do ponto de vista da sua natureza, este trabalho caracteriza-se como uma pesquisa
+    aplicada, pois tem como objetivo gerar conhecimento para solução de um problema
+    específico (GIL, 2010). Quanto à abordagem, é predominantemente qualitativa.
+    Com relação aos procedimentos técnicos, trata-se de um estudo de caso de
+    desenvolvimento de <em>software</em>.
+  </p>
+
+  <h2 class="section-title">3.2 Metodologia de Desenvolvimento</h2>
+  <p>
+    O desenvolvimento foi conduzido de forma iterativa e incremental, com ênfase em
+    entregas funcionais a cada ciclo. As funcionalidades foram organizadas nas
+    seguintes etapas:
+  </p>
+  <ol>
+    <li><strong>Modelagem do domínio:</strong> levantamento e especificação das entidades,
+        regras de negócio e casos de uso;</li>
+    <li><strong>Implementação do backend:</strong> desenvolvimento em Java/Spring Boot
+        seguindo a Arquitetura Hexagonal, com cobertura de testes unitários;</li>
+    <li><strong>Integração e testes:</strong> validação dos componentes por meio de testes
+        unitários da camada de domínio e testes de controladores;</li>
+    <li><strong>Documentação:</strong> geração automática da API via Swagger/OpenAPI e
+        elaboração deste documento.</li>
+  </ol>
+
+  <h2 class="section-title">3.3 Ferramentas e Ambiente de Desenvolvimento</h2>
+  <p>O Quadro 1 lista as principais ferramentas e tecnologias utilizadas.</p>
+
+  <div class="table-wrapper">
+    <div class="table-caption">Quadro 1 — Ferramentas e tecnologias utilizadas</div>
+    <table>
+      <thead>
+        <tr><th>Categoria</th><th>Tecnologia / Ferramenta</th><th>Versão</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Linguagem</td><td>Java</td><td>17</td></tr>
+        <tr><td>Framework</td><td>Spring Boot</td><td>3.5.6</td></tr>
+        <tr><td>Persistência</td><td>Spring Data JPA / Hibernate</td><td>6.x</td></tr>
+        <tr><td>Banco de dados</td><td>PostgreSQL</td><td>15</td></tr>
+        <tr><td>Mapeamento OR</td><td>MapStruct</td><td>1.5.x</td></tr>
+        <tr><td>Autenticação</td><td>JWT (JJWT)</td><td>0.12.x</td></tr>
+        <tr><td>Armazenamento</td><td>AWS S3 (SDK v2)</td><td>2.x</td></tr>
+        <tr><td>Conteinerização</td><td>Docker / Docker Compose</td><td>24.x</td></tr>
+        <tr><td>Build</td><td>Apache Maven (wrapper)</td><td>3.x</td></tr>
+        <tr><td>Documentação API</td><td>Springdoc OpenAPI (Swagger UI)</td><td>2.x</td></tr>
+        <tr><td>IDE</td><td>IntelliJ IDEA</td><td>—</td></tr>
+        <tr><td>Controle de versão</td><td>Git / GitHub</td><td>—</td></tr>
+        <tr><td>Testes unitários</td><td>JUnit 5 + Mockito</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="table-source">Fonte: Elaborado pelo autor (2026).</div>
+  </div>
+
+  <h2 class="section-title">3.4 Estratégia de Testes</h2>
+  <p>
+    A estratégia de testes concentra-se na camada de domínio, em conformidade com os
+    princípios da Arquitetura Hexagonal, que recomenda que o núcleo da aplicação seja
+    testável de forma isolada, sem dependência de <em>frameworks</em> ou infraestrutura.
+  </p>
+  <p>Os testes foram implementados com JUnit 5 e Mockito, cobrindo:</p>
+  <ul>
+    <li><strong>Testes de modelos de domínio:</strong> verificação das regras de negócio
+        encapsuladas nos métodos das entidades, como <code>User.awardXp()</code> e os
+        construtores via <em>factory methods</em>;</li>
+    <li><strong>Testes de serviços:</strong> verificação do comportamento dos
+        <code>ServiceImpl</code> com repositórios <em>mockados</em>;</li>
+    <li><strong>Testes de controladores:</strong> verificação dos <em>endpoints</em>
+        REST com <code>@WebMvcTest</code>.</li>
+  </ul>
+
+  <h2 class="section-title">3.5 Controle de Versão</h2>
+  <p>
+    O código-fonte foi versionado com Git, hospedado em repositório no GitHub.
+    O fluxo de trabalho adotou <em>commits</em> incrementais organizados por
+    funcionalidade, com mensagens no formato convencional
+    (<em>feat</em>, <em>fix</em>, <em>refactor</em>).
+  </p>
+</div>
+
+<!-- =====================================================
+     CAPÍTULO 4 — DESENVOLVIMENTO
+===================================================== -->
+<div class="page">
+  <h1 class="chapter-title">4 Desenvolvimento</h1>
+
+  <h2 class="section-title">4.1 Visão Geral do Sistema</h2>
+  <p>
+    O <em>Student App</em> é uma plataforma <em>web</em> voltada para estudantes
+    universitários que desejam organizar sua vida acadêmica de forma gamificada. O
+    sistema é composto por um <em>backend</em> em Java/Spring Boot que expõe uma API
+    REST consumida por um <em>frontend</em> (fora do escopo deste trabalho).
+  </p>
+
+  <div class="figure-placeholder">[Inserir diagrama de visão geral do sistema]</div>
+  <div class="figure-caption">Figura 2 — Visão geral da arquitetura do Student App</div>
+  <div class="figure-source">Fonte: Elaborado pelo autor (2026).</div>
+
+  <h2 class="section-title">4.2 Arquitetura do Sistema</h2>
+
+  <h3 class="subsection-title">4.2.1 Estrutura de Pacotes</h3>
+  <pre>com.studentapp.api
+  domain/
+    model/          -- Entidades de domínio puras (sem anotações JPA)
+    port/in/        -- Interfaces de casos de uso (portas de entrada)
+    port/out/       -- Interfaces de repositórios/serviços (portas de saída)
+    service/        -- Implementações dos casos de uso (XxxServiceImpl)
+  infra/
+    adapters/in/web/           -- Controllers REST, DTOs e mapeadores DTO
+    adapters/out/persistance/  -- Entidades JPA, repositórios, mapeadores
+    adapters/out/email/        -- Adaptador JavaMail
+    adapters/out/storage/      -- Adaptador AWS S3
+    config/                    -- Segurança, JWT, S3, CORS, exceções</pre>
+  <div class="code-caption">Código 1 — Estrutura de pacotes do projeto</div>
+
+  <h3 class="subsection-title">4.2.2 Fluxo de Requisição</h3>
+  <p>O fluxo de processamento de uma requisição segue a sequência:</p>
+  <div class="equation">
+    Controller → UseCase (porta/in) → ServiceImpl → RepositoryPort (porta/out) → RepositoryAdapter → JpaRepository
+  </div>
+
+  <h2 class="section-title">4.3 Modelagem do Domínio</h2>
+
+  <h3 class="subsection-title">4.3.1 Entidades Principais</h3>
+
+  <div class="table-wrapper">
+    <div class="table-caption">Quadro 2 — Entidades do domínio e suas responsabilidades</div>
+    <table>
+      <thead><tr><th>Entidade</th><th>Responsabilidade</th></tr></thead>
+      <tbody>
+        <tr><td><code>User</code></td><td>Usuário; gerencia gamificação (XP, nível, moedas, streak)</td></tr>
+        <tr><td><code>UserPreference</code></td><td>Preferências e configurações do usuário</td></tr>
+        <tr><td><code>Period</code></td><td>Período letivo (semestre/ano)</td></tr>
+        <tr><td><code>Subject</code></td><td>Disciplina cursada em um período</td></tr>
+        <tr><td><code>ClassSchedule</code></td><td>Horário de aula de uma disciplina</td></tr>
+        <tr><td><code>Activity</code></td><td>Atividade com checklist e prazo</td></tr>
+        <tr><td><code>ChecklistItem</code></td><td>Item individual da lista de tarefas</td></tr>
+        <tr><td><code>Assessment</code></td><td>Avaliação/prova de uma disciplina</td></tr>
+        <tr><td><code>AbsenceLog</code></td><td>Registro de falta em uma disciplina</td></tr>
+        <tr><td><code>Note</code></td><td>Nota de estudo em texto livre</td></tr>
+        <tr><td><code>Material</code></td><td>Material de estudo (arquivo ou link)</td></tr>
+        <tr><td><code>FileObject</code></td><td>Metadados de arquivo armazenado no S3</td></tr>
+        <tr><td><code>FocusSession</code></td><td>Sessão de foco com duração e XP ganho</td></tr>
+        <tr><td><code>PlannerEvent</code></td><td>Evento no planejador do estudante</td></tr>
+        <tr><td><code>Reminder</code></td><td>Lembrete pessoal</td></tr>
+        <tr><td><code>Notification</code></td><td>Notificação do sistema para o usuário</td></tr>
+        <tr><td><code>PasswordResetToken</code></td><td>Token para redefinição de senha</td></tr>
+        <tr><td><code>GamificationConfig</code></td><td>Configurações globais de gamificação</td></tr>
+      </tbody>
+    </table>
+    <div class="table-source">Fonte: Elaborado pelo autor (2026).</div>
+  </div>
+
+  <h3 class="subsection-title">4.3.2 Padrão de Construção das Entidades</h3>
+  <p>
+    As entidades de domínio utilizam o padrão <em>factory method</em> estático com
+    construtores privados, garantindo a integridade dos objetos. Dois
+    <em>factory methods</em> são definidos para cada entidade:
+  </p>
+  <pre>public class User {
+    private User() {}   // construtor privado
+
+    // Criação de nova instância — gera UUID e timestamps
+    public static User create(String name, String email,
+                              String passwordHash, Role role) { ... }
+
+    // Reconstituição a partir da persistência
+    public static User fromState(UUID id, String name, ...) { ... }
+}</pre>
+  <div class="code-caption">Código 2 — Factory methods da entidade User</div>
+
+  <h2 class="section-title">4.4 Sistema de Gamificação</h2>
+
+  <h3 class="subsection-title">4.4.1 Progressão de XP e Níveis</h3>
+  <p>
+    O limiar de XP necessário para avançar de nível é calculado como:
+  </p>
+  <div class="equation">XP<sub>necessário</sub> = 100 × nível_atual</div>
+  <p>
+    O método <code>User.awardXp(int amount)</code> implementa a concessão de XP com
+    preservação de XP excedente (<em>overflow</em>) ao subir de nível:
+  </p>
+  <pre>public boolean awardXp(int amount) {
+    this.currentXp += amount;
+    int threshold = 100 * this.currentLevel;
+    if (this.currentXp >= threshold) {
+        this.currentXp -= threshold;   // preserva overflow
+        this.currentLevel++;
+        touch();
+        return true;   // indica subida de nível
+    }
+    touch();
+    return false;
+}</pre>
+  <div class="code-caption">Código 3 — Método awardXp da entidade User</div>
+
+  <h3 class="subsection-title">4.4.2 Eventos de Gamificação</h3>
+  <p>A concessão de XP ocorre em três eventos principais:</p>
+  <ul>
+    <li><strong>Conclusão de Atividade:</strong> ao marcar uma <code>Activity</code>
+        como concluída pela primeira vez, o usuário recebe 50 XP;</li>
+    <li><strong>Sessão de Foco:</strong> ao encerrar uma <code>FocusSession</code>,
+        o XP é proporcional à duração da sessão (<code>durationSeconds</code>);</li>
+    <li><strong>Subida de Nível:</strong> quando <code>awardXp()</code> retorna
+        <code>true</code>, uma notificação <code>LEVEL_UP</code> é criada.</li>
+  </ul>
+
+  <h3 class="subsection-title">4.4.3 Controle de Faltas e Notificações</h3>
+  <p>
+    O <code>AbsenceLogServiceImpl</code> monitora o percentual de faltas. Quando
+    o limite de 75% é atingido, uma notificação <code>ABSENCE_LIMIT</code> é criada,
+    com deduplicação via
+    <code>NotificationRepositoryPort.existsUnreadByUserIdAndTypeAndReferenceId()</code>.
+  </p>
+
+  <h2 class="section-title">4.5 Segurança</h2>
+
+  <h3 class="subsection-title">4.5.1 Autenticação JWT</h3>
+  <ol>
+    <li>O cliente realiza <em>login</em> em <code>POST /auth/login</code> com e-mail e senha;</li>
+    <li>O <code>JwtService</code> gera um token assinado com a chave secreta configurada;</li>
+    <li>Nas requisições seguintes, o cliente inclui o token no cabeçalho
+        <code>Authorization: Bearer &lt;token&gt;</code>;</li>
+    <li>O filtro <code>JwtAuthFilter</code> valida o token a cada requisição.</li>
+  </ol>
+
+  <h3 class="subsection-title">4.5.2 Autorização</h3>
+  <ul>
+    <li><strong>USER:</strong> acesso aos próprios recursos acadêmicos e de gamificação;</li>
+    <li><strong>ADMIN:</strong> acesso às rotas <code>/admin/**</code> para operações administrativas.</li>
+  </ul>
+
+  <h2 class="section-title">4.6 Módulos Funcionais</h2>
+  <p class="todo">⚠️ Descreva cada módulo funcional com mais detalhe: Organização Acadêmica, Atividades com Checklist, Sessões de Foco, Materiais e Notas, Planejador, Notificações. Inclua diagramas de sequência para os fluxos mais importantes.</p>
+
+  <h2 class="section-title">4.7 Camada de Persistência</h2>
+  <p>
+    A lista de <code>ChecklistItem</code> na entidade <code>Activity</code> é
+    serializada diretamente como JSON na coluna <code>checklist</code> usando
+    o recurso do Hibernate 6:
+  </p>
+  <pre>@JdbcTypeCode(SqlTypes.JSON)
+@Column(columnDefinition = "jsonb")
+private List&lt;ChecklistItem&gt; checklist;</pre>
+  <div class="code-caption">Código 4 — Mapeamento JSON de ChecklistItem via Hibernate 6</div>
+
+  <h2 class="section-title">4.8 API REST e Documentação</h2>
+
+  <div class="table-wrapper">
+    <div class="table-caption">Quadro 3 — Grupos de recursos da API REST</div>
+    <table>
+      <thead><tr><th>Prefixo</th><th>Recurso</th></tr></thead>
+      <tbody>
+        <tr><td><code>/auth</code></td><td>Autenticação e registro</td></tr>
+        <tr><td><code>/users</code></td><td>Gerenciamento de usuários</td></tr>
+        <tr><td><code>/periods</code></td><td>Períodos letivos</td></tr>
+        <tr><td><code>/subjects</code></td><td>Disciplinas</td></tr>
+        <tr><td><code>/class-schedules</code></td><td>Horários de aula</td></tr>
+        <tr><td><code>/activities</code></td><td>Atividades com checklist</td></tr>
+        <tr><td><code>/assessments</code></td><td>Avaliações</td></tr>
+        <tr><td><code>/absence-logs</code></td><td>Registros de falta</td></tr>
+        <tr><td><code>/focus-sessions</code></td><td>Sessões de foco</td></tr>
+        <tr><td><code>/notes</code></td><td>Notas de estudo</td></tr>
+        <tr><td><code>/materials</code></td><td>Materiais de estudo</td></tr>
+        <tr><td><code>/planner-events</code></td><td>Eventos do planejador</td></tr>
+        <tr><td><code>/notifications</code></td><td>Notificações</td></tr>
+      </tbody>
+    </table>
+    <div class="table-source">Fonte: Elaborado pelo autor (2026).</div>
+  </div>
+</div>
+
+<!-- =====================================================
+     CAPÍTULO 5 — RESULTADOS
+===================================================== -->
+<div class="page">
+  <h1 class="chapter-title">5 Resultados</h1>
+
+  <h2 class="section-title">5.1 Funcionalidades Implementadas</h2>
+  <ul>
+    <li><strong>Autenticação e autorização:</strong> cadastro, login com JWT, redefinição de senha e controle de acesso por <em>role</em>;</li>
+    <li><strong>Organização acadêmica:</strong> gerenciamento de períodos, disciplinas, horários, avaliações e faltas;</li>
+    <li><strong>Atividades com checklist:</strong> criação e conclusão com lista de tarefas embutida em JSON;</li>
+    <li><strong>Sessões de foco:</strong> registro baseado no método Pomodoro com XP proporcional ao tempo;</li>
+    <li><strong>Notas e materiais:</strong> notas em texto livre e upload de arquivos no AWS S3;</li>
+    <li><strong>Planejador e lembretes:</strong> eventos e lembretes pessoais;</li>
+    <li><strong>Gamificação:</strong> XP, níveis, moedas e <em>streak</em>;</li>
+    <li><strong>Notificações:</strong> alertas automáticos com deduplicação.</li>
+  </ul>
+
+  <h2 class="section-title">5.2 Testes Realizados</h2>
+
+  <div class="table-wrapper">
+    <div class="table-caption">Quadro 4 — Resumo dos testes unitários implementados</div>
+    <table>
+      <thead><tr><th>Classe testada</th><th>Tipo</th><th>N.º de casos</th></tr></thead>
+      <tbody>
+        <tr><td><code>UserTest</code></td><td>Modelo de domínio</td><td>[N]</td></tr>
+        <tr><td><code>UserServiceImplTest</code></td><td>Serviço</td><td>[N]</td></tr>
+        <tr><td><code>NotificationServiceImplTest</code></td><td>Serviço</td><td>[N]</td></tr>
+        <tr><td><code>UserControllerTest</code></td><td>Controlador</td><td>[N]</td></tr>
+        <tr><td>[Demais classes…]</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="table-source">Fonte: Elaborado pelo autor (2026).</div>
+  </div>
+
+  <h2 class="section-title">5.3 Avaliação da Arquitetura</h2>
+  <p>A adoção da Arquitetura Hexagonal trouxe benefícios observáveis:</p>
+  <ul>
+    <li><strong>Testabilidade:</strong> serviços de domínio testados sem instanciar beans do Spring;</li>
+    <li><strong>Substituição de adapters:</strong> implementação de armazenamento trocável sem alterar o domínio;</li>
+    <li><strong>Legibilidade:</strong> separação clara de responsabilidades facilita manutenção.</li>
+  </ul>
+  <p>
+    Como contrapartida, a arquitetura exige a criação de um número maior de classes
+    (duas camadas de mapeamento, interfaces de porta, adaptadores), aumentando o
+    <em>boilerplate</em> inicial.
+  </p>
+
+  <h2 class="section-title">5.4 Discussão</h2>
+  <p class="todo">⚠️ Discuta os resultados em relação aos objetivos. Analise pontos fortes e limitações. Relacione com o referencial teórico.</p>
+</div>
+
+<!-- =====================================================
+     CAPÍTULO 6 — CONCLUSÃO
+===================================================== -->
+<div class="page">
+  <h1 class="chapter-title">6 Conclusão</h1>
+
+  <p>
+    Este trabalho apresentou o desenvolvimento do <em>Student App</em>, uma plataforma
+    <em>web</em> gamificada para apoio à gestão de estudos universitários. A solução
+    integra ferramentas de organização acadêmica com mecânicas de engajamento baseadas
+    em gamificação, como pontos de experiência, níveis progressivos, moedas virtuais
+    e sequências de estudo.
+  </p>
+  <p>
+    O <em>backend</em> foi desenvolvido em Java 17 com Spring Boot 3.5.6, adotando a
+    Arquitetura Hexagonal. Essa escolha demonstrou-se adequada, garantindo isolamento
+    das regras de negócio da infraestrutura, facilitando os testes unitários e tornando
+    os componentes de infraestrutura substituíveis de forma independente.
+  </p>
+  <p>Os objetivos específicos foram alcançados:</p>
+  <ul>
+    <li>O módulo de organização acadêmica foi implementado com todos os fluxos de CRUD;</li>
+    <li>O sistema de gamificação com XP, níveis, moedas e <em>streak</em> foi integrado;</li>
+    <li>As sessões de foco com recompensa de XP proporcional foram implementadas;</li>
+    <li>A Arquitetura Hexagonal foi aplicada de forma consistente;</li>
+    <li>A API REST foi documentada via Swagger UI e protegida com JWT;</li>
+    <li>O sistema de notificações com deduplicação foi implementado.</li>
+  </ul>
+
+  <h2 class="section-title">6.1 Limitações</h2>
+  <p class="todo">⚠️ Descreva as limitações do trabalho: ausência do frontend, sem testes de integração, sem avaliação com usuários reais etc.</p>
+
+  <h2 class="section-title">6.2 Trabalhos Futuros</h2>
+  <ul>
+    <li><strong>Desenvolvimento do frontend:</strong> implementação da interface em React ou Vue.js;</li>
+    <li><strong>Avaliação com usuários reais:</strong> estudo de usabilidade com estudantes universitários;</li>
+    <li><strong>Conquistas (<em>badges</em>):</strong> expansão da gamificação com conquistas desbloqueáveis;</li>
+    <li><strong>Ranking e elementos sociais:</strong> tabelas de classificação e funcionalidades colaborativas;</li>
+    <li><strong>Análise de desempenho:</strong> relatórios sobre histórico de estudos e evolução das notas;</li>
+    <li><strong>Aplicativo móvel:</strong> clientes iOS/Android com notificações <em>push</em>;</li>
+    <li><strong>Testes de integração e carga:</strong> ampliação da suíte de testes.</li>
+  </ul>
+</div>
+
+<!-- =====================================================
+     REFERÊNCIAS
+===================================================== -->
+<div class="page">
+  <h1 class="chapter-title">Referências</h1>
+
+  <div class="reference">
+    CIRILLO, Francesco. <strong>A Técnica Pomodoro</strong>. Rio de Janeiro: Sextante, 2018.
+  </div>
+
+  <div class="reference">
+    COCKBURN, Alistair. <strong>Hexagonal Architecture</strong>. 2005. Disponível em:
+    &lt;https://alistair.cockburn.us/hexagonal-architecture&gt;. Acesso em: [dia mês ano].
+  </div>
+
+  <div class="reference">
+    DETERDING, Sebastian et al. From game design elements to gamefulness: defining
+    gamification. In: <strong>Proceedings of the 15th International Academic MindTrek
+    Conference</strong>. New York: ACM, 2011. p. 9–15.
+  </div>
+
+  <div class="reference">
+    FIELDING, Roy Thomas. <strong>Architectural Styles and the Design of Network-based
+    Software Architectures</strong>. 2000. Tese (Doutorado) — University of California,
+    Irvine, 2000.
+  </div>
+
+  <div class="reference">
+    GIL, Antônio Carlos. <strong>Como Elaborar Projetos de Pesquisa</strong>. 5. ed.
+    São Paulo: Atlas, 2010.
+  </div>
+
+  <div class="reference">
+    HAMARI, Juho; KOIVISTO, Jonna; SARSA, Harri. Does gamification work? A literature
+    review of empirical studies on gamification. In: <strong>Annual Hawaii International
+    Conference on System Sciences</strong>. 2014. p. 3025–3034.
+  </div>
+
+  <div class="reference">
+    KAPP, Karl M. <strong>The Gamification of Learning and Instruction</strong>:
+    game-based methods and strategies for training and education. San Francisco:
+    Pfeiffer, 2012.
+  </div>
+
+  <div class="reference">
+    MARTIN, Robert C. <strong>Clean Architecture</strong>: a craftsman's guide to
+    software structure and design. New Jersey: Prentice Hall, 2017.
+  </div>
+
+  <div class="reference">
+    VMWARE, INC. <strong>Spring Boot Reference Documentation</strong>. 2024.
+    Disponível em: &lt;https://docs.spring.io/spring-boot/docs/current/reference/html/&gt;.
+    Acesso em: [dia mês ano].
+  </div>
+
+  <div class="reference">
+    WALLS, Craig. <strong>Spring in Action</strong>. 6. ed. Shelter Island: Manning, 2022.
+  </div>
+
+  <div class="reference">
+    WAZLAWICK, Raul Sidnei. <strong>Metodologia de Pesquisa para Ciência da
+    Computação</strong>. 2. ed. Rio de Janeiro: Elsevier, 2014.
+  </div>
+</div>
+
+<!-- =====================================================
+     APÊNDICE A
+===================================================== -->
+<div class="page">
+  <div class="appendix-label">Apêndice A</div>
+  <h1 class="chapter-title">Diagrama de Classes do Domínio</h1>
+  <div class="figure-placeholder" style="min-height:10cm;">
+    [Inserir aqui o diagrama de classes UML do domínio da aplicação]
+  </div>
+  <div class="figure-caption">Figura A.1 — Diagrama de Classes do Domínio</div>
+  <div class="figure-source">Fonte: Elaborado pelo autor (2026).</div>
+</div>
+
+<!-- =====================================================
+     APÊNDICE B
+===================================================== -->
+<div class="page">
+  <div class="appendix-label">Apêndice B</div>
+  <h1 class="chapter-title">Endpoints da API REST</h1>
+  <p class="todo">⚠️ Insira aqui a documentação completa dos endpoints. A documentação interativa está disponível em <code>/swagger-ui.html</code> quando a aplicação está em execução.</p>
+</div>
+
+<!-- =====================================================
+     APÊNDICE C
+===================================================== -->
+<div class="page">
+  <div class="appendix-label">Apêndice C</div>
+  <h1 class="chapter-title">Diagrama Entidade-Relacionamento</h1>
+  <div class="figure-placeholder" style="min-height:10cm;">
+    [Inserir aqui o DER do banco de dados PostgreSQL]
+  </div>
+  <div class="figure-caption">Figura C.1 — Diagrama Entidade-Relacionamento</div>
+  <div class="figure-source">Fonte: Elaborado pelo autor (2026).</div>
+</div>
+
+</body>
+</html>

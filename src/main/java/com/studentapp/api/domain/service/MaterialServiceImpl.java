@@ -1,9 +1,9 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.FileObject;
-import com.studentapp.api.domain.model.Material;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.model.material.FileObject;
+import com.studentapp.api.domain.model.material.Material;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.domain.port.in.MaterialUseCase;
 import com.studentapp.api.domain.port.out.*;
 import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;

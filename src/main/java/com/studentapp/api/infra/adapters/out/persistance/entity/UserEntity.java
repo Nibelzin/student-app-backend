@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance.entity;
 
-import com.studentapp.api.domain.model.Role;
+import com.studentapp.api.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.PasswordResetToken;
+import com.studentapp.api.domain.model.passwordResetToken.PasswordResetToken;
 import com.studentapp.api.domain.port.out.PasswordResetTokenRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.PasswordResetTokenEntity;
 import com.studentapp.api.infra.adapters.out.persistance.mapper.PasswordResetTokenMapper;

@@ -1,6 +1,5 @@
 package com.studentapp.api.infra.adapters.in.web.dto.user;
 
-import com.studentapp.api.domain.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

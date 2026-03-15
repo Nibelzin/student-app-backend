@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.Notification;
+import com.studentapp.api.domain.model.notification.Notification;
 import com.studentapp.api.infra.adapters.in.web.dto.notification.NotificationResponse;
 import org.springframework.stereotype.Component;
 

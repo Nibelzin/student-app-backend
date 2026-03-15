@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.PlannerEvent;
+import com.studentapp.api.domain.model.plannerEvent.PlannerEvent;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
 import com.studentapp.api.domain.port.out.PlannerEventRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.PlannerEventEntity;

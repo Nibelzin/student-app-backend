@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.AbsenceLog;
+import com.studentapp.api.domain.model.absenceLog.AbsenceLog;
 import com.studentapp.api.domain.port.out.AbsenceLogRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.AbsenceLogEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.SubjectEntity;

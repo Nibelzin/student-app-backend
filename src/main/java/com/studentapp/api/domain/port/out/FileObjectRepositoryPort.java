@@ -1,6 +1,6 @@
 package com.studentapp.api.domain.port.out;
 
-import com.studentapp.api.domain.model.FileObject;
+import com.studentapp.api.domain.model.material.FileObject;
 
 import java.util.Optional;
 import java.util.UUID;

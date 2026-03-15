@@ -1,10 +1,9 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.Period;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.period.Period;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.domain.port.in.PeriodUseCase;
 import com.studentapp.api.domain.port.in.SubjectUseCase;
-import com.studentapp.api.domain.port.in.UserUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodUpdateRequest;

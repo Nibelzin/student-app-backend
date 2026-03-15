@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.ClassSchedule;
+import com.studentapp.api.domain.model.classSchedule.ClassSchedule;
 import com.studentapp.api.domain.port.out.ClassScheduleRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.ClassScheduleEntity;
 import com.studentapp.api.infra.adapters.out.persistance.entity.SubjectEntity;

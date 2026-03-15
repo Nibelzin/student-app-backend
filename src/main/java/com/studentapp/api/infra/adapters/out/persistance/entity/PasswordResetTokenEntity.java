@@ -1,6 +1,5 @@
 package com.studentapp.api.infra.adapters.out.persistance.entity;
 
-import com.studentapp.api.domain.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

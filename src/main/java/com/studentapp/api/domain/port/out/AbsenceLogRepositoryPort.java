@@ -1,6 +1,6 @@
 package com.studentapp.api.domain.port.out;
 
-import com.studentapp.api.domain.model.AbsenceLog;
+import com.studentapp.api.domain.model.absenceLog.AbsenceLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.Material;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.model.material.Material;
 import com.studentapp.api.domain.port.in.ActivityUseCase;
 import com.studentapp.api.domain.port.in.MaterialUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.activity.ActivityResponse;
@@ -54,6 +54,9 @@ public class ActivityController {
 
     @PostMapping
     public ResponseEntity<ActivityResponse> createActivity(@RequestBody ActivityUseCase.CreateActivityData createActivityData) {
+
+        System.out.println("CREATE ACTIVITY: " + createActivityData);
+
         Activity newActivity = activityUseCase.createActivity(createActivityData);
         ActivityResponse response = activityDtoMapper.toResponse(newActivity);
         return ResponseEntity.ok(response);

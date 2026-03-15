@@ -1,7 +1,7 @@
 package com.studentapp.api.domain.port.in;
 
-import com.studentapp.api.domain.model.Role;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.enums.Role;
+import com.studentapp.api.domain.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

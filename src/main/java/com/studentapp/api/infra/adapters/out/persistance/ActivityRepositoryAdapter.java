@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
-import com.studentapp.api.domain.model.Activity;
+import com.studentapp.api.domain.model.activity.Activity;
 import com.studentapp.api.domain.port.in.ActivityUseCase;
 import com.studentapp.api.domain.port.out.ActivityRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.ActivityEntity;

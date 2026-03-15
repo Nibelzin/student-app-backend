@@ -1,7 +1,7 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.User;
-import com.studentapp.api.domain.model.UserPreference;
+import com.studentapp.api.domain.model.user.User;
+import com.studentapp.api.domain.model.user.UserPreference;
 import com.studentapp.api.domain.port.in.UserPreferenceUseCase;
 import com.studentapp.api.domain.port.out.UserPreferenceRepositoryPort;
 import com.studentapp.api.domain.port.out.UserRepositoryPort;

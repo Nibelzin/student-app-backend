@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.Period;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.period.Period;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.period.PeriodResponseSummary;

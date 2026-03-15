@@ -1,8 +1,8 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.Period;
-import com.studentapp.api.domain.model.Subject;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.period.Period;
+import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.infra.adapters.in.web.dto.subject.SubjectCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.subject.SubjectResponse;
 import org.springframework.stereotype.Component;

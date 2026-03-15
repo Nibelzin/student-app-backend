@@ -1,0 +1,82 @@
+% =========================================================
+%  Capítulo 6 — Conclusão
+% =========================================================
+
+\chapter{Conclusão}
+\label{cap:conclusao}
+
+Este trabalho apresentou o desenvolvimento do \textit{Student App}, uma plataforma
+\textit{web} gamificada para apoio à gestão de estudos universitários. A solução
+integra ferramentas de organização acadêmica -- gerenciamento de disciplinas,
+períodos, atividades, avaliações e horários -- com mecânicas de engajamento
+baseadas em gamificação, como pontos de experiência, níveis progressivos, moedas
+virtuais e sequências de estudo.
+
+O \textit{backend} foi desenvolvido em Java 17 com o \textit{framework} Spring Boot
+3.5.6, adotando a Arquitetura Hexagonal como padrão estrutural. Essa escolha
+arquitetural demonstrou-se adequada para o contexto do projeto, pois garantiu o
+isolamento das regras de negócio da infraestrutura, facilitando os testes unitários
+e tornando os componentes de infraestrutura (banco de dados, armazenamento de
+arquivos, e-mail) substituíveis de forma independente.
+
+Os objetivos específicos definidos na Seção~\ref{subsec:objetivos-especificos}
+foram alcançados:
+
+\begin{itemize}
+  \item O módulo de organização acadêmica foi implementado, contemplando todas as
+        entidades e seus fluxos de CRUD;
+
+  \item O sistema de gamificação com XP, níveis, moedas e \textit{streak} foi
+        integrado às ações do usuário;
+
+  \item As sessões de foco com recompensa de XP proporcional ao tempo dedicado
+        foram implementadas;
+
+  \item A Arquitetura Hexagonal foi aplicada de forma consistente em todo o projeto;
+
+  \item A API REST foi documentada via Swagger UI e protegida com JWT;
+
+  \item O sistema de notificações com deduplicação para prazos, limites de faltas
+        e conquistas foi implementado.
+\end{itemize}
+
+% -----------------------------------------------------------
+\section{Limitações}
+\label{sec:limitacoes}
+
+[Descreva as limitações do trabalho atual, por exemplo: ausência do frontend,
+ausência de testes de integração, falta de avaliação com usuários reais, etc.]
+
+% -----------------------------------------------------------
+\section{Trabalhos Futuros}
+\label{sec:trabalhos-futuros}
+
+Como desdobramentos naturais deste trabalho, destacam-se as seguintes direções
+para trabalhos futuros:
+
+\begin{itemize}
+  \item \textbf{Desenvolvimento do \textit{frontend}:} implementação da interface
+        do usuário em uma tecnologia moderna como React ou Vue.js, consumindo a
+        API REST existente;
+
+  \item \textbf{Avaliação com usuários reais:} realização de um estudo de usabilidade
+        e de eficácia da gamificação com estudantes universitários, coletando métricas
+        de engajamento e satisfação;
+
+  \item \textbf{Sistema de conquistas (\textit{badges}):} expansão do sistema de
+        gamificação com conquistas desbloqueáveis por marcos específicos (e.g., primeira
+        semana consecutiva de estudo, 100 sessões de foco concluídas);
+
+  \item \textbf{Ranking e elementos sociais:} introdução de tabelas de classificação
+        e funcionalidades colaborativas entre estudantes;
+
+  \item \textbf{Análise de desempenho:} implementação de relatórios e visualizações
+        sobre o histórico de estudos, distribuição de tempo por disciplina e evolução
+        das notas;
+
+  \item \textbf{Aplicativo móvel:} desenvolvimento de clientes móveis (iOS/Android)
+        com suporte a notificações \textit{push};
+
+  \item \textbf{Testes de integração e de carga:} ampliação da suíte de testes com
+        testes de integração (\texttt{@DataJpaTest}) e testes de desempenho sob carga.
+\end{itemize}

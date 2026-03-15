@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.ClassSchedule;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.classSchedule.ClassSchedule;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.infra.adapters.out.persistance.entity.ClassScheduleEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

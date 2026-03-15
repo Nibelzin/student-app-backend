@@ -1,7 +1,7 @@
 package com.studentapp.api.infra.adapters.in.web.mapper;
 
-import com.studentapp.api.domain.model.Role;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.enums.Role;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.user.UserResponseSummary;

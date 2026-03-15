@@ -1,7 +1,7 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.PasswordResetToken;
-import com.studentapp.api.domain.model.User;
+import com.studentapp.api.domain.model.passwordResetToken.PasswordResetToken;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.PasswordResetUseCase;
 import com.studentapp.api.domain.port.out.EmailServicePort;
 import com.studentapp.api.domain.port.out.PasswordResetTokenRepositoryPort;

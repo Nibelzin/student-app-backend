@@ -1,6 +1,6 @@
 package com.studentapp.api.domain.port.out;
 
-import com.studentapp.api.domain.model.ClassSchedule;
+import com.studentapp.api.domain.model.classSchedule.ClassSchedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

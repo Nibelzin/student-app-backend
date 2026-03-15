@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.FileObject;
+import com.studentapp.api.domain.model.material.FileObject;
 import com.studentapp.api.infra.adapters.out.persistance.entity.FileObjectEntity;
 import org.mapstruct.Mapper;
 

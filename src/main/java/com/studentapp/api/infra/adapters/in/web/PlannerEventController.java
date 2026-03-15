@@ -1,10 +1,7 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.PlannerEvent;
-import com.studentapp.api.domain.port.in.ActivityUseCase;
+import com.studentapp.api.domain.model.plannerEvent.PlannerEvent;
 import com.studentapp.api.domain.port.in.PlannerEventUseCase;
-import com.studentapp.api.domain.port.in.SubjectUseCase;
-import com.studentapp.api.domain.port.in.UserUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.plannerEvent.PlannerEventResponseSummary;
 import com.studentapp.api.infra.adapters.in.web.mapper.PlannerEventDtoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;

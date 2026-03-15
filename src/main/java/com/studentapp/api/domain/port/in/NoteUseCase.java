@@ -1,6 +1,6 @@
 package com.studentapp.api.domain.port.in;
 
-import com.studentapp.api.domain.model.Note;
+import com.studentapp.api.domain.model.note.Note;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

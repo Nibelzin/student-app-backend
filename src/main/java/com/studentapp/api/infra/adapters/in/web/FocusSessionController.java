@@ -1,9 +1,11 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.FocusSession;
+import com.studentapp.api.domain.model.focusSession.FocusSession;
+import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.FocusSessionUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.focusSession.FocusSessionCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.focusSession.FocusSessionResponse;
+import com.studentapp.api.infra.adapters.in.web.dto.focusSession.FocusSessionTickResponse;
 import com.studentapp.api.infra.adapters.in.web.dto.focusSession.FocusSessionUpdateRequest;
 import com.studentapp.api.infra.adapters.in.web.mapper.FocusSessionDtoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -77,5 +80,13 @@ public class FocusSessionController {
     public ResponseEntity<Void> deleteFocusSession(@PathVariable UUID id) {
         focusSessionUseCase.deleteFocusSession(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/tick")
+    public ResponseEntity<FocusSessionTickResponse> tick(@AuthenticationPrincipal User user) {
+        FocusSessionUseCase.FocusSessionTickResult result = focusSessionUseCase.awardTickXp(user.getId());
+        return ResponseEntity.ok(new FocusSessionTickResponse(
+                result.currentXp(), result.currentLevel(), result.leveledUp()
+        ));
     }
 }

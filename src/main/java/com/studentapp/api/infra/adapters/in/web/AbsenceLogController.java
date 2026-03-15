@@ -1,6 +1,6 @@
 package com.studentapp.api.infra.adapters.in.web;
 
-import com.studentapp.api.domain.model.AbsenceLog;
+import com.studentapp.api.domain.model.absenceLog.AbsenceLog;
 import com.studentapp.api.domain.port.in.AbsenceLogUseCase;
 import com.studentapp.api.infra.adapters.in.web.dto.absenceLog.AbsenceLogCreateRequest;
 import com.studentapp.api.infra.adapters.in.web.dto.absenceLog.AbsenceLogResponse;

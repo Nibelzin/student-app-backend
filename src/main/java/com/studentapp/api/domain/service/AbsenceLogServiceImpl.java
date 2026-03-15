@@ -1,8 +1,8 @@
 package com.studentapp.api.domain.service;
 
-import com.studentapp.api.domain.model.AbsenceLog;
-import com.studentapp.api.domain.model.NotificationType;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.absenceLog.AbsenceLog;
+import com.studentapp.api.domain.enums.NotificationType;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.domain.port.in.AbsenceLogUseCase;
 import com.studentapp.api.domain.port.in.NotificationUseCase;
 import com.studentapp.api.domain.port.out.AbsenceLogRepositoryPort;

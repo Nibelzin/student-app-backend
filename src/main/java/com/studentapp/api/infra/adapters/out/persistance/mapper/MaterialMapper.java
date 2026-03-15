@@ -1,9 +1,9 @@
 package com.studentapp.api.infra.adapters.out.persistance.mapper;
 
-import com.studentapp.api.domain.model.Activity;
-import com.studentapp.api.domain.model.FileObject;
-import com.studentapp.api.domain.model.Material;
-import com.studentapp.api.domain.model.Subject;
+import com.studentapp.api.domain.model.activity.Activity;
+import com.studentapp.api.domain.model.material.FileObject;
+import com.studentapp.api.domain.model.material.Material;
+import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.infra.adapters.out.persistance.entity.MaterialEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

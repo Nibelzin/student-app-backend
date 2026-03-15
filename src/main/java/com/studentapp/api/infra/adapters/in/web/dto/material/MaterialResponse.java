@@ -1,6 +1,5 @@
 package com.studentapp.api.infra.adapters.in.web.dto.material;
 
-import com.studentapp.api.domain.model.FileObject;
 import lombok.Getter;
 import lombok.Setter;
 
