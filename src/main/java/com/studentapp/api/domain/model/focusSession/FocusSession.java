@@ -10,7 +10,7 @@ import java.util.UUID;
 public class FocusSession {
 
     private final UUID id;
-    private int durationSeconds;
+    private Integer durationSeconds;
     private boolean isCompleted;
     private int xpEarned;
 
@@ -20,7 +20,7 @@ public class FocusSession {
     private Subject subject;
     private Activity activity;
 
-    private FocusSession(UUID id, int durationSeconds, boolean isCompleted, int xpEarned, LocalDateTime createdAt, User user, Subject subject, Activity activity) {
+    private FocusSession(UUID id, Integer durationSeconds, boolean isCompleted, int xpEarned, LocalDateTime createdAt, User user, Subject subject, Activity activity) {
         this.id = id;
         this.durationSeconds = durationSeconds;
         this.isCompleted = isCompleted;
@@ -31,22 +31,22 @@ public class FocusSession {
         this.activity = activity;
     }
 
-    private FocusSession(int durationSeconds, boolean isCompleted, int xpEarned, User user, Subject subject, Activity activity) {
+    private FocusSession(User user, Subject subject, Activity activity) {
         this.id = UUID.randomUUID();
-        this.durationSeconds = durationSeconds;
-        this.isCompleted = isCompleted;
-        this.xpEarned = xpEarned;
+        this.durationSeconds = null;
+        this.isCompleted = false;
+        this.xpEarned = 0;
         this.createdAt = LocalDateTime.now();
         this.user = user;
         this.subject = subject;
         this.activity = activity;
     }
 
-    public static FocusSession create(int durationSeconds, boolean isCompleted, int xpEarned, User user, Subject subject, Activity activity) {
-        return new FocusSession(durationSeconds, isCompleted, xpEarned, user, subject, activity);
+    public static FocusSession create(User user, Subject subject, Activity activity) {
+        return new FocusSession(user, subject, activity);
     }
 
-    public static FocusSession fromState(UUID id, int durationSeconds, boolean isCompleted, int xpEarned, LocalDateTime createdAt, User user, Subject subject, Activity activity) {
+    public static FocusSession fromState(UUID id, Integer durationSeconds, boolean isCompleted, int xpEarned, LocalDateTime createdAt, User user, Subject subject, Activity activity) {
         return new FocusSession(id, durationSeconds, isCompleted, xpEarned, createdAt, user, subject, activity);
     }
 
@@ -54,11 +54,11 @@ public class FocusSession {
         return id;
     }
 
-    public int getDurationSeconds() {
+    public Integer getDurationSeconds() {
         return durationSeconds;
     }
 
-    public void setDurationSeconds(int durationSeconds) {
+    public void setDurationSeconds(Integer durationSeconds) {
         this.durationSeconds = durationSeconds;
     }
 

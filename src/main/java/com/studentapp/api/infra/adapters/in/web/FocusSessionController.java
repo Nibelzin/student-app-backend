@@ -54,8 +54,6 @@ public class FocusSessionController {
     @PostMapping
     public ResponseEntity<FocusSessionResponse> createFocusSession(@Valid @RequestBody FocusSessionCreateRequest request) {
         FocusSessionUseCase.CreateFocusSessionData data = new FocusSessionUseCase.CreateFocusSessionData(
-                request.getDurationSeconds(),
-                Boolean.TRUE.equals(request.getIsCompleted()),
                 request.getUserId(),
                 request.getSubjectId(),
                 request.getActivityId()

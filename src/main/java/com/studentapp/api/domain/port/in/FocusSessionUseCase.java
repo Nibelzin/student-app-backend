@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface FocusSessionUseCase {
 
-    record CreateFocusSessionData(int durationSeconds, boolean isCompleted, UUID userId, UUID subjectId, UUID activityId) {}
+    record CreateFocusSessionData(UUID userId, UUID subjectId, UUID activityId) {}
     record UpdateFocusSessionData(Integer durationSeconds, Boolean isCompleted) {}
     record FocusSessionQueryData(UUID userId, UUID subjectId, UUID activityId, Boolean isCompleted) {}
     record FocusSessionTickResult(int currentXp, int currentLevel, boolean leveledUp) {}

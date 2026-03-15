@@ -21,7 +21,7 @@ public class FocusSessionEntity {
     private UUID id;
 
     @Column(name = "duration_seconds")
-    private int durationSeconds;
+    private Integer durationSeconds;
 
     @Column(name = "is_completed")
     private Boolean isCompleted;

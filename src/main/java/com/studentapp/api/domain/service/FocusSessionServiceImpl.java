@@ -31,8 +31,9 @@ public class FocusSessionServiceImpl implements FocusSessionUseCase {
     private final ActivityRepositoryPort activityRepositoryPort;
     private final NotificationUseCase notificationUseCase;
 
-    private int calculateXp(int durationSeconds, boolean isCompleted) {
-        return isCompleted ? Math.max(GamificationConfig.XP_FOCUS_PER_MINUTE, (durationSeconds / 60) * GamificationConfig.XP_FOCUS_PER_MINUTE) : 0;
+    private int calculateXp(Integer durationSeconds, boolean isCompleted) {
+        if (!isCompleted || durationSeconds == null) return 0;
+        return Math.max(GamificationConfig.XP_FOCUS_PER_MINUTE, (durationSeconds / 60) * GamificationConfig.XP_FOCUS_PER_MINUTE);
     }
 
     @Override
@@ -55,25 +56,8 @@ public class FocusSessionServiceImpl implements FocusSessionUseCase {
             );
         }
 
-        int xpEarned = calculateXp(data.durationSeconds(), data.isCompleted());
-        FocusSession newSession = FocusSession.create(data.durationSeconds(), data.isCompleted(), xpEarned, user, subject, activity);
-
-        FocusSession saved = focusSessionRepositoryPort.save(newSession);
-
-        if (data.isCompleted() && xpEarned > 0) {
-            boolean leveledUp = user.awardXp(xpEarned);
-            userRepositoryPort.save(user);
-            if (leveledUp) {
-                notificationUseCase.createNotification(new NotificationUseCase.CreateNotificationData(
-                        user,
-                        NotificationType.LEVEL_UP,
-                        "Você avançou para o nível " + user.getCurrentLevel() + "!",
-                        null
-                ));
-            }
-        }
-
-        return saved;
+        FocusSession newSession = FocusSession.create(user, subject, activity);
+        return focusSessionRepositoryPort.save(newSession);
     }
 
     @Override
@@ -85,7 +69,7 @@ public class FocusSessionServiceImpl implements FocusSessionUseCase {
         boolean wasCompleted = existing.isCompleted();
 
         if (data.durationSeconds() != null) {
-            if (data.durationSeconds() < existing.getDurationSeconds()) {
+            if (existing.getDurationSeconds() != null && data.durationSeconds() < existing.getDurationSeconds()) {
                 throw new IllegalArgumentException("Não é possível diminuir a duração de uma sessão de foco.");
             }
             existing.setDurationSeconds(data.durationSeconds());
