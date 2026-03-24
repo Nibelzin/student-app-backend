@@ -109,7 +109,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
 
     @Override
     public Page<Activity> findActivities(ActivityQueryData queryData, Pageable pageable){
-        if(queryData.isCompleted().isPresent() && queryData.isOverdue().isPresent()){
+        if((queryData.isCompleted().isPresent() && queryData.isCompleted().get()) && queryData.isOverdue().isPresent()){
             throw new InvalidQueryException("Não é possível buscas por 'atrasadas' e 'completas' simultaneamente.");
         }
 

@@ -33,6 +33,11 @@ public class ActivitySpecification {
             if(queryData.isCompleted().isPresent()){
                 predicates.add(cb.equal(root.get("isCompleted"), queryData.isCompleted().get()));
             }
+
+            if(queryData.isCompleted().isPresent() && !queryData.isCompleted().get()){
+                predicates.add(cb.equal(root.get("isCompleted"), false));   
+            }
+
             if(queryData.isOverdue().isPresent()){
                 if(queryData.isOverdue().get()){
                     predicates.add(cb.and(
@@ -46,6 +51,7 @@ public class ActivitySpecification {
                     ));
                 }
             }
+
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
