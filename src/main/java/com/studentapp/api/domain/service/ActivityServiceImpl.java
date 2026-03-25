@@ -42,7 +42,7 @@ public class ActivityServiceImpl implements ActivityUseCase {
                 () -> new ResourceNotFoundException("Matéria não encontrada.")
         );
 
-        Activity newActivity = Activity.create(createActivityData.title(), createActivityData.description(), createActivityData.dueDate(), false, createActivityData.type(), subject, createActivityData.checklist());
+        Activity newActivity = Activity.create(createActivityData.title(), createActivityData.description(), createActivityData.dueDate(), false, createActivityData.type(), subject, subject.getUser(), createActivityData.checklist());
 
         return activityRepositoryPort.save(newActivity);
     }

@@ -29,7 +29,7 @@ public class AssessmentServiceImpl implements AssessmentUseCase {
 
         Assessment newAssessment = Assessment.create(
                 data.title(), data.assessmentDate(), data.grade(),
-                data.maxGrade(), data.weight(), subject
+                data.maxGrade(), data.weight(), subject, subject.getUser()
         );
 
         return assessmentRepositoryPort.save(newAssessment);
@@ -72,6 +72,11 @@ public class AssessmentServiceImpl implements AssessmentUseCase {
     @Override
     public Page<Assessment> findBySubjectId(UUID subjectId, Pageable pageable) {
         return assessmentRepositoryPort.findBySubjectId(subjectId, pageable);
+    }
+
+    @Override
+    public Page<Assessment> findByUserId(UUID userId, Pageable pageable) {
+        return assessmentRepositoryPort.findByUserId(userId, pageable);
     }
 
     @Override

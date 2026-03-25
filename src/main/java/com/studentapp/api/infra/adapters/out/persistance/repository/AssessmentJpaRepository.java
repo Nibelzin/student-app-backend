@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface AssessmentJpaRepository extends JpaRepository<AssessmentEntity, UUID> {
 
     Page<AssessmentEntity> findBySubject(SubjectEntity subject, Pageable pageable);
+
+    Page<AssessmentEntity> findBySubjectUserId(UUID userId, Pageable pageable);
 }

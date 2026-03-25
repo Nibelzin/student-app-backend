@@ -1,6 +1,7 @@
 package com.studentapp.api.domain.model.activity;
 
 import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,9 +20,10 @@ public class Activity {
     private LocalDateTime updatedAt;
 
     private Subject subject;
+    private User user;
     private List<ChecklistItem> checklist;
 
-    private Activity(UUID id, String title, String description, LocalDateTime dueDate, Boolean isCompleted, Boolean xpAwarded, String type, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, List<ChecklistItem> checklist){
+    private Activity(UUID id, String title, String description, LocalDateTime dueDate, Boolean isCompleted, Boolean xpAwarded, String type, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, User user, List<ChecklistItem> checklist){
         this.id = id;
         this.title = title;
         this.description = description;
@@ -32,10 +34,11 @@ public class Activity {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.subject = subject;
+        this.user = user;
         this.checklist = checklist;
     }
 
-    private Activity(String title, String description, LocalDateTime dueDate, Boolean isCompleted, String type, Subject subject, List<ChecklistItem> checklist){
+    private Activity(String title, String description, LocalDateTime dueDate, Boolean isCompleted, String type, Subject subject, User user, List<ChecklistItem> checklist){
         this.id = UUID.randomUUID();
         this.title = title;
         this.description = description;
@@ -46,15 +49,16 @@ public class Activity {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
         this.subject = subject;
+        this.user = user;
         this.checklist = checklist;
     }
 
-    public static Activity create(String title, String description, LocalDateTime dueDate, Boolean isCompleted, String type, Subject subject, List<ChecklistItem> checklist){
-        return new Activity(title, description, dueDate, isCompleted, type, subject, checklist);
+    public static Activity create(String title, String description, LocalDateTime dueDate, Boolean isCompleted, String type, Subject subject, User user, List<ChecklistItem> checklist){
+        return new Activity(title, description, dueDate, isCompleted, type, subject, user, checklist);
     }
 
-    public static Activity fromState(UUID id, String title, String description, LocalDateTime dueDate, Boolean isCompleted, Boolean xpAwarded, String type, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, List<ChecklistItem> checklist){
-        return new Activity(id, title, description, dueDate, isCompleted, xpAwarded, type, createdAt, updatedAt, subject, checklist);
+    public static Activity fromState(UUID id, String title, String description, LocalDateTime dueDate, Boolean isCompleted, Boolean xpAwarded, String type, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, User user, List<ChecklistItem> checklist){
+        return new Activity(id, title, description, dueDate, isCompleted, xpAwarded, type, createdAt, updatedAt, subject, user, checklist);
     }
 
     private void touch(){
@@ -146,6 +150,15 @@ public class Activity {
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+        touch();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
         touch();
     }
 

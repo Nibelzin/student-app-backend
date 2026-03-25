@@ -32,7 +32,8 @@ public abstract class AssessmentMapper {
                 entity.getWeight(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
-                subject
+                subject,
+                subject.getUser()
         );
     }
 }

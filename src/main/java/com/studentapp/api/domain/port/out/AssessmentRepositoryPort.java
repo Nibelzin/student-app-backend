@@ -11,5 +11,6 @@ public interface AssessmentRepositoryPort {
     Assessment save(Assessment assessment);
     Optional<Assessment> findById(UUID id);
     Page<Assessment> findBySubjectId(UUID subjectId, Pageable pageable);
+    Page<Assessment> findByUserId(UUID userId, Pageable pageable);
     void delete(UUID id);
 }

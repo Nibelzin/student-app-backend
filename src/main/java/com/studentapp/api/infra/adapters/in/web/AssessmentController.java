@@ -41,6 +41,13 @@ public class AssessmentController {
         return ResponseEntity.ok(page.map(assessmentDtoMapper::toResponse));
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Page<AssessmentResponse>> getAssessmentsByUserId(
+            @PathVariable UUID userId, Pageable pageable) {
+        Page<Assessment> page = assessmentUseCase.findByUserId(userId, pageable);
+        return ResponseEntity.ok(page.map(assessmentDtoMapper::toResponse));
+    }
+
     @PostMapping
     public ResponseEntity<AssessmentResponse> createAssessment(
             @Valid @RequestBody AssessmentCreateRequest request) {

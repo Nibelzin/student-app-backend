@@ -30,7 +30,7 @@ public abstract class ActivityMapper {
                 entity.getDueDate(), entity.getIsCompleted(),
                 entity.getXpAwarded() != null ? entity.getXpAwarded() : false,
                 entity.getType(), entity.getCreatedAt(), entity.getUpdatedAt(),
-                subjectDomain, entity.getChecklist()
+                subjectDomain, subjectDomain.getUser(), entity.getChecklist()
         );
     }
 }

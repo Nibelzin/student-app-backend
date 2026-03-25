@@ -18,6 +18,7 @@ public abstract class ActivityDtoMapper {
                 request.getIsCompleted(),
                 request.getType(),
                 subject,
+                subject.getUser(),
                 request.getChecklist()
         );
     }

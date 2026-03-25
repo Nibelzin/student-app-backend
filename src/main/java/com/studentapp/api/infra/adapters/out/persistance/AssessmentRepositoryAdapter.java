@@ -44,6 +44,11 @@ public class AssessmentRepositoryAdapter implements AssessmentRepositoryPort {
     }
 
     @Override
+    public Page<Assessment> findByUserId(UUID userId, Pageable pageable) {
+        return assessmentJpaRepository.findBySubjectUserId(userId, pageable).map(assessmentMapper::toDomain);
+    }
+
+    @Override
     public void delete(UUID id) {
         assessmentJpaRepository.deleteById(id);
     }

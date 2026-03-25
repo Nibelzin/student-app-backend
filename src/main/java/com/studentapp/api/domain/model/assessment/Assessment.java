@@ -1,6 +1,7 @@
 package com.studentapp.api.domain.model.assessment;
 
 import com.studentapp.api.domain.model.subject.Subject;
+import com.studentapp.api.domain.model.user.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,8 +20,9 @@ public class Assessment {
     private LocalDateTime updatedAt;
 
     private Subject subject;
+    private User user;
 
-    private Assessment(UUID id, String title, LocalDate assessmentDate, Double grade, Double maxGrade, Double weight, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject) {
+    private Assessment(UUID id, String title, LocalDate assessmentDate, Double grade, Double maxGrade, Double weight, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, User user) {
         this.id = id;
         this.title = title;
         this.assessmentDate = assessmentDate;
@@ -30,9 +32,10 @@ public class Assessment {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.subject = subject;
+        this.user = user;
     }
 
-    private Assessment(String title, LocalDate assessmentDate, Double grade, Double maxGrade, Double weight, Subject subject) {
+    private Assessment(String title, LocalDate assessmentDate, Double grade, Double maxGrade, Double weight, Subject subject, User user) {
         this.id = UUID.randomUUID();
         this.title = title;
         this.assessmentDate = assessmentDate;
@@ -42,14 +45,15 @@ public class Assessment {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
         this.subject = subject;
+        this.user = user;
     }
 
-    public static Assessment create(String title, LocalDate assessmentDate, Double grade, Double maxGrade, Double weight, Subject subject) {
-        return new Assessment(title, assessmentDate, grade, maxGrade, weight, subject);
+    public static Assessment create(String title, LocalDate assessmentDate, Double grade, Double maxGrade, Double weight, Subject subject, User user) {
+        return new Assessment(title, assessmentDate, grade, maxGrade, weight, subject, user);
     }
 
-    public static Assessment fromState(UUID id, String title, LocalDate assessmentDate, Double grade, Double maxGrade, Double weight, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject) {
-        return new Assessment(id, title, assessmentDate, grade, maxGrade, weight, createdAt, updatedAt, subject);
+    public static Assessment fromState(UUID id, String title, LocalDate assessmentDate, Double grade, Double maxGrade, Double weight, LocalDateTime createdAt, LocalDateTime updatedAt, Subject subject, User user) {
+        return new Assessment(id, title, assessmentDate, grade, maxGrade, weight, createdAt, updatedAt, subject, user);
     }
 
     public void touch() {
@@ -119,6 +123,15 @@ public class Assessment {
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+        touch();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
         touch();
     }
 }

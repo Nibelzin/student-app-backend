@@ -20,5 +20,6 @@ public interface AssessmentUseCase {
     Assessment updateAssessment(UUID id, UpdateAssessmentData data);
     Optional<Assessment> findAssessmentById(UUID id);
     Page<Assessment> findBySubjectId(UUID subjectId, Pageable pageable);
+    Page<Assessment> findByUserId(UUID userId, Pageable pageable);
     void deleteAssessment(UUID id);
 }
