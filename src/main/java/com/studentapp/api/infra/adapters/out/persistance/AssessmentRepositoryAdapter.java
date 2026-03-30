@@ -1,16 +1,16 @@
 package com.studentapp.api.infra.adapters.out.persistance;
 
 import com.studentapp.api.domain.model.assessment.Assessment;
+import com.studentapp.api.domain.port.in.AssessmentUseCase;
 import com.studentapp.api.domain.port.out.AssessmentRepositoryPort;
 import com.studentapp.api.infra.adapters.out.persistance.entity.AssessmentEntity;
-import com.studentapp.api.infra.adapters.out.persistance.entity.SubjectEntity;
+import com.studentapp.api.infra.adapters.out.persistance.jpa.AssessmentSpecification;
 import com.studentapp.api.infra.adapters.out.persistance.mapper.AssessmentMapper;
 import com.studentapp.api.infra.adapters.out.persistance.repository.AssessmentJpaRepository;
-import com.studentapp.api.infra.adapters.out.persistance.repository.SubjectJpaRepository;
-import com.studentapp.api.infra.config.exception.custom.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -21,7 +21,6 @@ import java.util.UUID;
 public class AssessmentRepositoryAdapter implements AssessmentRepositoryPort {
 
     private final AssessmentJpaRepository assessmentJpaRepository;
-    private final SubjectJpaRepository subjectJpaRepository;
     private final AssessmentMapper assessmentMapper;
 
     @Override
@@ -36,16 +35,9 @@ public class AssessmentRepositoryAdapter implements AssessmentRepositoryPort {
     }
 
     @Override
-    public Page<Assessment> findBySubjectId(UUID subjectId, Pageable pageable) {
-        SubjectEntity subjectEntity = subjectJpaRepository.findById(subjectId).orElseThrow(
-                () -> new ResourceNotFoundException("Matéria não encontrada.")
-        );
-        return assessmentJpaRepository.findBySubject(subjectEntity, pageable).map(assessmentMapper::toDomain);
-    }
-
-    @Override
-    public Page<Assessment> findByUserId(UUID userId, Pageable pageable) {
-        return assessmentJpaRepository.findBySubjectUserId(userId, pageable).map(assessmentMapper::toDomain);
+    public Page<Assessment> findByQuery(AssessmentUseCase.AssessmentQueryData queryData, Pageable pageable) {
+        Specification<AssessmentEntity> spec = AssessmentSpecification.byCriteria(queryData);
+        return assessmentJpaRepository.findAll(spec, pageable).map(assessmentMapper::toDomain);
     }
 
     @Override

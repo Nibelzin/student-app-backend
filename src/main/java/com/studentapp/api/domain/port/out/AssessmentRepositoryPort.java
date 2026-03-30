@@ -1,6 +1,7 @@
 package com.studentapp.api.domain.port.out;
 
 import com.studentapp.api.domain.model.assessment.Assessment;
+import com.studentapp.api.domain.port.in.AssessmentUseCase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,7 +11,6 @@ import java.util.UUID;
 public interface AssessmentRepositoryPort {
     Assessment save(Assessment assessment);
     Optional<Assessment> findById(UUID id);
-    Page<Assessment> findBySubjectId(UUID subjectId, Pageable pageable);
-    Page<Assessment> findByUserId(UUID userId, Pageable pageable);
+    Page<Assessment> findByQuery(AssessmentUseCase.AssessmentQueryData queryData, Pageable pageable);
     void delete(UUID id);
 }

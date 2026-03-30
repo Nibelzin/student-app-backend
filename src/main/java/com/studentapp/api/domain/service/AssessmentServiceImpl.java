@@ -70,13 +70,8 @@ public class AssessmentServiceImpl implements AssessmentUseCase {
     }
 
     @Override
-    public Page<Assessment> findBySubjectId(UUID subjectId, Pageable pageable) {
-        return assessmentRepositoryPort.findBySubjectId(subjectId, pageable);
-    }
-
-    @Override
-    public Page<Assessment> findByUserId(UUID userId, Pageable pageable) {
-        return assessmentRepositoryPort.findByUserId(userId, pageable);
+    public Page<Assessment> findAssessments(AssessmentQueryData query, Pageable pageable) {
+        return assessmentRepositoryPort.findByQuery(query, pageable);
     }
 
     @Override

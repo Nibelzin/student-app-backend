@@ -6,6 +6,7 @@ import com.studentapp.api.domain.model.subject.Subject;
 import com.studentapp.api.domain.model.user.User;
 import com.studentapp.api.domain.port.in.SubjectUseCase;
 import com.studentapp.api.domain.port.out.AbsenceLogRepositoryPort;
+import com.studentapp.api.domain.port.in.AssessmentUseCase;
 import com.studentapp.api.domain.port.out.AssessmentRepositoryPort;
 import com.studentapp.api.domain.port.out.ClassScheduleRepositoryPort;
 import com.studentapp.api.domain.port.out.PeriodRepositoryPort;
@@ -128,7 +129,10 @@ public class SubjectServiceImpl implements SubjectUseCase {
 
     @Override
     public void deleteSubject(UUID id){
-        assessmentRepository.findBySubjectId(id, Pageable.unpaged())
+        AssessmentUseCase.AssessmentQueryData assessmentQuery = new AssessmentUseCase.AssessmentQueryData(
+                Optional.of(id), Optional.empty(), Optional.empty(), Optional.empty()
+        );
+        assessmentRepository.findByQuery(assessmentQuery, Pageable.unpaged())
                 .forEach(a -> assessmentRepository.delete(a.getId()));
         classScheduleRepository.findBySubjectId(id, Pageable.unpaged())
                 .forEach(cs -> classScheduleRepository.delete(cs.getId()));

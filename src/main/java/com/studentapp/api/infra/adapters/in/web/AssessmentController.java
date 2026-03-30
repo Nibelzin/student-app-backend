@@ -26,26 +26,19 @@ public class AssessmentController {
     private final AssessmentUseCase assessmentUseCase;
     private final AssessmentDtoMapper assessmentDtoMapper;
 
+    @GetMapping
+    public ResponseEntity<Page<AssessmentResponse>> getAssessments(
+            AssessmentUseCase.AssessmentQueryData assessmentQueryData, Pageable pageable) {
+        Page<Assessment> page = assessmentUseCase.findAssessments(assessmentQueryData, pageable);
+        return ResponseEntity.ok(page.map(assessmentDtoMapper::toResponse));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AssessmentResponse> getAssessmentById(@PathVariable UUID id) {
         return assessmentUseCase.findAssessmentById(id)
                 .map(assessmentDtoMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/subject/{subjectId}")
-    public ResponseEntity<Page<AssessmentResponse>> getAssessmentsBySubjectId(
-            @PathVariable UUID subjectId, Pageable pageable) {
-        Page<Assessment> page = assessmentUseCase.findBySubjectId(subjectId, pageable);
-        return ResponseEntity.ok(page.map(assessmentDtoMapper::toResponse));
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Page<AssessmentResponse>> getAssessmentsByUserId(
-            @PathVariable UUID userId, Pageable pageable) {
-        Page<Assessment> page = assessmentUseCase.findByUserId(userId, pageable);
-        return ResponseEntity.ok(page.map(assessmentDtoMapper::toResponse));
     }
 
     @PostMapping

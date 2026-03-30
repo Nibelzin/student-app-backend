@@ -16,10 +16,16 @@ public interface AssessmentUseCase {
     record UpdateAssessmentData(String title, LocalDate assessmentDate,
             Double grade, Double maxGrade, Double weight) {}
 
+    record AssessmentQueryData(
+            Optional<UUID> subjectId,
+            Optional<UUID> userId,
+            Optional<LocalDate> assessmentDate,
+            Optional<Boolean> isCompleted
+    ) {}
+
     Assessment createAssessment(CreateAssessmentData data);
     Assessment updateAssessment(UUID id, UpdateAssessmentData data);
     Optional<Assessment> findAssessmentById(UUID id);
-    Page<Assessment> findBySubjectId(UUID subjectId, Pageable pageable);
-    Page<Assessment> findByUserId(UUID userId, Pageable pageable);
+    Page<Assessment> findAssessments(AssessmentQueryData query, Pageable pageable);
     void deleteAssessment(UUID id);
 }
